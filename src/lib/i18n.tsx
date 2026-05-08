@@ -111,6 +111,18 @@ const dict: Dict = {
   view: { en: "View", tr: "Görüntüle" },
   reply: { en: "Reply", tr: "Yanıtla" },
   ignore: { en: "Ignore", tr: "Yok say" },
+  restore: { en: "Restore", tr: "Geri al" },
+  ignored: { en: "Ignored", tr: "Yok sayıldı" },
+  replied: { en: "Replied", tr: "Yanıtlandı" },
+  tab_active: { en: "Active", tr: "Aktif" },
+  tab_archived: { en: "Archived", tr: "Arşiv" },
+  tab_ignored: { en: "Ignored", tr: "Yok sayılan" },
+  tab_replied: { en: "Replied", tr: "Yanıtlanan" },
+  noEmailsHere: { en: "No emails here.", tr: "Burada e-posta yok." },
+  allCaughtUp: { en: "All caught up.", tr: "Hepsi tamam." },
+  ignoredToast: { en: "Email ignored.", tr: "E-posta yok sayıldı." },
+  repliedToast: { en: "Reply sent. Email marked as replied.", tr: "Yanıt gönderildi. E-posta yanıtlandı olarak işaretlendi." },
+  restoredOk: { en: "Restored to inbox.", tr: "Gelen kutusuna alındı." },
 
   // Magic moment
   whatChanged: { en: "What changed?", tr: "Ne değişti?" },
