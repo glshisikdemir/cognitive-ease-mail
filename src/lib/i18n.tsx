@@ -111,7 +111,6 @@ const dict: Dict = {
   view: { en: "View", tr: "Görüntüle" },
   reply: { en: "Reply", tr: "Yanıtla" },
   ignore: { en: "Ignore", tr: "Yok say" },
-  restore: { en: "Restore", tr: "Geri al" },
   ignored: { en: "Ignored", tr: "Yok sayıldı" },
   replied: { en: "Replied", tr: "Yanıtlandı" },
   tab_active: { en: "Active", tr: "Aktif" },
