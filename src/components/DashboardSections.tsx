@@ -1,6 +1,8 @@
+import { Link } from "@tanstack/react-router";
 import { emails } from "@/lib/emails";
 import { quickAssess } from "@/lib/heuristics";
 import { useLang, t } from "@/lib/i18n";
+import { archiveEmails, useArchived } from "@/lib/archive";
 
 function useStats() {
   const assessed = emails.map((e) => ({ email: e, ...quickAssess(e) }));
@@ -46,34 +48,64 @@ export function HeroStatus() {
   );
 }
 
-export function PrimaryActions() {
+export type DashboardView = "all" | "priority" | "replies" | "low";
+
+export function PrimaryActions({ activeView }: { activeView: DashboardView }) {
   const { lang } = useLang();
+  const s = useStats();
+  const archived = useArchived();
+  const lowIds = emails
+    .filter((e) => {
+      const a = quickAssess(e);
+      return (a.priority === "ignore" || a.load === "low") && !archived.has(e.id);
+    })
+    .map((e) => e.id);
+
   const actions = [
-    { key: "reviewPriority", primary: true },
-    { key: "seeReplies", primary: false },
-    { key: "archiveLow", primary: false },
-  ] as const;
+    { key: "reviewPriority" as const, view: "priority" as DashboardView, count: s.high, primary: true },
+    { key: "seeReplies" as const, view: "replies" as DashboardView, count: s.drafts, primary: false },
+    { key: "archiveLow" as const, view: "low" as DashboardView, count: lowIds.length, primary: false, onClick: () => archiveEmails(lowIds) },
+  ];
+
   return (
     <section className="grid gap-3 sm:grid-cols-3">
-      {actions.map((a) => (
-        <button
-          key={a.key}
-          className={`group rounded-xl border px-5 py-4 text-left text-sm font-medium transition-colors ${
-            a.primary
-              ? "border-transparent bg-primary text-primary-foreground hover:bg-primary/90"
-              : "border-border/70 bg-surface text-foreground hover:bg-surface-muted"
-          }`}
-        >
-          <span className="block">{t(lang, a.key)}</span>
-          <span
-            className={`mt-1 inline-block text-xs ${
-              a.primary ? "text-primary-foreground/70" : "text-muted-foreground"
+      {actions.map((a) => {
+        const isActive = activeView === a.view;
+        return (
+          <Link
+            key={a.key}
+            to="/"
+            search={{ view: a.view }}
+            onClick={a.onClick}
+            hash="emails"
+            className={`group rounded-xl border px-5 py-4 text-left text-sm font-medium transition-colors ${
+              a.primary
+                ? "border-transparent bg-primary text-primary-foreground hover:bg-primary/90"
+                : isActive
+                ? "border-border-strong bg-surface-muted text-foreground"
+                : "border-border/70 bg-surface text-foreground hover:bg-surface-muted"
             }`}
           >
-            →
-          </span>
-        </button>
-      ))}
+            <span className="flex items-center justify-between">
+              <span>{t(lang, a.key)}</span>
+              <span
+                className={`rounded-full px-2 py-0.5 text-[11px] tabular-nums ${
+                  a.primary ? "bg-primary-foreground/15 text-primary-foreground" : "bg-surface-muted text-muted-foreground"
+                }`}
+              >
+                {a.count}
+              </span>
+            </span>
+            <span
+              className={`mt-2 inline-block text-xs ${
+                a.primary ? "text-primary-foreground/70" : "text-muted-foreground"
+              }`}
+            >
+              →
+            </span>
+          </Link>
+        );
+      })}
     </section>
   );
 }
