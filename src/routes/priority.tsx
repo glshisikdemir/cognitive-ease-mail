@@ -99,7 +99,12 @@ function PriorityPage() {
                     <ArrowRight className="h-3 w-3" />
                   </Link>
                   <button
-                    onClick={() => archiveEmails([email.id])}
+                    onClick={() => {
+                      archiveEmails([email.id]);
+                      toast.success(t(lang, "archivedOneToast"), {
+                        action: { label: t(lang, "undo"), onClick: () => unarchive(email.id) },
+                      });
+                    }}
                     className="rounded-md px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {t(lang, "ignore")}
