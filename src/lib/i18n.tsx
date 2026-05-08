@@ -57,6 +57,14 @@ const dict: Dict = {
     tr: "ISURA şu anda yüksek yüklü veya acil e-posta bulamadı.",
   },
   backToDashboard: { en: "Back to dashboard", tr: "Panele dön" },
+  generateReply: { en: "Generate reply", tr: "Yanıt oluştur" },
+  archive: { en: "Archive", tr: "Arşivle" },
+  needsAttention: { en: "Needs your attention", tr: "Dikkatinizi bekliyor" },
+  hiddenLow: { en: "Hidden — low load", tr: "Gizli — düşük yük" },
+  decisionHint: {
+    en: "ISURA already decided. You just confirm.",
+    tr: "ISURA zaten karar verdi. Siz yalnızca onaylayın.",
+  },
 
   // Cognitive overview
   cognitiveOverview: { en: "Cognitive load overview", tr: "Bilişsel yük genel bakışı" },
