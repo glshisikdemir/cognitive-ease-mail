@@ -32,7 +32,8 @@ function PriorityPage() {
   const priority = allEmails
     .map((e) => ({ email: e, ...quickAssess(e) }))
     .filter(({ email, load, priority }) =>
-      !archived.has(email.id) && (priority === "urgent" || load === "high"),
+      !archived.has(email.id) &&
+      (priority === "urgent" || load === "high" || load === "medium"),
     );
 
   const totalMin = priority.length * 4;
