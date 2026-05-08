@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Archive as ArchiveIcon, EyeOff } from "lucide-react";
 import { Header } from "@/components/Header";
 import { LoadBadge, PriorityTag } from "@/components/LoadBadge";
 import { emails as allEmails } from "@/lib/emails";
 import { quickAssess, type Load, type Priority } from "@/lib/heuristics";
-import { useArchived, archiveEmails, unarchive } from "@/lib/archive";
+import { useEmailStore, setStatus, resetEmail } from "@/lib/email-store";
 import { toast } from "sonner";
 import { useLang, t } from "@/lib/i18n";
 import type { Email } from "@/lib/emails";
