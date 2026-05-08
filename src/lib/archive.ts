@@ -1,65 +1,26 @@
-import { useEffect, useState } from "react";
-
-const KEY = "isura.archived";
-const EVENT = "isura.archived.change";
-
-function read(): Set<string> {
-  if (typeof window === "undefined") return new Set();
-  try {
-    const raw = window.localStorage.getItem(KEY);
-    return new Set(raw ? (JSON.parse(raw) as string[]) : []);
-  } catch {
-    return new Set();
-  }
-}
-
-function write(s: Set<string>) {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(KEY, JSON.stringify([...s]));
-    // Notify same-tab subscribers (storage event only fires across tabs)
-    window.dispatchEvent(new CustomEvent(EVENT));
-  } catch {
-    /* quota / private mode — ignore */
-  }
-}
+// Backwards-compat shim — delegates to the unified email store.
+import { useMemo } from "react";
+import { useEmailStore, setStatus, resetEmail } from "./email-store";
 
 export function archiveEmails(ids: string[]) {
-  if (ids.length === 0) return;
-  const s = read();
-  for (const id of ids) s.add(id);
-  write(s);
+  for (const id of ids) setStatus(id, "archived");
 }
 
 export function unarchive(id: string) {
-  const s = read();
-  if (!s.delete(id)) return;
-  write(s);
+  resetEmail(id);
 }
 
 export function clearArchive() {
-  write(new Set());
+  // No-op kept for compatibility.
 }
 
 export function useArchived(): Set<string> {
-  const [state, setState] = useState<Set<string>>(() => read());
-
-  useEffect(() => {
-    // Re-read on mount (covers SSR hydration where read() returned empty)
-    setState(read());
-
-    const sync = () => setState(read());
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === KEY) sync();
-    };
-
-    window.addEventListener(EVENT, sync);
-    window.addEventListener("storage", onStorage);
-    return () => {
-      window.removeEventListener(EVENT, sync);
-      window.removeEventListener("storage", onStorage);
-    };
-  }, []);
-
-  return state;
+  const store = useEmailStore();
+  return useMemo(() => {
+    const s = new Set<string>();
+    for (const [id, st] of Object.entries(store)) {
+      if (st.status === "archived") s.add(id);
+    }
+    return s;
+  }, [store]);
 }

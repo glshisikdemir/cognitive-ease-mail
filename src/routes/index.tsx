@@ -1,27 +1,36 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { ArrowRight, Sparkles, Inbox, Flame, CircleDot, EyeOff, MessageSquare } from "lucide-react";
+import { useMemo } from "react";
+import { toast } from "sonner";
+import { ArrowRight, Archive as ArchiveIcon, EyeOff, MessageSquare, RotateCcw, Inbox, CheckCircle2 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { emails as allEmails } from "@/lib/emails";
 import { quickAssess } from "@/lib/heuristics";
 import { useLang, t } from "@/lib/i18n";
-import { useArchived } from "@/lib/archive";
+import {
+  useEmailStore,
+  setStatus,
+  resetEmail,
+  type EmailStatus,
+} from "@/lib/email-store";
 import { LoadBadge, PriorityTag } from "@/components/LoadBadge";
 
+const tabSchema = z.enum(["active", "replied", "archived", "ignored"]);
+type Tab = z.infer<typeof tabSchema>;
+
 const searchSchema = z.object({
-  view: fallback(z.enum(["all", "priority", "replies", "low"]), "all").default("all"),
+  view: fallback(tabSchema, "active").default("active"),
 });
 
 export const Route = createFileRoute("/")({
   validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [
-      { title: "ISURA — Your inbox is under control" },
+      { title: "ISURA — Inbox" },
       {
         name: "description",
-        content:
-          "ISURA has analyzed your emails and organized your attention. Review priorities, see suggested replies, and stay in control.",
+        content: "Your cognitive inbox. View, reply, archive or ignore — every action stays in sync.",
       },
     ],
   }),
@@ -30,174 +39,131 @@ export const Route = createFileRoute("/")({
 
 function aiSummary(body: string, preview: string) {
   const first = body.split("\n").map((l) => l.trim()).find((l) => l.length > 20) ?? preview;
-  return first.length > 110 ? first.slice(0, 110).trimEnd() + "…" : first;
+  return first.length > 120 ? first.slice(0, 120).trimEnd() + "…" : first;
 }
 
 function Index() {
   const { lang } = useLang();
-  const archived = useArchived();
+  const { view } = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const store = useEmailStore();
 
-  const assessed = allEmails
-    .filter((e) => !archived.has(e.id))
-    .map((e) => ({ email: e, ...quickAssess(e) }));
+  const enriched = useMemo(
+    () =>
+      allEmails.map((email) => {
+        const state = store[email.id] ?? { status: "active" as EmailStatus };
+        return { email, state, ...quickAssess(email) };
+      }),
+    [store],
+  );
 
-  const high = assessed.filter((a) => a.priority === "urgent" || a.load === "high").length;
-  const low = assessed.filter((a) => a.priority === "ignore" || a.load === "low").length;
-  const medium = Math.max(0, assessed.length - high - low);
-  const drafts = assessed.filter((a) => a.priority !== "ignore").length;
+  const counts = {
+    active: enriched.filter((e) => e.state.status === "active").length,
+    replied: enriched.filter((e) => e.state.status === "replied").length,
+    archived: enriched.filter((e) => e.state.status === "archived").length,
+    ignored: enriched.filter((e) => e.state.status === "ignored").length,
+  };
 
-  const insight =
-    low > high
-      ? t(lang, "insightLow")
-      : t(lang, "insightHigh", { n: high });
+  const visible = enriched.filter((e) => e.state.status === view);
 
-  const previews = assessed
-    .filter((a) => a.priority !== "ignore" && a.load !== "low")
-    .slice(0, 5);
-
-  const cards = [
-    {
-      key: "high",
-      label: t(lang, "highPriority"),
-      value: high,
-      icon: Flame,
-      tone: "text-rose-600",
-      ring: "ring-rose-500/20",
-    },
-    {
-      key: "medium",
-      label: t(lang, "mediumPriority"),
-      value: medium,
-      icon: CircleDot,
-      tone: "text-amber-600",
-      ring: "ring-amber-500/20",
-    },
-    {
-      key: "low",
-      label: t(lang, "hiddenMinimized"),
-      value: low,
-      icon: EyeOff,
-      tone: "text-muted-foreground",
-      ring: "ring-border",
-    },
-    {
-      key: "drafts",
-      label: t(lang, "draftsReady"),
-      value: drafts,
-      icon: MessageSquare,
-      tone: "text-emerald-600",
-      ring: "ring-emerald-500/20",
-    },
+  const tabs: { key: Tab; label: string; count: number }[] = [
+    { key: "active", label: t(lang, "tab_active"), count: counts.active },
+    { key: "replied", label: t(lang, "tab_replied"), count: counts.replied },
+    { key: "archived", label: t(lang, "tab_archived"), count: counts.archived },
+    { key: "ignored", label: t(lang, "tab_ignored"), count: counts.ignored },
   ];
+
+  const handleArchive = (id: string) => {
+    setStatus(id, "archived");
+    toast.success(t(lang, "archivedOneToast"), {
+      action: { label: t(lang, "undo"), onClick: () => resetEmail(id) },
+    });
+  };
+  const handleIgnore = (id: string) => {
+    setStatus(id, "ignored");
+    toast.success(t(lang, "ignoredToast"), {
+      action: { label: t(lang, "undo"), onClick: () => resetEmail(id) },
+    });
+  };
+  const handleRestore = (id: string) => {
+    resetEmail(id);
+    toast.success(t(lang, "restoredOk"));
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="mx-auto max-w-5xl px-6 py-12 space-y-12">
-        {/* Hero */}
-        <section className="text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-surface px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            ISURA
+      <main className="mx-auto max-w-5xl px-6 py-10 space-y-8">
+        {/* Header */}
+        <section className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+              <Inbox className="h-3.5 w-3.5" />
+              {t(lang, "inbox")}
+            </div>
+            <h1 className="mt-2 font-display text-3xl text-foreground sm:text-4xl">
+              {counts.active === 0
+                ? t(lang, "allCaughtUp")
+                : t(lang, "heroTitle")}
+            </h1>
+            <p className="mt-1.5 text-sm text-muted-foreground">
+              {t(lang, "heroSubtitle")}
+            </p>
           </div>
-          <h1 className="mt-5 font-display text-4xl leading-tight text-foreground sm:text-5xl">
-            {t(lang, "heroTitle")}
-          </h1>
-          <p className="mx-auto mt-4 max-w-xl text-[15px] text-muted-foreground sm:text-base">
-            {t(lang, "heroSubtitle")}
-          </p>
-        </section>
-
-        {/* Status cards */}
-        <section className="grid gap-3 grid-cols-2 lg:grid-cols-4">
-          {cards.map((c) => {
-            const Icon = c.icon;
-            return (
-              <div
-                key={c.key}
-                className={`rounded-xl border border-border/70 bg-surface px-5 py-5 ring-1 ${c.ring}`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">{c.label}</span>
-                  <Icon className={`h-4 w-4 ${c.tone}`} />
-                </div>
-                <div className="mt-3 font-display text-3xl tabular-nums text-foreground">
-                  {c.value}
-                </div>
-              </div>
-            );
-          })}
-        </section>
-
-        {/* Primary actions */}
-        <section className="grid gap-3 sm:grid-cols-3">
           <Link
             to="/priority"
-            className="group flex items-center justify-between rounded-xl bg-primary px-5 py-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            <span>{t(lang, "reviewPriority")}</span>
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </Link>
-          <Link
-            to="/"
-            search={{ view: "replies" }}
-            hash="emails"
-            className="group flex items-center justify-between rounded-xl border border-border/70 bg-surface px-5 py-4 text-sm font-medium text-foreground transition-colors hover:bg-surface-muted"
-          >
-            <span>{t(lang, "seeReplies")}</span>
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </Link>
-          <Link
-            to="/"
-            search={{ view: "all" }}
-            hash="emails"
-            className="group flex items-center justify-between rounded-xl border border-border/70 bg-surface px-5 py-4 text-sm font-medium text-foreground transition-colors hover:bg-surface-muted"
-          >
-            <span>{t(lang, "viewAllEmails")}</span>
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            {t(lang, "reviewPriority")}
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </section>
 
-        {/* Today's insight */}
-        <section className="rounded-2xl border border-border/70 bg-surface px-7 py-7">
-          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            <Sparkles className="h-3.5 w-3.5" />
-            {t(lang, "insightTitle")}
-          </div>
-          <p className="mt-3 font-display text-2xl leading-snug text-foreground">
-            “{insight}”
-          </p>
-        </section>
+        {/* Tabs */}
+        <div className="flex flex-wrap gap-1 rounded-lg border border-border/70 bg-surface p-1 text-sm">
+          {tabs.map((tab) => {
+            const active = view === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => navigate({ search: { view: tab.key } })}
+                className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+                  active
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-surface-muted hover:text-foreground"
+                }`}
+              >
+                {tab.label}
+                <span
+                  className={`rounded-full px-1.5 text-[10px] tabular-nums ${
+                    active ? "bg-primary-foreground/20" : "bg-muted/60"
+                  }`}
+                >
+                  {tab.count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
-        {/* Email preview */}
-        <section id="emails" className="overflow-hidden rounded-2xl border border-border/70 bg-surface">
-          <div className="flex items-center justify-between border-b border-border/70 px-6 py-4">
-            <div className="flex items-center gap-2">
-              <Inbox className="h-4 w-4 text-muted-foreground" />
-              <h2 className="font-display text-lg text-foreground">
-                {t(lang, "emailPreviewTitle")}
-              </h2>
-            </div>
-            <Link
-              to="/"
-              search={{ view: "all" }}
-              hash="emails"
-              className="text-xs text-muted-foreground hover:text-foreground"
-            >
-              {t(lang, "viewAllEmails")} →
-            </Link>
-          </div>
-
-          {previews.length === 0 ? (
-            <div className="px-6 py-16 text-center text-sm text-muted-foreground">
-              {t(lang, "nothingUrgent")}
+        {/* List */}
+        <section className="overflow-hidden rounded-2xl border border-border/70 bg-surface">
+          {visible.length === 0 ? (
+            <div className="flex flex-col items-center justify-center px-6 py-20 text-center">
+              <CheckCircle2 className="h-8 w-8 text-muted-foreground/60" />
+              <p className="mt-4 font-display text-xl text-foreground">
+                {view === "active" ? t(lang, "allCaughtUp") : t(lang, "noEmailsHere")}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {t(lang, "nothingUrgentSub")}
+              </p>
             </div>
           ) : (
             <ul>
-              {previews.map(({ email, load, priority }) => (
+              {visible.map(({ email, load, priority, state }) => (
                 <li
                   key={email.id}
-                  className="flex items-start gap-4 border-b border-border/60 px-6 py-4 last:border-b-0 transition-colors hover:bg-surface-muted/60"
+                  className="flex flex-col gap-3 border-b border-border/60 px-6 py-5 last:border-b-0 sm:flex-row sm:items-start"
                 >
                   <div className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-accent text-sm font-medium text-accent-foreground">
                     {email.sender[0]}
@@ -209,21 +175,67 @@ function Index() {
                       </span>
                       <PriorityTag priority={priority} />
                       <LoadBadge load={load} />
+                      {state.status !== "active" && (
+                        <span className="rounded-full border border-border bg-background px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
+                          {t(lang, state.status === "replied" ? "replied" : state.status === "archived" ? "archived" : "ignored")}
+                        </span>
+                      )}
                     </div>
-                    <p className="mt-1 truncate text-sm text-foreground">
+                    <Link
+                      to="/email/$id"
+                      params={{ id: email.id }}
+                      className="mt-1 block truncate text-sm font-medium text-foreground hover:underline"
+                    >
                       {email.subject}
-                    </p>
-                    <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">
+                    </Link>
+                    <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
                       {aiSummary(email.body, email.preview)}
                     </p>
+
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      <Link
+                        to="/email/$id"
+                        params={{ id: email.id }}
+                        className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
+                      >
+                        {t(lang, "view")}
+                      </Link>
+                      {state.status === "active" ? (
+                        <>
+                          <Link
+                            to="/email/$id"
+                            params={{ id: email.id }}
+                            className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-3 py-1.5 text-xs text-foreground hover:bg-surface-muted"
+                          >
+                            <MessageSquare className="h-3 w-3" />
+                            {t(lang, "reply")}
+                          </Link>
+                          <button
+                            onClick={() => handleArchive(email.id)}
+                            className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-3 py-1.5 text-xs text-foreground hover:bg-surface-muted"
+                          >
+                            <ArchiveIcon className="h-3 w-3" />
+                            {t(lang, "archive")}
+                          </button>
+                          <button
+                            onClick={() => handleIgnore(email.id)}
+                            className="inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground"
+                          >
+                            <EyeOff className="h-3 w-3" />
+                            {t(lang, "ignore")}
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          onClick={() => handleRestore(email.id)}
+                          className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-3 py-1.5 text-xs text-foreground hover:bg-surface-muted"
+                        >
+                          <RotateCcw className="h-3 w-3" />
+                          {t(lang, "restore")}
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <Link
-                    to="/email/$id"
-                    params={{ id: email.id }}
-                    className="flex-none rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-surface-muted"
-                  >
-                    {t(lang, "view")}
-                  </Link>
                 </li>
               ))}
             </ul>

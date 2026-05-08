@@ -4,15 +4,17 @@ import { toast } from "sonner";
 import { analyzeEmail, type EmailAnalysis } from "@/lib/analyze.functions";
 import { LoadBadge } from "./LoadBadge";
 import { useLang, t } from "@/lib/i18n";
+import { useEmailState, setReplyDraft, setStatus } from "@/lib/email-store";
 import type { Email } from "@/lib/emails";
 
 export function AIPanel({ email }: { email: Email }) {
   const { lang } = useLang();
   const fn = useServerFn(analyzeEmail);
+  const stored = useEmailState(email.id);
   const [analysis, setAnalysis] = useState<EmailAnalysis | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [draft, setDraft] = useState("");
+  const [draft, setDraft] = useState(stored.replyDraft ?? "");
   const [editing, setEditing] = useState(false);
 
   const run = async (regenerate = false) => {
@@ -23,7 +25,10 @@ export function AIPanel({ email }: { email: Email }) {
         data: { sender: email.sender, subject: email.subject, body: email.body, regenerate },
       });
       setAnalysis(result);
-      setDraft(result.replyDraft);
+      if (!stored.replyDraft || regenerate) {
+        setDraft(result.replyDraft);
+        setReplyDraft(email.id, result.replyDraft);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Analysis failed");
     } finally {
@@ -117,7 +122,10 @@ export function AIPanel({ email }: { email: Email }) {
           {editing ? (
             <textarea
               value={draft}
-              onChange={(e) => setDraft(e.target.value)}
+              onChange={(e) => {
+                setDraft(e.target.value);
+                setReplyDraft(email.id, e.target.value);
+              }}
               rows={Math.min(18, draft.split("\n").length + 2)}
               className="w-full resize-y rounded-lg border border-border bg-surface px-3 py-2.5 text-sm leading-relaxed text-foreground outline-none focus:border-border-strong focus:ring-2 focus:ring-ring/20"
             />
@@ -134,25 +142,29 @@ export function AIPanel({ email }: { email: Email }) {
           <div className="flex flex-wrap items-center gap-2 pt-3">
             <button
               onClick={() => run(true)}
-              disabled={loading}
+              disabled={loading || stored.status === "replied"}
               className="rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground transition hover:bg-surface-muted disabled:opacity-50"
             >
               {loading ? "…" : t(lang, "regenerate")}
             </button>
             <button
               onClick={() => setEditing((v) => !v)}
-              className="rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground transition hover:bg-surface-muted"
+              disabled={stored.status === "replied"}
+              className="rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground transition hover:bg-surface-muted disabled:opacity-50"
             >
               {t(lang, "edit")}
             </button>
             <button
               onClick={() => {
-                toast.success(t(lang, "sentToast"));
+                setReplyDraft(email.id, draft);
+                setStatus(email.id, "replied");
+                toast.success(t(lang, "repliedToast"));
                 setEditing(false);
               }}
-              className="ml-auto rounded-md bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground transition hover:opacity-90"
+              disabled={stored.status === "replied" || !draft.trim()}
+              className="ml-auto rounded-md bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
             >
-              {t(lang, "approveSend")}
+              {stored.status === "replied" ? t(lang, "replied") : t(lang, "approveSend")}
             </button>
           </div>
         </Section>

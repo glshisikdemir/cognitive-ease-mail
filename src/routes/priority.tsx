@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Archive as ArchiveIcon, EyeOff } from "lucide-react";
 import { Header } from "@/components/Header";
 import { LoadBadge, PriorityTag } from "@/components/LoadBadge";
 import { emails as allEmails } from "@/lib/emails";
 import { quickAssess, type Load, type Priority } from "@/lib/heuristics";
-import { useArchived, archiveEmails, unarchive } from "@/lib/archive";
+import { useEmailStore, setStatus, resetEmail } from "@/lib/email-store";
 import { toast } from "sonner";
 import { useLang, t } from "@/lib/i18n";
 import type { Email } from "@/lib/emails";
@@ -36,10 +36,10 @@ function aiSummary(email: Email) {
 
 function PriorityPage() {
   const { lang } = useLang();
-  const archived = useArchived();
+  const store = useEmailStore();
 
   const assessed: Assessed[] = allEmails
-    .filter((e) => !archived.has(e.id))
+    .filter((e) => (store[e.id]?.status ?? "active") === "active")
     .map((e) => ({ email: e, ...quickAssess(e) }));
 
   const high = assessed.filter((a) => a.priority === "urgent" || a.load === "high");
@@ -143,14 +143,27 @@ function PriorityPage() {
                   </Link>
                   <button
                     onClick={() => {
-                      archiveEmails([email.id]);
+                      setStatus(email.id, "archived");
                       toast.success(t(lang, "archivedOneToast"), {
-                        action: { label: t(lang, "undo"), onClick: () => unarchive(email.id) },
+                        action: { label: t(lang, "undo"), onClick: () => resetEmail(email.id) },
                       });
                     }}
-                    className="ml-auto rounded-md px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                    className="ml-auto inline-flex items-center gap-1 rounded-md border border-border bg-surface px-2.5 py-1.5 text-xs text-foreground transition-colors hover:bg-surface-muted"
                   >
+                    <ArchiveIcon className="h-3 w-3" />
                     {t(lang, "archive")}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setStatus(email.id, "ignored");
+                      toast.success(t(lang, "ignoredToast"), {
+                        action: { label: t(lang, "undo"), onClick: () => resetEmail(email.id) },
+                      });
+                    }}
+                    className="inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <EyeOff className="h-3 w-3" />
+                    {t(lang, "ignore")}
                   </button>
                 </div>
               </li>

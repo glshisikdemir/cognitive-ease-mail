@@ -1,9 +1,11 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { createFileRoute, Link, useNavigate, notFound } from "@tanstack/react-router";
+import { ArrowLeft, Archive as ArchiveIcon, EyeOff, RotateCcw, CheckCircle2 } from "lucide-react";
+import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { AIPanel } from "@/components/AIPanel";
 import { getEmail } from "@/lib/emails";
 import { useLang, t } from "@/lib/i18n";
+import { useEmailState, setStatus, resetEmail } from "@/lib/email-store";
 
 export const Route = createFileRoute("/email/$id")({
   loader: ({ params }) => {
@@ -31,6 +33,8 @@ export const Route = createFileRoute("/email/$id")({
 function EmailDetail() {
   const { email } = Route.useLoaderData();
   const { lang } = useLang();
+  const state = useEmailState(email.id);
+  const navigate = useNavigate();
   const date = new Date(email.receivedAt).toLocaleString(lang === "tr" ? "tr-TR" : "en-US", {
     weekday: "short",
     month: "short",
@@ -39,20 +43,89 @@ function EmailDetail() {
     minute: "2-digit",
   });
 
+  const statusLabel = {
+    active: null,
+    archived: t(lang, "archived"),
+    ignored: t(lang, "ignored"),
+    replied: t(lang, "replied"),
+  }[state.status];
+
+  const statusTone = {
+    active: "",
+    archived: "border-border bg-surface text-muted-foreground",
+    ignored: "border-border bg-surface text-muted-foreground",
+    replied: "border-emerald-500/30 bg-emerald-500/10 text-emerald-700",
+  }[state.status];
+
+  const onArchive = () => {
+    setStatus(email.id, "archived");
+    toast.success(t(lang, "archivedOneToast"), {
+      action: { label: t(lang, "undo"), onClick: () => resetEmail(email.id) },
+    });
+    navigate({ to: "/", search: { view: "active" } });
+  };
+  const onIgnore = () => {
+    setStatus(email.id, "ignored");
+    toast.success(t(lang, "ignoredToast"), {
+      action: { label: t(lang, "undo"), onClick: () => resetEmail(email.id) },
+    });
+    navigate({ to: "/", search: { view: "active" } });
+  };
+  const onRestore = () => {
+    resetEmail(email.id);
+    toast.success(t(lang, "restoredOk"));
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <main className="mx-auto max-w-7xl px-6 py-6">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          {t(lang, "back")}
-        </Link>
+        <div className="flex items-center justify-between gap-3">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            {t(lang, "back")}
+          </Link>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {statusLabel && (
+              <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium ${statusTone}`}>
+                <CheckCircle2 className="h-3 w-3" />
+                {statusLabel}
+              </span>
+            )}
+            {state.status === "active" ? (
+              <>
+                <button
+                  onClick={onArchive}
+                  className="inline-flex items-center gap-1 rounded-md border border-border bg-surface px-3 py-1.5 text-xs text-foreground hover:bg-surface-muted"
+                >
+                  <ArchiveIcon className="h-3 w-3" />
+                  {t(lang, "archive")}
+                </button>
+                <button
+                  onClick={onIgnore}
+                  className="inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground"
+                >
+                  <EyeOff className="h-3 w-3" />
+                  {t(lang, "ignore")}
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={onRestore}
+                className="inline-flex items-center gap-1 rounded-md border border-border bg-surface px-3 py-1.5 text-xs text-foreground hover:bg-surface-muted"
+              >
+                <RotateCcw className="h-3 w-3" />
+                {t(lang, "restore")}
+              </button>
+            )}
+          </div>
+        </div>
 
         <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)]">
-          {/* Left: original email */}
           <article className="overflow-hidden rounded-2xl border border-border/70 bg-surface">
             <header className="border-b border-border/70 px-7 py-6">
               <h1 className="font-display text-2xl leading-tight text-foreground">{email.subject}</h1>
@@ -73,7 +146,6 @@ function EmailDetail() {
             </div>
           </article>
 
-          {/* Right: AI panel */}
           <aside className="rounded-2xl border border-border/70 bg-surface lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)]">
             <AIPanel email={email} />
           </aside>
