@@ -28,6 +28,29 @@ const dict: Dict = {
   seeReplies: { en: "See suggested replies", tr: "Hazır yanıtları gör" },
   archiveLow: { en: "Archive low-load emails", tr: "Düşük yüklü e-postaları arşivle" },
 
+  // Priority review page
+  priorityReviewLabel: { en: "Priority review", tr: "Öncelik incelemesi" },
+  priorityHeading: {
+    en: "{n} emails need your attention.",
+    tr: "{n} e-posta dikkatinizi bekliyor.",
+  },
+  priorityHeadingSub: {
+    en: "Estimated focus time: about {min} minutes. Take them one at a time.",
+    tr: "Tahmini odak süresi: yaklaşık {min} dakika. Birer birer ele alın.",
+  },
+  priorityCleared: { en: "You're clear.", tr: "Her şey hazır." },
+  priorityClearedSub: {
+    en: "Nothing high-priority is waiting on you. Breathe.",
+    tr: "Sizden bekleyen yüksek öncelikli bir şey yok. Nefes alın.",
+  },
+  openAndDecide: { en: "Open & decide", tr: "Aç ve karar ver" },
+  nothingUrgent: { en: "Inbox at zero attention.", tr: "Dikkat gerektiren bir şey yok." },
+  nothingUrgentSub: {
+    en: "ISURA found no high-load or urgent emails right now.",
+    tr: "ISURA şu anda yüksek yüklü veya acil e-posta bulamadı.",
+  },
+  backToDashboard: { en: "Back to dashboard", tr: "Panele dön" },
+
   // Cognitive overview
   cognitiveOverview: { en: "Cognitive load overview", tr: "Bilişsel yük genel bakışı" },
   cognitiveSubtitle: {
