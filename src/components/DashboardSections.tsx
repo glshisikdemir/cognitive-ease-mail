@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { emails } from "@/lib/emails";
 import { quickAssess } from "@/lib/heuristics";
 import { useLang, t } from "@/lib/i18n";
-import { archiveEmails, useArchived } from "@/lib/archive";
+import { archiveEmails, unarchive, useArchived } from "@/lib/archive";
 
 function useStats() {
   const assessed = emails.map((e) => ({ email: e, ...quickAssess(e) }));
