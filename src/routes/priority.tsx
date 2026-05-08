@@ -36,10 +36,10 @@ function aiSummary(email: Email) {
 
 function PriorityPage() {
   const { lang } = useLang();
-  const archived = useArchived();
+  const store = useEmailStore();
 
   const assessed: Assessed[] = allEmails
-    .filter((e) => !archived.has(e.id))
+    .filter((e) => (store[e.id]?.status ?? "active") === "active")
     .map((e) => ({ email: e, ...quickAssess(e) }));
 
   const high = assessed.filter((a) => a.priority === "urgent" || a.load === "high");
