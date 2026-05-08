@@ -4,7 +4,18 @@ import { toast } from "sonner";
 import { analyzeEmail, type EmailAnalysis } from "@/lib/analyze.functions";
 import { LoadBadge } from "./LoadBadge";
 import { useLang, t } from "@/lib/i18n";
+import { useEmailState, setReplyDraft, setStatus } from "@/lib/email-store";
 import type { Email } from "@/lib/emails";
+
+export function AIPanel({ email }: { email: Email }) {
+  const { lang } = useLang();
+  const fn = useServerFn(analyzeEmail);
+  const stored = useEmailState(email.id);
+  const [analysis, setAnalysis] = useState<EmailAnalysis | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [draft, setDraft] = useState(stored.replyDraft ?? "");
+  const [editing, setEditing] = useState(false);
 
 export function AIPanel({ email }: { email: Email }) {
   const { lang } = useLang();
