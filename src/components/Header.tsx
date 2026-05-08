@@ -1,9 +1,45 @@
 import { Link } from "@tanstack/react-router";
 import { Settings } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useLang, t } from "@/lib/i18n";
+
+type SyncStatus = "online" | "syncing" | "offline";
+
+function useSyncStatus(): SyncStatus {
+  const [status, setStatus] = useState<SyncStatus>("online");
+  useEffect(() => {
+    const update = () => setStatus(navigator.onLine ? "online" : "offline");
+    update();
+    const onOnline = () => {
+      setStatus("syncing");
+      window.setTimeout(() => setStatus(navigator.onLine ? "online" : "offline"), 900);
+    };
+    const onOffline = () => setStatus("offline");
+    window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
+    return () => {
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
+    };
+  }, []);
+  return status;
+}
 
 export function Header() {
   const { lang, setLang } = useLang();
+  const status = useSyncStatus();
+  const dot =
+    status === "online"
+      ? "bg-emerald-500"
+      : status === "syncing"
+      ? "bg-amber-500 animate-pulse"
+      : "bg-rose-500";
+  const label =
+    status === "online"
+      ? t(lang, "connected")
+      : status === "syncing"
+      ? t(lang, "syncing")
+      : t(lang, "offline");
   return (
     <header className="sticky top-0 z-30 border-b border-border/70 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-6">
