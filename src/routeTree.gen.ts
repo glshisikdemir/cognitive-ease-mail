@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PriorityRouteImport } from './routes/priority'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as LandingRouteImport } from './routes/landing'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EmailIdRouteImport } from './routes/email.$id'
@@ -17,6 +18,11 @@ import { Route as EmailIdRouteImport } from './routes/email.$id'
 const PriorityRoute = PriorityRouteImport.update({
   id: '/priority',
   path: '/priority',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LandingRoute = LandingRouteImport.update({
@@ -38,12 +44,14 @@ const EmailIdRoute = EmailIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/landing': typeof LandingRoute
+  '/login': typeof LoginRoute
   '/priority': typeof PriorityRoute
   '/email/$id': typeof EmailIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/landing': typeof LandingRoute
+  '/login': typeof LoginRoute
   '/priority': typeof PriorityRoute
   '/email/$id': typeof EmailIdRoute
 }
@@ -51,20 +59,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/landing': typeof LandingRoute
+  '/login': typeof LoginRoute
   '/priority': typeof PriorityRoute
   '/email/$id': typeof EmailIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/landing' | '/priority' | '/email/$id'
+  fullPaths: '/' | '/landing' | '/login' | '/priority' | '/email/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/landing' | '/priority' | '/email/$id'
-  id: '__root__' | '/' | '/landing' | '/priority' | '/email/$id'
+  to: '/' | '/landing' | '/login' | '/priority' | '/email/$id'
+  id: '__root__' | '/' | '/landing' | '/login' | '/priority' | '/email/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LandingRoute: typeof LandingRoute
+  LoginRoute: typeof LoginRoute
   PriorityRoute: typeof PriorityRoute
   EmailIdRoute: typeof EmailIdRoute
 }
@@ -76,6 +86,13 @@ declare module '@tanstack/react-router' {
       path: '/priority'
       fullPath: '/priority'
       preLoaderRoute: typeof PriorityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/landing': {
@@ -105,9 +122,20 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LandingRoute: LandingRoute,
+  LoginRoute: LoginRoute,
   PriorityRoute: PriorityRoute,
   EmailIdRoute: EmailIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
