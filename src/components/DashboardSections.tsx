@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { emails } from "@/lib/emails";
 import { quickAssess } from "@/lib/heuristics";
 import { useLang, t } from "@/lib/i18n";
-import { archiveEmails, useArchived } from "@/lib/archive";
+import { archiveEmails, unarchive, useArchived } from "@/lib/archive";
 
 function useStats() {
   const assessed = emails.map((e) => ({ email: e, ...quickAssess(e) }));
@@ -68,7 +69,16 @@ export function PrimaryActions({ activeView }: { activeView: DashboardView }) {
   const actions: Action[] = [
     { key: "reviewPriority", to: "/priority", count: s.high, primary: true },
     { key: "seeReplies", to: "/", view: "replies", count: s.drafts, primary: false },
-    { key: "archiveLow", to: "/", view: "low", count: lowIds.length, primary: false, onClick: () => archiveEmails(lowIds) },
+    { key: "archiveLow", to: "/", view: "low", count: lowIds.length, primary: false, onClick: () => {
+      if (lowIds.length === 0) {
+        toast(t(lang, "archiveEmpty"));
+        return;
+      }
+      archiveEmails(lowIds);
+      toast.success(t(lang, "archivedToast", { n: lowIds.length }), {
+        action: { label: t(lang, "undo"), onClick: () => lowIds.forEach((id) => unarchive(id)) },
+      });
+    } },
   ];
 
   return (

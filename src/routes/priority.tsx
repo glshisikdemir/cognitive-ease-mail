@@ -4,7 +4,8 @@ import { Header } from "@/components/Header";
 import { LoadBadge, PriorityTag } from "@/components/LoadBadge";
 import { emails as allEmails } from "@/lib/emails";
 import { quickAssess } from "@/lib/heuristics";
-import { useArchived, archiveEmails } from "@/lib/archive";
+import { useArchived, archiveEmails, unarchive } from "@/lib/archive";
+import { toast } from "sonner";
 import { useLang, t } from "@/lib/i18n";
 
 export const Route = createFileRoute("/priority")({
@@ -98,7 +99,12 @@ function PriorityPage() {
                     <ArrowRight className="h-3 w-3" />
                   </Link>
                   <button
-                    onClick={() => archiveEmails([email.id])}
+                    onClick={() => {
+                      archiveEmails([email.id]);
+                      toast.success(t(lang, "archivedOneToast"), {
+                        action: { label: t(lang, "undo"), onClick: () => unarchive(email.id) },
+                      });
+                    }}
                     className="rounded-md px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {t(lang, "ignore")}

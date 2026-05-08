@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { emails as allEmails } from "@/lib/emails";
 import { quickAssess } from "@/lib/heuristics";
 import { LoadBadge, PriorityTag } from "./LoadBadge";
@@ -65,7 +66,13 @@ export function EmailList({ view = "all" }: { view?: DashboardView }) {
         </div>
         {view === "low" && lowVisibleIds.length > 0 && (
           <button
-            onClick={() => archiveEmails(lowVisibleIds)}
+            onClick={() => {
+              const ids = [...lowVisibleIds];
+              archiveEmails(ids);
+              toast.success(t(lang, "archivedToast", { n: ids.length }), {
+                action: { label: t(lang, "undo"), onClick: () => ids.forEach((id) => unarchive(id)) },
+              });
+            }}
             className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             {t(lang, "archiveAll")}
@@ -130,14 +137,22 @@ export function EmailList({ view = "all" }: { view?: DashboardView }) {
                           </button>
                           {isArchived ? (
                             <button
-                              onClick={() => unarchive(email.id)}
+                              onClick={() => {
+                                unarchive(email.id);
+                                toast(t(lang, "restoredToast"));
+                              }}
                               className="rounded-md px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
                             >
                               {t(lang, "restore")}
                             </button>
                           ) : (
                             <button
-                              onClick={() => archiveEmails([email.id])}
+                              onClick={() => {
+                                archiveEmails([email.id]);
+                                toast.success(t(lang, "archivedOneToast"), {
+                                  action: { label: t(lang, "undo"), onClick: () => unarchive(email.id) },
+                                });
+                              }}
                               className="rounded-md px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
                             >
                               {t(lang, "ignore")}
