@@ -55,9 +55,12 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-[11px] text-muted-foreground sm:inline-flex">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            {t(lang, "connected")}
+          <div
+            className="hidden items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-[11px] text-muted-foreground sm:inline-flex"
+            title={label}
+          >
+            <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+            {label}
           </div>
           <div className="flex items-center gap-1 rounded-full border border-border bg-surface p-0.5 text-xs">
             <button
