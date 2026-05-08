@@ -51,8 +51,6 @@ export function HeroStatus() {
 export type DashboardView = "all" | "priority" | "replies" | "low";
 
 export function PrimaryActions({ activeView }: { activeView: DashboardView }) {
-
-export function PrimaryActions({ activeView }: { activeView: DashboardView }) {
   const { lang } = useLang();
   const s = useStats();
   const archived = useArchived();
