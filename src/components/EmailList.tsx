@@ -137,14 +137,22 @@ export function EmailList({ view = "all" }: { view?: DashboardView }) {
                           </button>
                           {isArchived ? (
                             <button
-                              onClick={() => unarchive(email.id)}
+                              onClick={() => {
+                                unarchive(email.id);
+                                toast(t(lang, "restoredToast"));
+                              }}
                               className="rounded-md px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
                             >
                               {t(lang, "restore")}
                             </button>
                           ) : (
                             <button
-                              onClick={() => archiveEmails([email.id])}
+                              onClick={() => {
+                                archiveEmails([email.id]);
+                                toast.success(t(lang, "archivedOneToast"), {
+                                  action: { label: t(lang, "undo"), onClick: () => unarchive(email.id) },
+                                });
+                              }}
                               className="rounded-md px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
                             >
                               {t(lang, "ignore")}
