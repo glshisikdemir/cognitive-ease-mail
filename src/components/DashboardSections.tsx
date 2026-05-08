@@ -46,10 +46,9 @@ export function HeroStatus() {
   );
 }
 
-export function PrimaryActions() {
-  const { lang } = useLang();
-  const actions = [
 export type DashboardView = "all" | "priority" | "replies" | "low";
+
+export function PrimaryActions({ activeView }: { activeView: DashboardView }) {
 
 export function PrimaryActions({ activeView }: { activeView: DashboardView }) {
   const { lang } = useLang();
