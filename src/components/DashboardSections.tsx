@@ -61,23 +61,28 @@ export function PrimaryActions({ activeView }: { activeView: DashboardView }) {
     })
     .map((e) => e.id);
 
-  const actions = [
-    { key: "reviewPriority" as const, view: "priority" as DashboardView, count: s.high, primary: true },
-    { key: "seeReplies" as const, view: "replies" as DashboardView, count: s.drafts, primary: false },
-    { key: "archiveLow" as const, view: "low" as DashboardView, count: lowIds.length, primary: false, onClick: () => archiveEmails(lowIds) },
+  type Action =
+    | { key: "reviewPriority"; to: "/priority"; count: number; primary: boolean }
+    | { key: "seeReplies" | "archiveLow"; to: "/"; view: DashboardView; count: number; primary: boolean; onClick?: () => void };
+
+  const actions: Action[] = [
+    { key: "reviewPriority", to: "/priority", count: s.high, primary: true },
+    { key: "seeReplies", to: "/", view: "replies", count: s.drafts, primary: false },
+    { key: "archiveLow", to: "/", view: "low", count: lowIds.length, primary: false, onClick: () => archiveEmails(lowIds) },
   ];
 
   return (
     <section className="grid gap-3 sm:grid-cols-3">
       {actions.map((a) => {
-        const isActive = activeView === a.view;
+        const isActive = a.to === "/" && activeView === a.view;
+        const linkProps =
+          a.to === "/priority"
+            ? { to: "/priority" as const }
+            : { to: "/" as const, search: { view: a.view }, hash: "emails", onClick: a.onClick };
         return (
           <Link
             key={a.key}
-            to="/"
-            search={{ view: a.view }}
-            onClick={a.onClick}
-            hash="emails"
+            {...linkProps}
             className={`group rounded-xl border px-5 py-4 text-left text-sm font-medium transition-colors ${
               a.primary
                 ? "border-transparent bg-primary text-primary-foreground hover:bg-primary/90"
