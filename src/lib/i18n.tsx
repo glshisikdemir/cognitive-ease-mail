@@ -82,7 +82,7 @@ const dict: Dict = {
   load: { en: "Load", tr: "Yük" },
   loadLow: { en: "Low load", tr: "Düşük yük" },
   loadMedium: { en: "Medium load", tr: "Orta yük" },
-  loadHigh: { en: "Yüksek yük".replace("Y", "H") as unknown as string === "High load" ? "High load" : "High load", tr: "Yüksek yük" },
+  loadHigh: { en: "High load", tr: "Yüksek yük" },
   prUrgent: { en: "Urgent", tr: "Acil" },
   prNormal: { en: "Normal", tr: "Normal" },
   prIgnore: { en: "Ignore", tr: "Yok say" },
