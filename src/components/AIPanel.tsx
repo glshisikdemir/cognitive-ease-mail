@@ -17,15 +17,6 @@ export function AIPanel({ email }: { email: Email }) {
   const [draft, setDraft] = useState(stored.replyDraft ?? "");
   const [editing, setEditing] = useState(false);
 
-export function AIPanel({ email }: { email: Email }) {
-  const { lang } = useLang();
-  const fn = useServerFn(analyzeEmail);
-  const [analysis, setAnalysis] = useState<EmailAnalysis | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [draft, setDraft] = useState("");
-  const [editing, setEditing] = useState(false);
-
   const run = async (regenerate = false) => {
     setLoading(true);
     setError(null);
@@ -34,7 +25,10 @@ export function AIPanel({ email }: { email: Email }) {
         data: { sender: email.sender, subject: email.subject, body: email.body, regenerate },
       });
       setAnalysis(result);
-      setDraft(result.replyDraft);
+      if (!stored.replyDraft || regenerate) {
+        setDraft(result.replyDraft);
+        setReplyDraft(email.id, result.replyDraft);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Analysis failed");
     } finally {
