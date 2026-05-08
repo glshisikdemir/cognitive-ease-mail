@@ -69,7 +69,16 @@ export function PrimaryActions({ activeView }: { activeView: DashboardView }) {
   const actions: Action[] = [
     { key: "reviewPriority", to: "/priority", count: s.high, primary: true },
     { key: "seeReplies", to: "/", view: "replies", count: s.drafts, primary: false },
-    { key: "archiveLow", to: "/", view: "low", count: lowIds.length, primary: false, onClick: () => archiveEmails(lowIds) },
+    { key: "archiveLow", to: "/", view: "low", count: lowIds.length, primary: false, onClick: () => {
+      if (lowIds.length === 0) {
+        toast(t(lang, "archiveEmpty"));
+        return;
+      }
+      archiveEmails(lowIds);
+      toast.success(t(lang, "archivedToast", { n: lowIds.length }), {
+        action: { label: t(lang, "undo"), onClick: () => lowIds.forEach((id) => unarchive(id)) },
+      });
+    } },
   ];
 
   return (
