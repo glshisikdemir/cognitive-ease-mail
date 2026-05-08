@@ -10,6 +10,8 @@ const dict: Dict = {
   inbox: { en: "Inbox", tr: "Gelen Kutusu" },
   settings: { en: "Settings", tr: "Ayarlar" },
   connected: { en: "Connected: Gmail", tr: "Bağlı: Gmail" },
+  offline: { en: "Offline", tr: "Çevrimdışı" },
+  syncing: { en: "Syncing…", tr: "Eşitleniyor…" },
 
   // Hero
   heroTitle: { en: "Your inbox is under control.", tr: "Gelen kutunuz kontrol altında." },
