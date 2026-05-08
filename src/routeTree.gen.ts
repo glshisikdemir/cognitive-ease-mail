@@ -9,9 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PriorityRouteImport } from './routes/priority'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EmailIdRouteImport } from './routes/email.$id'
 
+const PriorityRoute = PriorityRouteImport.update({
+  id: '/priority',
+  path: '/priority',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -25,32 +31,43 @@ const EmailIdRoute = EmailIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/priority': typeof PriorityRoute
   '/email/$id': typeof EmailIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/priority': typeof PriorityRoute
   '/email/$id': typeof EmailIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/priority': typeof PriorityRoute
   '/email/$id': typeof EmailIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/email/$id'
+  fullPaths: '/' | '/priority' | '/email/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/email/$id'
-  id: '__root__' | '/' | '/email/$id'
+  to: '/' | '/priority' | '/email/$id'
+  id: '__root__' | '/' | '/priority' | '/email/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PriorityRoute: typeof PriorityRoute
   EmailIdRoute: typeof EmailIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/priority': {
+      id: '/priority'
+      path: '/priority'
+      fullPath: '/priority'
+      preLoaderRoute: typeof PriorityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PriorityRoute: PriorityRoute,
   EmailIdRoute: EmailIdRoute,
 }
 export const routeTree = rootRouteImport
