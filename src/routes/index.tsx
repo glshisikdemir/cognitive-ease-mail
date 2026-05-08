@@ -1,15 +1,29 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
-import { DailyBriefing } from "@/components/DailyBriefing";
 import { EmailList } from "@/components/EmailList";
+import {
+  HeroStatus,
+  PrimaryActions,
+  CognitiveOverview,
+  AIInsight,
+  MagicMoment,
+  PositioningFooter,
+} from "@/components/DashboardSections";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ISURA — Email Cognitive Assistant" },
-      { name: "description", content: "ISURA reads your inbox so you don't have to. Cognitive load scoring, decisions, and ready-to-send replies." },
-      { property: "og:title", content: "ISURA — Email Cognitive Assistant" },
-      { property: "og:description", content: "Stop being overwhelmed by email. ISURA prioritizes, decides, and drafts." },
+      { title: "ISURA — Your inbox cognition system" },
+      {
+        name: "description",
+        content:
+          "ISURA is an AI cognitive assistant that prioritizes, decides, and drafts replies — so you can manage your attention, not your inbox.",
+      },
+      { property: "og:title", content: "ISURA — Your inbox cognition system" },
+      {
+        property: "og:description",
+        content: "Reduce email overload. ISURA scores cognitive load, surfaces what matters, and drafts replies.",
+      },
     ],
   }),
   component: Index,
@@ -19,9 +33,16 @@ function Index() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="mx-auto max-w-6xl space-y-6 px-6 py-8">
-        <DailyBriefing />
+      <main className="mx-auto max-w-6xl space-y-8 px-6 py-10">
+        <HeroStatus />
+        <PrimaryActions />
+        <div className="grid gap-6 lg:grid-cols-2">
+          <CognitiveOverview />
+          <AIInsight />
+        </div>
         <EmailList />
+        <MagicMoment />
+        <PositioningFooter />
       </main>
     </div>
   );
