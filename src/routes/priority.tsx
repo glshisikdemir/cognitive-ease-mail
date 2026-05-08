@@ -4,7 +4,8 @@ import { Header } from "@/components/Header";
 import { LoadBadge, PriorityTag } from "@/components/LoadBadge";
 import { emails as allEmails } from "@/lib/emails";
 import { quickAssess } from "@/lib/heuristics";
-import { useArchived, archiveEmails } from "@/lib/archive";
+import { useArchived, archiveEmails, unarchive } from "@/lib/archive";
+import { toast } from "sonner";
 import { useLang, t } from "@/lib/i18n";
 
 export const Route = createFileRoute("/priority")({
