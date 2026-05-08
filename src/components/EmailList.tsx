@@ -66,7 +66,13 @@ export function EmailList({ view = "all" }: { view?: DashboardView }) {
         </div>
         {view === "low" && lowVisibleIds.length > 0 && (
           <button
-            onClick={() => archiveEmails(lowVisibleIds)}
+            onClick={() => {
+              const ids = [...lowVisibleIds];
+              archiveEmails(ids);
+              toast.success(t(lang, "archivedToast", { n: ids.length }), {
+                action: { label: t(lang, "undo"), onClick: () => ids.forEach((id) => unarchive(id)) },
+              });
+            }}
             className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             {t(lang, "archiveAll")}
