@@ -1,26 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Header } from "@/components/Header";
+import { DailyBriefing } from "@/components/DailyBriefing";
+import { EmailList } from "@/components/EmailList";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "ISURA — Email Cognitive Assistant" },
+      { name: "description", content: "ISURA reads your inbox so you don't have to. Cognitive load scoring, decisions, and ready-to-send replies." },
+      { property: "og:title", content: "ISURA — Email Cognitive Assistant" },
+      { property: "og:description", content: "Stop being overwhelmed by email. ISURA prioritizes, decides, and drafts." },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
+function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="mx-auto max-w-6xl space-y-6 px-6 py-8">
+        <DailyBriefing />
+        <EmailList />
+      </main>
     </div>
   );
-}
-
-function Index() {
-  return <PlaceholderIndex />;
 }
