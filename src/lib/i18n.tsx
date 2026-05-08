@@ -27,6 +27,11 @@ const dict: Dict = {
   reviewPriority: { en: "Review priority emails", tr: "Öncelikli e-postaları incele" },
   seeReplies: { en: "See suggested replies", tr: "Hazır yanıtları gör" },
   archiveLow: { en: "Archive low-load emails", tr: "Düşük yüklü e-postaları arşivle" },
+  archivedToast: { en: "Archived {n} low-load emails.", tr: "{n} düşük yüklü e-posta arşivlendi." },
+  archivedOneToast: { en: "Archived. Inbox a little lighter.", tr: "Arşivlendi. Kutunuz biraz daha hafif." },
+  restoredToast: { en: "Restored to inbox.", tr: "Gelen kutusuna geri alındı." },
+  archiveEmpty: { en: "Nothing low-load to archive.", tr: "Arşivlenecek düşük yüklü e-posta yok." },
+  undo: { en: "Undo", tr: "Geri al" },
 
   // Priority review page
   priorityReviewLabel: { en: "Priority review", tr: "Öncelik incelemesi" },
