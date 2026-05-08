@@ -16,9 +16,12 @@ const dict: Dict = {
   // Hero
   heroTitle: { en: "Your inbox is under control.", tr: "Gelen kutunuz kontrol altında." },
   heroSubtitle: {
-    en: "ISURA analyzed your emails and reduced your cognitive load.",
-    tr: "ISURA e-postalarınızı analiz etti ve bilişsel yükünüzü azalttı.",
+    en: "ISURA has analyzed your emails and organized your attention.",
+    tr: "ISURA e-postalarınızı analiz etti ve dikkatinizi düzenledi.",
   },
+  viewAllEmails: { en: "View all emails", tr: "Tüm e-postaları gör" },
+  hiddenMinimized: { en: "Hidden / minimized", tr: "Gizli / küçültülmüş" },
+  emailPreviewTitle: { en: "Latest in your inbox", tr: "Gelen kutusundaki en yeniler" },
   emailsToday: { en: "Emails received today", tr: "Bugün gelen e-postalar" },
   highPriority: { en: "High priority", tr: "Yüksek öncelik" },
   mediumPriority: { en: "Medium priority", tr: "Orta öncelik" },
