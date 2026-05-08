@@ -55,6 +55,18 @@ const dict: Dict = {
 
   // Email list
   emailListTitle: { en: "Today's emails", tr: "Bugünün e-postaları" },
+  viewAll: { en: "All emails", tr: "Tüm e-postalar" },
+  viewPriority: { en: "Priority emails", tr: "Öncelikli e-postalar" },
+  viewReplies: { en: "Suggested replies", tr: "Hazır yanıtlar" },
+  viewLow: { en: "Low-load emails", tr: "Düşük yüklü e-postalar" },
+  tab_all: { en: "All", tr: "Tümü" },
+  tab_priority: { en: "Priority", tr: "Öncelik" },
+  tab_replies: { en: "Replies", tr: "Yanıtlar" },
+  tab_low: { en: "Low load", tr: "Düşük yük" },
+  archiveAll: { en: "Archive all", tr: "Tümünü arşivle" },
+  archived: { en: "Archived", tr: "Arşivlendi" },
+  restore: { en: "Restore", tr: "Geri al" },
+  emptyView: { en: "Nothing here. Inbox a little lighter.", tr: "Burada bir şey yok. Kutunuz biraz daha hafif." },
   view: { en: "View", tr: "Görüntüle" },
   reply: { en: "Reply", tr: "Yanıtla" },
   ignore: { en: "Ignore", tr: "Yok say" },
