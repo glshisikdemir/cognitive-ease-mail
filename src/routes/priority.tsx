@@ -143,14 +143,27 @@ function PriorityPage() {
                   </Link>
                   <button
                     onClick={() => {
-                      archiveEmails([email.id]);
+                      setStatus(email.id, "archived");
                       toast.success(t(lang, "archivedOneToast"), {
-                        action: { label: t(lang, "undo"), onClick: () => unarchive(email.id) },
+                        action: { label: t(lang, "undo"), onClick: () => resetEmail(email.id) },
                       });
                     }}
-                    className="ml-auto rounded-md px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                    className="ml-auto inline-flex items-center gap-1 rounded-md border border-border bg-surface px-2.5 py-1.5 text-xs text-foreground transition-colors hover:bg-surface-muted"
                   >
+                    <ArchiveIcon className="h-3 w-3" />
                     {t(lang, "archive")}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setStatus(email.id, "ignored");
+                      toast.success(t(lang, "ignoredToast"), {
+                        action: { label: t(lang, "undo"), onClick: () => resetEmail(email.id) },
+                      });
+                    }}
+                    className="inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <EyeOff className="h-3 w-3" />
+                    {t(lang, "ignore")}
                   </button>
                 </div>
               </li>
