@@ -1,10 +1,10 @@
 import { type ReactNode } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { Header } from "@/components/Header";
 import { ProductFooter } from "@/components/ProductFooter";
 import { PilotNotice } from "@/components/PilotNotice";
-import { useLang, t, type Lang } from "@/lib/i18n";
+import { useLang, t } from "@/lib/i18n";
 
 export type LegalSection = {
   id?: string;
