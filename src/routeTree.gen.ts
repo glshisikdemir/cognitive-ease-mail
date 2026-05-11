@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrustRouteImport } from './routes/trust'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PriorityRouteImport } from './routes/priority'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
@@ -20,6 +21,11 @@ import { Route as EmailIdRouteImport } from './routes/email.$id'
 const TrustRoute = TrustRouteImport.update({
   id: '/trust',
   path: '/trust',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PriorityRoute = PriorityRouteImport.update({
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/priority': typeof PriorityRoute
+  '/privacy': typeof PrivacyRoute
   '/trust': typeof TrustRoute
   '/email/$id': typeof EmailIdRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/priority': typeof PriorityRoute
+  '/privacy': typeof PrivacyRoute
   '/trust': typeof TrustRoute
   '/email/$id': typeof EmailIdRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/priority': typeof PriorityRoute
+  '/privacy': typeof PrivacyRoute
   '/trust': typeof TrustRoute
   '/email/$id': typeof EmailIdRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/priority'
+    | '/privacy'
     | '/trust'
     | '/email/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/priority'
+    | '/privacy'
     | '/trust'
     | '/email/$id'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/priority'
+    | '/privacy'
     | '/trust'
     | '/email/$id'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
   PriorityRoute: typeof PriorityRoute
+  PrivacyRoute: typeof PrivacyRoute
   TrustRoute: typeof TrustRoute
   EmailIdRoute: typeof EmailIdRoute
 }
@@ -128,6 +141,13 @@ declare module '@tanstack/react-router' {
       path: '/trust'
       fullPath: '/trust'
       preLoaderRoute: typeof TrustRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/priority': {
@@ -181,9 +201,20 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   PriorityRoute: PriorityRoute,
+  PrivacyRoute: PrivacyRoute,
   TrustRoute: TrustRoute,
   EmailIdRoute: EmailIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
