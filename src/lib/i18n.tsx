@@ -422,6 +422,84 @@ const dict: Dict = {
   emptyLowBody: { en: "No low-value noise to filter today.", tr: "Bugün süzülecek düşük değerli gürültü yok." },
   emptyResolvedTitle: { en: "Nothing resolved yet.", tr: "Henüz çözülen bir şey yok." },
   emptyResolvedBody: { en: "Items you file, reply to, or quiet in this session will land here.", tr: "Bu oturumda arşivlediğiniz, yanıtladığınız veya sessizleştirdikleriniz burada görünür." },
+
+  // Pilot notice (Part 1)
+  pilotBadge: { en: "Private pilot", tr: "Özel pilot" },
+  pilotNoticeBody: {
+    en: "ISURA is currently in private pilot. Features and system behavior may evolve during testing.",
+    tr: "ISURA şu anda özel pilot sürecindedir. Özellikler ve sistem davranışları test sürecinde değişebilir.",
+  },
+  pilotLearnMore: { en: "Read the pilot status →", tr: "Pilot durumunu okuyun →" },
+
+  // Shared legal copy
+  legalEffective: { en: "Effective", tr: "Yürürlük tarihi" },
+  legalContactTitle: { en: "Questions or requests?", tr: "Sorularınız veya talepleriniz mi var?" },
+  legalContactBody: {
+    en: "Reach our privacy and trust team directly. We respond within five working days.",
+    tr: "Gizlilik ve güven ekibimize doğrudan ulaşın. Beş iş günü içinde yanıt veriyoruz.",
+  },
+
+  // Privacy
+  privacyEyebrow: { en: "Privacy policy", tr: "Gizlilik politikası" },
+  privacyTitle: { en: "Your inbox stays yours.", tr: "Gelen kutunuz sizin kalır." },
+  privacySubtitle: {
+    en: "How ISURA collects, processes, and protects the data you connect — written in plain language, not legal templates.",
+    tr: "ISURA'nın bağladığınız verileri nasıl topladığı, işlediği ve koruduğu — şablon değil, sade dille.",
+  },
+
+  // Terms
+  termsEyebrow: { en: "Terms of service", tr: "Hizmet şartları" },
+  termsTitle: { en: "A calm contract.", tr: "Sakin bir sözleşme." },
+  termsSubtitle: {
+    en: "What ISURA does, what it does not, and the responsibilities each side carries during the private pilot.",
+    tr: "ISURA'nın ne yaptığı, ne yapmadığı ve özel pilot süresince her iki tarafın taşıdığı sorumluluklar.",
+  },
+
+  // Cookies
+  cookiesEyebrow: { en: "Cookie policy", tr: "Çerez politikası" },
+  cookiesTitle: { en: "A small, considered set of cookies.", tr: "Az ve özenle seçilmiş çerezler." },
+  cookiesSubtitle: {
+    en: "We use only the cookies needed to keep your session safe, your preferences remembered, and the product measurably reliable.",
+    tr: "Yalnızca oturumunuzu güvende tutmak, tercihlerinizi hatırlamak ve ürünün ölçülebilir biçimde güvenilir kalmasını sağlamak için çerez kullanırız.",
+  },
+
+  // Security
+  securityEyebrow: { en: "Security", tr: "Güvenlik" },
+  securityTitle: { en: "Built for the most cautious operator.", tr: "En temkinli kullanıcı için tasarlandı." },
+  securitySubtitle: {
+    en: "OAuth-based authentication, encrypted tokens, read-only analysis — and a clear path to disconnect at any time.",
+    tr: "OAuth tabanlı kimlik doğrulama, şifreli token'lar, yalnızca okuma analizi — ve istediğiniz an bağlantıyı kesme yolu.",
+  },
+
+  // AI Transparency
+  aiEyebrow: { en: "AI transparency", tr: "AI şeffaflığı" },
+  aiTitle: { en: "Suggestions, never actions.", tr: "Öneriler, eylemler değil." },
+  aiSubtitle: {
+    en: "What ISURA's AI analyzes, what it never does, and how every operational suggestion reaches you.",
+    tr: "ISURA'nın AI'ının neyi analiz ettiği, asla neyi yapmadığı ve her operasyonel önerinin size nasıl ulaştığı.",
+  },
+  aiNeverActs: {
+    en: "ISURA never takes action without user approval.",
+    tr: "ISURA, kullanıcı onayı olmadan asla eylemde bulunmaz.",
+  },
+
+  // Pilot status page
+  pilotPageEyebrow: { en: "Pilot status", tr: "Pilot durumu" },
+  pilotPageTitle: { en: "Where ISURA is right now.", tr: "ISURA şu an nerede." },
+  pilotPageSubtitle: {
+    en: "ISURA is in private pilot with a small group of operators. This page describes what that means for you, today.",
+    tr: "ISURA, az sayıda operatörle özel pilot sürecindedir. Bu sayfa bugün sizin için ne anlama geldiğini açıklar.",
+  },
+
+  // Footer additions
+  footerLinkSecurity: { en: "Security", tr: "Güvenlik" },
+  footerLinkCookies: { en: "Cookies", tr: "Çerezler" },
+  footerLinkAI: { en: "AI transparency", tr: "AI şeffaflığı" },
+  footerLinkPilot: { en: "Pilot status", tr: "Pilot durumu" },
+  footerPilotLine: {
+    en: "ISURA is in private pilot. Behavior may evolve during testing.",
+    tr: "ISURA özel pilot sürecindedir. Davranışlar test sürecinde değişebilir.",
+  },
 };
 
 export function t(lang: Lang, key: keyof typeof dict | string, vars?: Record<string, string | number>): string {
