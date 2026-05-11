@@ -104,19 +104,3 @@ export function LegalPage({
   );
 }
 
-export function makeLegalRoute(path: string, head: { title: string; description: string }, render: () => ReactNode) {
-  return createFileRoute(path as never)({
-    head: () => ({
-      meta: [
-        { title: `${head.title} — ISURA` },
-        { name: "description", content: head.description },
-        { property: "og:title", content: `${head.title} — ISURA` },
-        { property: "og:description", content: head.description },
-      ],
-    }),
-    component: render,
-  });
-}
-
-// Re-export to avoid duplicate Lang imports in route files
-export type { Lang };
