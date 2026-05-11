@@ -14,6 +14,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SecurityRouteImport } from './routes/security'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PriorityRouteImport } from './routes/priority'
+import { Route as PilotStatusRouteImport } from './routes/pilot-status'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CookiesRouteImport } from './routes/cookies'
@@ -45,6 +46,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const PriorityRoute = PriorityRouteImport.update({
   id: '/priority',
   path: '/priority',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PilotStatusRoute = PilotStatusRouteImport.update({
+  id: '/pilot-status',
+  path: '/pilot-status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/cookies': typeof CookiesRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/pilot-status': typeof PilotStatusRoute
   '/priority': typeof PriorityRoute
   '/privacy': typeof PrivacyRoute
   '/security': typeof SecurityRoute
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/cookies': typeof CookiesRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/pilot-status': typeof PilotStatusRoute
   '/priority': typeof PriorityRoute
   '/privacy': typeof PrivacyRoute
   '/security': typeof SecurityRoute
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/cookies': typeof CookiesRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/pilot-status': typeof PilotStatusRoute
   '/priority': typeof PriorityRoute
   '/privacy': typeof PrivacyRoute
   '/security': typeof SecurityRoute
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/login'
     | '/onboarding'
+    | '/pilot-status'
     | '/priority'
     | '/privacy'
     | '/security'
@@ -149,6 +159,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/login'
     | '/onboarding'
+    | '/pilot-status'
     | '/priority'
     | '/privacy'
     | '/security'
@@ -163,6 +174,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/login'
     | '/onboarding'
+    | '/pilot-status'
     | '/priority'
     | '/privacy'
     | '/security'
@@ -178,6 +190,7 @@ export interface RootRouteChildren {
   CookiesRoute: typeof CookiesRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
+  PilotStatusRoute: typeof PilotStatusRoute
   PriorityRoute: typeof PriorityRoute
   PrivacyRoute: typeof PrivacyRoute
   SecurityRoute: typeof SecurityRoute
@@ -221,6 +234,13 @@ declare module '@tanstack/react-router' {
       path: '/priority'
       fullPath: '/priority'
       preLoaderRoute: typeof PriorityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pilot-status': {
+      id: '/pilot-status'
+      path: '/pilot-status'
+      fullPath: '/pilot-status'
+      preLoaderRoute: typeof PilotStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -282,6 +302,7 @@ const rootRouteChildren: RootRouteChildren = {
   CookiesRoute: CookiesRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
+  PilotStatusRoute: PilotStatusRoute,
   PriorityRoute: PriorityRoute,
   PrivacyRoute: PrivacyRoute,
   SecurityRoute: SecurityRoute,
