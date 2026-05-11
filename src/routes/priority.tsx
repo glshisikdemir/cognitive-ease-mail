@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Archive as ArchiveIcon, EyeOff } from "lucide-react";
+import { ArrowLeft, ArrowRight, Archive as ArchiveIcon, EyeOff, ShieldCheck } from "lucide-react";
 import { Header } from "@/components/Header";
-import { LoadBadge, PriorityTag } from "@/components/LoadBadge";
+import { CategoryBadge, ConfidenceTag, ReasonList } from "@/components/LoadBadge";
 import { emails as allEmails } from "@/lib/emails";
-import { quickAssess, type Load, type Priority } from "@/lib/heuristics";
+import { quickAssess, type Assessment } from "@/lib/heuristics";
 import { useEmailStore, setStatus, resetEmail } from "@/lib/email-store";
 import { toast } from "sonner";
 import { useLang, t } from "@/lib/i18n";
@@ -12,26 +12,26 @@ import type { Email } from "@/lib/emails";
 export const Route = createFileRoute("/priority")({
   head: () => ({
     meta: [
-      { title: "Priority review — ISURA" },
+      { title: "Priority queue — ISURA" },
       {
         name: "description",
-        content: "Focus only on the emails that demand your cognitive effort today.",
+        content: "Operational decisions and risks that genuinely require your attention.",
       },
-      { property: "og:title", content: "Priority review — ISURA" },
+      { property: "og:title", content: "Priority queue — ISURA" },
       {
         property: "og:description",
-        content: "A calm, focused workspace to clear what truly matters.",
+        content: "ISURA surfaces only what carries operational consequence.",
       },
     ],
   }),
   component: PriorityPage,
 });
 
-type Assessed = { email: Email; load: Load; priority: Priority };
+type Assessed = { email: Email; assessment: Assessment };
 
 function aiSummary(email: Email) {
   const first = email.body.split("\n").map((l) => l.trim()).find((l) => l.length > 20) ?? email.preview;
-  return first.length > 140 ? first.slice(0, 140).trimEnd() + "…" : first;
+  return first.length > 160 ? first.slice(0, 160).trimEnd() + "…" : first;
 }
 
 function PriorityPage() {
@@ -40,15 +40,17 @@ function PriorityPage() {
 
   const assessed: Assessed[] = allEmails
     .filter((e) => (store[e.id]?.status ?? "active") === "active")
-    .map((e) => ({ email: e, ...quickAssess(e) }));
+    .map((e) => ({ email: e, assessment: quickAssess(e) }));
 
-  const high = assessed.filter((a) => a.priority === "urgent" || a.load === "high");
-  const medium = assessed.filter(
-    (a) => !(a.priority === "urgent" || a.load === "high") && a.load === "medium" && a.priority !== "ignore",
-  );
-  const low = assessed.filter((a) => a.priority === "ignore" || a.load === "low").length;
+  const decisions = assessed.filter((a) => a.assessment.category === "decision");
+  const risks = assessed.filter((a) => a.assessment.category === "risk");
+  const waiting = assessed.filter((a) => a.assessment.category === "waiting");
+  const quieted = assessed.filter(
+    (a) => a.assessment.category === "low_value" || a.assessment.category === "safe_ignore",
+  ).length;
 
-  const visible = [...high, ...medium];
+  // Risks first — they have downstream consequences. Then decisions, then waiting.
+  const visible = [...risks, ...decisions, ...waiting];
 
   return (
     <div className="min-h-screen bg-background">
@@ -77,39 +79,27 @@ function PriorityPage() {
           </p>
         </header>
 
-        {/* Top summary bar */}
-        <section className="mt-8 grid grid-cols-3 gap-3">
-          <SummaryCard
-            label={t(lang, "highPriority")}
-            value={high.length}
-            tone="high"
-          />
-          <SummaryCard
-            label={t(lang, "mediumPriority")}
-            value={medium.length}
-            tone="medium"
-          />
-          <SummaryCard
-            label={t(lang, "hiddenLow")}
-            value={low}
-            tone="low"
-            muted
-          />
+        {/* Operational summary */}
+        <section className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <SummaryCard label={t(lang, "cat_risk")} value={risks.length} tone="risk" />
+          <SummaryCard label={t(lang, "cat_decision")} value={decisions.length} tone="decision" />
+          <SummaryCard label={t(lang, "cat_waiting")} value={waiting.length} tone="waiting" />
+          <SummaryCard label={t(lang, "hiddenMinimized")} value={quieted} tone="quiet" muted />
         </section>
 
         {visible.length > 0 && (
           <ol className="mt-8 space-y-3">
-            {visible.map(({ email, load, priority: p }, i) => (
+            {visible.map(({ email, assessment }, i) => (
               <li
                 key={email.id}
                 className="rounded-2xl border border-border/70 bg-surface px-6 py-5 transition-colors hover:border-border-strong"
               >
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                   <span className="font-display text-base text-foreground tabular-nums">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <PriorityTag priority={p} />
-                  <LoadBadge load={load} />
+                  <CategoryBadge category={assessment.category} />
+                  <ConfidenceTag confidence={assessment.confidence} />
                   <span className="ml-auto truncate">{email.sender}</span>
                 </div>
 
@@ -121,17 +111,24 @@ function PriorityPage() {
                   {email.subject}
                 </Link>
 
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {aiSummary(email)}
-                </p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{aiSummary(email)}</p>
 
-                <div className="mt-4 flex items-center gap-2">
+                {assessment.reasons.length > 0 && (
+                  <div className="mt-4 rounded-lg border border-border/70 bg-background/60 px-4 py-3">
+                    <div className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                      {t(lang, "whyThisMatters")}
+                    </div>
+                    <ReasonList reasons={assessment.reasons} />
+                  </div>
+                )}
+
+                <div className="mt-4 flex flex-wrap items-center gap-2">
                   <Link
                     to="/email/$id"
                     params={{ id: email.id }}
                     className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                   >
-                    {t(lang, "view")}
+                    {t(lang, "openAndDecide")}
                     <ArrowRight className="h-3 w-3" />
                   </Link>
                   <Link
@@ -183,6 +180,11 @@ function PriorityPage() {
             </Link>
           </div>
         )}
+
+        <p className="mt-8 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          {t(lang, "trustNoAutoSend")}
+        </p>
       </main>
     </div>
   );
@@ -196,23 +198,22 @@ function SummaryCard({
 }: {
   label: string;
   value: number;
-  tone: "high" | "medium" | "low";
+  tone: "risk" | "decision" | "waiting" | "quiet";
   muted?: boolean;
 }) {
   const dot = {
-    high: "bg-priority-urgent",
-    medium: "bg-load-medium",
-    low: "bg-muted-foreground/40",
+    risk: "bg-priority-urgent",
+    decision: "bg-load-high-foreground/70",
+    waiting: "bg-load-medium-foreground/70",
+    quiet: "bg-muted-foreground/40",
   }[tone];
   return (
     <div
       className={`rounded-xl border px-4 py-4 ${
-        muted
-          ? "border-dashed border-border/60 bg-transparent"
-          : "border-border/70 bg-surface"
+        muted ? "border-dashed border-border/60 bg-transparent" : "border-border/70 bg-surface"
       }`}
     >
-      <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+      <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
         <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
         {label}
       </div>
