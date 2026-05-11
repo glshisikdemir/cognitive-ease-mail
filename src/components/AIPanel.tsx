@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { analyzeEmail, type EmailAnalysis } from "@/lib/analyze.functions";
 import { LoadBadge } from "./LoadBadge";
+import { TrustChip } from "./TrustStrip";
 import { useLang, t } from "@/lib/i18n";
 import { useEmailState, setReplyDraft, setStatus } from "@/lib/email-store";
 import type { Email } from "@/lib/emails";
@@ -167,9 +168,12 @@ export function AIPanel({ email }: { email: Email }) {
               {stored.status === "replied" ? t(lang, "replied") : t(lang, "approveSend")}
             </button>
           </div>
-          <p className="pt-2 text-[11px] text-muted-foreground">
-            {t(lang, "trustNoAutoSend")}
-          </p>
+          <div className="flex flex-wrap items-center gap-2 pt-2">
+            <TrustChip variant="approval" />
+            <p className="text-[11px] text-muted-foreground">
+              {t(lang, "trustPersistentNoSend")}
+            </p>
+          </div>
         </Section>
       </div>
     </div>

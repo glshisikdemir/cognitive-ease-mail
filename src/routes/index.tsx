@@ -26,6 +26,7 @@ import {
 } from "@/lib/email-store";
 import { CategoryBadge, ConfidenceTag, ReasonList } from "@/components/LoadBadge";
 import { DailyBriefing } from "@/components/DailyBriefing";
+import { TrustStrip } from "@/components/TrustStrip";
 
 const tabSchema = z.enum(["active", "replied", "archived", "ignored"]);
 type Tab = z.infer<typeof tabSchema>;
@@ -307,6 +308,8 @@ function Index() {
             </ul>
           )}
         </section>
+
+        <TrustStrip />
 
         <p className="text-center text-xs text-muted-foreground">{t(lang, "positioning")}</p>
       </main>

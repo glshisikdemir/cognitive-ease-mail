@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Settings } from "lucide-react";
+import { Settings, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLang, t } from "@/lib/i18n";
 
@@ -80,6 +80,15 @@ export function Header() {
               TR
             </button>
           </div>
+          <Link
+            to="/trust"
+            title={t(lang, "trustPage")}
+            aria-label={t(lang, "trustPage")}
+            className="hidden h-8 items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
+          >
+            <ShieldCheck className="h-3 w-3" />
+            {t(lang, "trustPage")}
+          </Link>
           <button
             aria-label={t(lang, "settings")}
             className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-surface text-muted-foreground transition-colors hover:text-foreground"

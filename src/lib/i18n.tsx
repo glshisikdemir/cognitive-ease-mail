@@ -5,6 +5,75 @@ export type Lang = "en" | "tr";
 type Dict = Record<string, { en: string; tr: string }>;
 
 const dict: Dict = {
+  // Trust & security
+  trustPage: { en: "Trust & security", tr: "Güven ve güvenlik" },
+  trustHeroLabel: { en: "Trust architecture", tr: "Güven mimarisi" },
+  trustHeroTitle: {
+    en: "You stay in control. ISURA only assists.",
+    tr: "Kontrol sizde kalır. ISURA yalnızca yardımcı olur.",
+  },
+  trustHeroSub: {
+    en: "Every line of access, every action, and every reply is bound to your explicit approval.",
+    tr: "Her erişim, her eylem ve her yanıt yalnızca açık onayınıza bağlıdır.",
+  },
+  trustPillarApproval: { en: "Human approval required", tr: "İnsan onayı gerekli" },
+  trustPillarReadOnly: { en: "Read-only mode available", tr: "Yalnızca okuma modu mevcuttur" },
+  trustPillarDisconnect: { en: "Disconnect anytime", tr: "İstediğiniz zaman bağlantıyı kesin" },
+  trustPillarNoTraining: { en: "No training on your data", tr: "Verileriniz eğitim için kullanılmaz" },
+  trustPersistentNoSend: {
+    en: "ISURA never sends emails without your approval.",
+    tr: "ISURA, onayınız olmadan asla e-posta göndermez.",
+  },
+  trustPersistentControl: { en: "You stay in control.", tr: "Kontrol sizde kalır." },
+  trustPersistentReadOnly: {
+    en: "Read-only analysis mode available.",
+    tr: "Yalnızca okuma modu mevcuttur.",
+  },
+  trustPersistentDisconnect: { en: "Disconnect anytime.", tr: "İstediğiniz zaman bağlantıyı kesin." },
+  trustS1Title: { en: "How ISURA accesses your email", tr: "ISURA e-postanıza nasıl erişir" },
+  trustS1Body: {
+    en: "ISURA connects through your provider's official OAuth flow. We never see, store, or request your password. The connection is scoped to the minimum permissions needed for cognitive analysis.",
+    tr: "ISURA, sağlayıcınızın resmi OAuth akışı üzerinden bağlanır. Şifrenizi asla göremez, saklayamaz veya istemeyiz. Bağlantı, bilişsel analiz için gereken en az izinle sınırlıdır.",
+  },
+  trustS2Title: { en: "OAuth, in plain language", tr: "Sade dille OAuth" },
+  trustS2Body: {
+    en: "OAuth is the same standard your bank, calendar, and operating system use. You authorize ISURA on Google's or Microsoft's own page — your credentials never reach us.",
+    tr: "OAuth; bankanızın, takviminizin ve işletim sisteminizin kullandığı aynı standarttır. Yetkiyi Google veya Microsoft'un kendi sayfasında verirsiniz — kimlik bilgileriniz bize asla ulaşmaz.",
+  },
+  trustS3Title: { en: "Encryption in transit and at rest", tr: "İletim ve depolamada şifreleme" },
+  trustS3Body: {
+    en: "All traffic is encrypted with TLS 1.3. Stored analysis artifacts are encrypted at rest using AES-256. Access tokens are isolated per workspace and rotated automatically.",
+    tr: "Tüm trafik TLS 1.3 ile şifrelenir. Saklanan analiz verileri AES-256 ile beklemede şifrelenir. Erişim token'ları çalışma alanı bazında izole edilir ve otomatik döndürülür.",
+  },
+  trustS4Title: { en: "Human approval architecture", tr: "İnsan onayı mimarisi" },
+  trustS4Body: {
+    en: "ISURA prepares drafts. You approve them. Nothing is ever sent on your behalf without an explicit click. Replies are queued, never auto-fired — even on routine threads.",
+    tr: "ISURA taslakları hazırlar. Siz onaylarsınız. Açık bir tıklama olmadan adınıza hiçbir şey gönderilmez. Yanıtlar kuyruğa alınır; rutin yazışmalarda bile otomatik gönderilmez.",
+  },
+  trustS5Title: { en: "Data privacy", tr: "Veri gizliliği" },
+  trustS5Body: {
+    en: "Your messages remain yours. ISURA processes content only to serve the live request. We do not sell, share, or expose your data to third parties beyond the AI inference provider bound by strict zero-retention agreements.",
+    tr: "Mesajlarınız size aittir. ISURA içeriği yalnızca anlık isteğinize hizmet etmek için işler. Verilerinizi üçüncü taraflarla satmaz, paylaşmaz veya ifşa etmez; AI sağlayıcıları sıkı sıfır-saklama anlaşmalarıyla bağlıdır.",
+  },
+  trustS6Title: { en: "No training on your private email", tr: "Özel e-postanızla eğitim yapılmaz" },
+  trustS6Body: {
+    en: "Your emails are never used to train any model — ours, our providers', or anyone else's. This is contractual, not optional.",
+    tr: "E-postalarınız hiçbir modeli eğitmek için kullanılmaz — ne bizim ne de sağlayıcılarımızın. Bu sözleşmeseldir, isteğe bağlı değildir.",
+  },
+  trustS7Title: { en: "Permission management", tr: "İzin yönetimi" },
+  trustS7Body: {
+    en: "Switch to read-only mode at any time. Pause analysis. Disconnect your account in one click — your tokens are revoked immediately and stored artifacts are purged within 24 hours.",
+    tr: "İstediğiniz zaman yalnızca okuma moduna geçin. Analizi duraklatın. Hesabınızı tek tıkla kesin — token'larınız anında iptal edilir ve saklanan veriler 24 saat içinde silinir.",
+  },
+  trustClosingTitle: { en: "Calm, transparent, controlled.", tr: "Sakin, şeffaf, kontrollü." },
+  trustClosingBody: {
+    en: "ISURA is built so the most cautious operator can use it without hesitation.",
+    tr: "ISURA, en temkinli kullanıcının bile tereddütsüz kullanabileceği biçimde tasarlandı.",
+  },
+  trustViewSecurity: { en: "View trust & security", tr: "Güven ve güvenliği görüntüle" },
+  trustModeReadOnly: { en: "Read-only mode", tr: "Yalnızca okuma modu" },
+  trustModeApproval: { en: "Approval required", tr: "Onay gerekli" },
+
   // Daily briefing
   dailyBriefing: { en: "Daily operational briefing", tr: "Günlük operasyonel brifing" },
   greet_morning: { en: "Good morning.", tr: "Günaydın." },

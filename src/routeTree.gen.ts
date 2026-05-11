@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrustRouteImport } from './routes/trust'
 import { Route as PriorityRouteImport } from './routes/priority'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LandingRouteImport } from './routes/landing'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EmailIdRouteImport } from './routes/email.$id'
 
+const TrustRoute = TrustRouteImport.update({
+  id: '/trust',
+  path: '/trust',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PriorityRoute = PriorityRouteImport.update({
   id: '/priority',
   path: '/priority',
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
   '/priority': typeof PriorityRoute
+  '/trust': typeof TrustRoute
   '/email/$id': typeof EmailIdRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
   '/priority': typeof PriorityRoute
+  '/trust': typeof TrustRoute
   '/email/$id': typeof EmailIdRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,22 @@ export interface FileRoutesById {
   '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
   '/priority': typeof PriorityRoute
+  '/trust': typeof TrustRoute
   '/email/$id': typeof EmailIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/landing' | '/login' | '/priority' | '/email/$id'
+  fullPaths: '/' | '/landing' | '/login' | '/priority' | '/trust' | '/email/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/landing' | '/login' | '/priority' | '/email/$id'
-  id: '__root__' | '/' | '/landing' | '/login' | '/priority' | '/email/$id'
+  to: '/' | '/landing' | '/login' | '/priority' | '/trust' | '/email/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/landing'
+    | '/login'
+    | '/priority'
+    | '/trust'
+    | '/email/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,11 +92,19 @@ export interface RootRouteChildren {
   LandingRoute: typeof LandingRoute
   LoginRoute: typeof LoginRoute
   PriorityRoute: typeof PriorityRoute
+  TrustRoute: typeof TrustRoute
   EmailIdRoute: typeof EmailIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trust': {
+      id: '/trust'
+      path: '/trust'
+      fullPath: '/trust'
+      preLoaderRoute: typeof TrustRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/priority': {
       id: '/priority'
       path: '/priority'
@@ -124,6 +148,7 @@ const rootRouteChildren: RootRouteChildren = {
   LandingRoute: LandingRoute,
   LoginRoute: LoginRoute,
   PriorityRoute: PriorityRoute,
+  TrustRoute: TrustRoute,
   EmailIdRoute: EmailIdRoute,
 }
 export const routeTree = rootRouteImport
