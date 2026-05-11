@@ -5,6 +5,64 @@ export type Lang = "en" | "tr";
 type Dict = Record<string, { en: string; tr: string }>;
 
 const dict: Dict = {
+  // Operational sections
+  workspaceTitle: { en: "Operational workspace", tr: "Operasyonel çalışma alanı" },
+  workspaceSubtitle: {
+    en: "Organized by what each thread asks of you — not by folders.",
+    tr: "Klasörlere göre değil, her konunun sizden istediğine göre düzenlendi.",
+  },
+  sec_decision: { en: "Requires your decision", tr: "Kararınızı bekliyor" },
+  sec_decision_sub: {
+    en: "Open items where the next move is yours.",
+    tr: "Bir sonraki adım sizde olan açık konular.",
+  },
+  sec_risk: { en: "Operational risks", tr: "Operasyonel riskler" },
+  sec_risk_sub: {
+    en: "Threads with downstream consequences if left untouched.",
+    tr: "Ele alınmazsa sonraki sonuçları etkileyecek konular.",
+  },
+  sec_waiting: { en: "Waiting on others", tr: "Başkalarını bekliyor" },
+  sec_waiting_sub: {
+    en: "Tracked so you don't have to remember.",
+    tr: "Hatırlamak zorunda kalmayın diye takip ediliyor.",
+  },
+  sec_followup: { en: "Follow-up risks", tr: "Takip riskleri" },
+  sec_followup_sub: {
+    en: "External responses overdue. A nudge may be in order.",
+    tr: "Dış yanıtlar gecikti. Hatırlatma uygun olabilir.",
+  },
+  sec_review: { en: "Ready to review", tr: "İncelemeye hazır" },
+  sec_review_sub: {
+    en: "Drafts ISURA prepared. Approve and send when you choose.",
+    tr: "ISURA'nın hazırladığı taslaklar. Hazır olduğunuzda onaylayın.",
+  },
+  sec_low: { en: "Low cognitive value", tr: "Düşük bilişsel değer" },
+  sec_low_sub: {
+    en: "Routine and automated noise. Quieted by default.",
+    tr: "Rutin ve otomatik gürültü. Varsayılan olarak sessizleştirildi.",
+  },
+  sec_resolved: { en: "Resolved today", tr: "Bugün çözüldü" },
+  sec_resolved_sub: {
+    en: "Filed, replied, or quieted in this session.",
+    tr: "Bu oturumda arşivlenen, yanıtlanan veya sessizleştirilen.",
+  },
+  sec_empty: { en: "Nothing here right now.", tr: "Şu anda burada bir şey yok." },
+  sec_collapse: { en: "Collapse", tr: "Daralt" },
+  sec_expand: { en: "Expand", tr: "Genişlet" },
+  sugg_label: { en: "Suggested next action", tr: "Önerilen sonraki adım" },
+  urg_label: { en: "Why now", tr: "Neden şimdi" },
+  sugg_decide_today: { en: "Open and decide before end of day.", tr: "Açın ve gün bitmeden karar verin." },
+  sugg_review_risk: { en: "Review the risk and confirm an action.", tr: "Riski inceleyin ve bir eylem belirleyin." },
+  sugg_send_nudge: { en: "Send a brief nudge or update.", tr: "Kısa bir hatırlatma veya güncelleme gönderin." },
+  sugg_approve_draft: { en: "Approve the prepared draft.", tr: "Hazırlanan taslağı onaylayın." },
+  sugg_let_quiet: { en: "Let it stay quiet. No action needed.", tr: "Sessiz kalsın. Eylem gerekmiyor." },
+  sugg_archive: { en: "File and move on.", tr: "Arşivleyin ve devam edin." },
+  urg_today: { en: "Time-critical window today.", tr: "Bugün zaman kritik pencere." },
+  urg_consequence: { en: "Inaction has operational consequences.", tr: "Eylemsizlik operasyonel sonuçlar doğurur." },
+  urg_overdue: { en: "Response window has lapsed.", tr: "Yanıt süresi aşıldı." },
+  urg_routine: { en: "Routine — no urgency detected.", tr: "Rutin — aciliyet algılanmadı." },
+  urg_drafted: { en: "Draft ready since you opened it.", tr: "Açtığınızdan beri taslak hazır." },
+
   // Trust & security
   trustPage: { en: "Trust & security", tr: "Güven ve güvenlik" },
   trustHeroLabel: { en: "Trust architecture", tr: "Güven mimarisi" },
