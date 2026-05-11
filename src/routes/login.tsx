@@ -65,13 +65,17 @@ function LoginPage() {
       {/* Center */}
       <div className="flex-1 flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-sm">
-          <div className="text-center mb-10">
+          <div className="text-center mb-8">
             <h1 className="text-[28px] leading-tight font-semibold tracking-tight text-foreground">
               Welcome to ISURA
             </h1>
             <p className="mt-3 text-[15px] text-muted-foreground">
               Sign in to access your cognitive inbox assistant
             </p>
+          </div>
+
+          <div className="mb-6">
+            <PilotNotice variant="banner" />
           </div>
 
           {sent ? (
