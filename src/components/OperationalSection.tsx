@@ -146,8 +146,16 @@ export function OperationalSection({
       {open && (
         <div className="border-t border-border/60">
           {items.length === 0 ? (
-            <div className="px-6 py-10 text-center text-xs text-muted-foreground">
-              {t(lang, "sec_empty")}
+            <div className="px-6 py-12 text-center">
+              <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full border border-border/70 bg-background">
+                <meta.Icon className={`h-3.5 w-3.5 ${meta.tone}`} />
+              </div>
+              <p className="mt-4 font-display text-base text-foreground">
+                {t(lang, sectionEmptyTitleKey[section])}
+              </p>
+              <p className="mx-auto mt-1.5 max-w-sm text-xs leading-relaxed text-muted-foreground">
+                {t(lang, sectionEmptyBodyKey[section])}
+              </p>
             </div>
           ) : (
             <ul>
