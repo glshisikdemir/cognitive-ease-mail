@@ -28,7 +28,7 @@ function LoginPage() {
     setTimeout(() => {
       setLoading(null);
       toast.success("Signed in. Welcome back.");
-      navigate({ to: "/" });
+      navigate({ to: "/app" });
     }, 900);
   };
 

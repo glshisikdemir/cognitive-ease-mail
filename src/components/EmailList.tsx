@@ -53,7 +53,7 @@ export function EmailList({ view = "all" }: { view?: DashboardView }) {
           {(["all", "priority", "replies", "low"] as DashboardView[]).map((v) => (
             <Link
               key={v}
-              to="/"
+              to="/app"
               search={{ view: v }}
               hash="emails"
               className={`rounded-full px-2.5 py-1 transition-colors ${

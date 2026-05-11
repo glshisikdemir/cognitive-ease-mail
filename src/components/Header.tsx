@@ -43,7 +43,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-30 border-b border-border/70 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-6">
-        <Link to="/" className="flex items-center gap-2.5">
+        <Link to="/app" className="flex items-center gap-2.5">
           <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <span className="font-display text-lg leading-none">I</span>
           </div>

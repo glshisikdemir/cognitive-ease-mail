@@ -64,12 +64,12 @@ export function PrimaryActions({ activeView }: { activeView: DashboardView }) {
 
   type Action =
     | { key: "reviewPriority"; to: "/priority"; count: number; primary: boolean }
-    | { key: "seeReplies" | "archiveLow"; to: "/"; view: DashboardView; count: number; primary: boolean; onClick?: () => void };
+    | { key: "seeReplies" | "archiveLow"; to: "/app"; view: DashboardView; count: number; primary: boolean; onClick?: () => void };
 
   const actions: Action[] = [
     { key: "reviewPriority", to: "/priority", count: s.high, primary: true },
-    { key: "seeReplies", to: "/", view: "replies", count: s.drafts, primary: false },
-    { key: "archiveLow", to: "/", view: "low", count: lowIds.length, primary: false, onClick: () => {
+    { key: "seeReplies", to: "/app", view: "replies", count: s.drafts, primary: false },
+    { key: "archiveLow", to: "/app", view: "low", count: lowIds.length, primary: false, onClick: () => {
       if (lowIds.length === 0) {
         toast(t(lang, "archiveEmpty"));
         return;
@@ -88,7 +88,7 @@ export function PrimaryActions({ activeView }: { activeView: DashboardView }) {
         const linkProps =
           a.to === "/priority"
             ? { to: "/priority" as const }
-            : { to: "/" as const, search: { view: a.view }, hash: "emails", onClick: a.onClick };
+            : { to: "/app" as const, search: { view: a.view }, hash: "emails", onClick: a.onClick };
         return (
           <Link
             key={a.key}

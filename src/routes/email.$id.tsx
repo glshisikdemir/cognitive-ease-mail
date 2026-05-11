@@ -26,7 +26,7 @@ export const Route = createFileRoute("/email/$id")({
       <Header />
       <div className="mx-auto max-w-2xl px-6 py-24 text-center">
         <p className="text-muted-foreground">Email not found.</p>
-        <Link to="/" className="mt-4 inline-block text-sm underline">Back to inbox</Link>
+        <Link to="/app" className="mt-4 inline-block text-sm underline">Back to inbox</Link>
       </div>
     </div>
   ),
@@ -65,14 +65,14 @@ function EmailDetail() {
     toast.success(t(lang, "archivedOneToast"), {
       action: { label: t(lang, "undo"), onClick: () => resetEmail(email.id) },
     });
-    navigate({ to: "/", search: { view: "active" } });
+    navigate({ to: "/app", search: { view: "active" } });
   };
   const onIgnore = () => {
     setStatus(email.id, "ignored");
     toast.success(t(lang, "ignoredToast"), {
       action: { label: t(lang, "undo"), onClick: () => resetEmail(email.id) },
     });
-    navigate({ to: "/", search: { view: "active" } });
+    navigate({ to: "/app", search: { view: "active" } });
   };
   const onRestore = () => {
     resetEmail(email.id);
@@ -85,7 +85,7 @@ function EmailDetail() {
       <main className="mx-auto max-w-7xl px-6 py-6">
         <div className="flex items-center justify-between gap-3">
           <Link
-            to="/"
+            to="/app"
             className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
