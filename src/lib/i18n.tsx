@@ -21,7 +21,7 @@ const dict: Dict = {
     en: "Threads with downstream consequences if left untouched.",
     tr: "Ele alınmazsa sonraki sonuçları etkileyecek konular.",
   },
-  sec_waiting: { en: "Waiting on others", tr: "Başkalarını bekliyor" },
+  sec_waiting: { en: "Waiting on others", tr: "Karşı taraftan bekleniyor" },
   sec_waiting_sub: {
     en: "Tracked so you don't have to remember.",
     tr: "Hatırlamak zorunda kalmayın diye takip ediliyor.",
@@ -36,7 +36,7 @@ const dict: Dict = {
     en: "Drafts ISURA prepared. Approve and send when you choose.",
     tr: "ISURA'nın hazırladığı taslaklar. Hazır olduğunuzda onaylayın.",
   },
-  sec_low: { en: "Low cognitive value", tr: "Düşük bilişsel değer" },
+  sec_low: { en: "Low cognitive value", tr: "Düşük zihinsel öncelik" },
   sec_low_sub: {
     en: "Routine and automated noise. Quieted by default.",
     tr: "Rutin ve otomatik gürültü. Varsayılan olarak sessizleştirildi.",
@@ -197,7 +197,7 @@ const dict: Dict = {
   emailsToday: { en: "Messages received today", tr: "Bugün gelen mesajlar" },
   highPriority: { en: "Requires decision", tr: "Karar gerektiriyor" },
   mediumPriority: { en: "Operational risk", tr: "Operasyonel risk" },
-  lowPriority: { en: "Low cognitive value", tr: "Düşük bilişsel değer" },
+  lowPriority: { en: "Low cognitive value", tr: "Düşük zihinsel öncelik" },
   draftsReady: { en: "Drafts awaiting your approval", tr: "Onayınızı bekleyen taslaklar" },
 
   // Primary actions
@@ -244,8 +244,8 @@ const dict: Dict = {
   // Operational categories
   cat_decision: { en: "Requires decision", tr: "Karar gerektiriyor" },
   cat_risk: { en: "Operational risk", tr: "Operasyonel risk" },
-  cat_waiting: { en: "Waiting on others", tr: "Başkalarını bekliyor" },
-  cat_low_value: { en: "Low cognitive value", tr: "Düşük bilişsel değer" },
+  cat_waiting: { en: "Waiting on others", tr: "Karşı taraftan bekleniyor" },
+  cat_low_value: { en: "Low cognitive value", tr: "Düşük zihinsel öncelik" },
   cat_safe_ignore: { en: "Safe to ignore", tr: "Yok sayılabilir" },
 
   // Confidence
@@ -303,7 +303,7 @@ const dict: Dict = {
   },
   insightLow: {
     en: "Most of your inbox is low cognitive value. ISURA has quieted it.",
-    tr: "Gelen kutunuzun çoğu düşük bilişsel değere sahip. ISURA bunları sessizleştirdi.",
+    tr: "Gelen kutunuzun çoğu düşük zihinsel önceliğe sahip. ISURA bunları sessizleştirdi.",
   },
   insightHigh: {
     en: "{n} items genuinely require your decision today.",
@@ -359,7 +359,7 @@ const dict: Dict = {
 
   // Detail page
   load: { en: "Category", tr: "Kategori" },
-  loadLow: { en: "Low cognitive value", tr: "Düşük bilişsel değer" },
+  loadLow: { en: "Low cognitive value", tr: "Düşük zihinsel öncelik" },
   loadMedium: { en: "Operational risk", tr: "Operasyonel risk" },
   loadHigh: { en: "Requires decision", tr: "Karar gerektiriyor" },
   prUrgent: { en: "Decide today", tr: "Bugün karar ver" },
@@ -398,15 +398,28 @@ const LangCtx = createContext<{ lang: Lang; setLang: (l: Lang) => void }>({
   setLang: () => {},
 });
 
+export const SUPPORTED_LANGS: { code: Lang; label: string; native: string }[] = [
+  { code: "en", label: "English", native: "English" },
+  { code: "tr", label: "Turkish", native: "Türkçe" },
+];
+
 export function LangProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>("en");
   useEffect(() => {
     const saved = typeof window !== "undefined" ? (localStorage.getItem("isura.lang") as Lang | null) : null;
-    if (saved === "en" || saved === "tr") setLangState(saved);
+    const initial: Lang =
+      saved === "en" || saved === "tr"
+        ? saved
+        : typeof navigator !== "undefined" && navigator.language?.toLowerCase().startsWith("tr")
+        ? "tr"
+        : "en";
+    setLangState(initial);
+    if (typeof document !== "undefined") document.documentElement.lang = initial;
   }, []);
   const setLang = (l: Lang) => {
     setLangState(l);
     if (typeof window !== "undefined") localStorage.setItem("isura.lang", l);
+    if (typeof document !== "undefined") document.documentElement.lang = l;
   };
   return <LangCtx.Provider value={{ lang, setLang }}>{children}</LangCtx.Provider>;
 }
