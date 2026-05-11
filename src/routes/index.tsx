@@ -808,6 +808,10 @@ function FinalCTA({ lang }: { lang: Lang }) {
                 </p>
               )}
 
+              <div className="mx-auto mt-6 max-w-xl">
+                <PilotNotice variant="banner" />
+              </div>
+
               <div className="mx-auto mt-10 grid max-w-xl gap-3 text-left sm:grid-cols-3">
                 {[
                   { Icon: CalendarDays, h: "confirmTimeline_h", b: "confirmTimeline" },
