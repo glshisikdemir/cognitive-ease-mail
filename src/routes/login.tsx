@@ -28,7 +28,7 @@ function LoginPage() {
     setTimeout(() => {
       setLoading(null);
       toast.success("Signed in. Welcome back.");
-      navigate({ to: "/" });
+      navigate({ to: "/app" });
     }, 900);
   };
 
@@ -51,7 +51,7 @@ function LoginPage() {
       {/* Top bar */}
       <header className="px-6 py-5">
         <Link
-          to="/landing"
+          to="/"
           className="inline-flex items-center gap-2 text-sm font-medium tracking-tight text-foreground"
         >
           <span className="grid h-7 w-7 place-items-center rounded-md bg-foreground text-background">

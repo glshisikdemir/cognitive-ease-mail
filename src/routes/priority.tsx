@@ -58,7 +58,7 @@ function PriorityPage() {
       <Header />
       <main className="mx-auto max-w-3xl px-6 py-10">
         <Link
-          to="/"
+          to="/app"
           className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
@@ -174,7 +174,7 @@ function PriorityPage() {
             <p className="font-display text-2xl text-foreground">{t(lang, "nothingUrgent")}</p>
             <p className="mt-2 text-sm text-muted-foreground">{t(lang, "nothingUrgentSub")}</p>
             <Link
-              to="/"
+              to="/app"
               className="mt-6 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-surface-muted"
             >
               {t(lang, "backToDashboard")}
