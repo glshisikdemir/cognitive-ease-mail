@@ -1,9 +1,11 @@
 import { createFileRoute, Link, useNavigate, notFound } from "@tanstack/react-router";
-import { ArrowLeft, Archive as ArchiveIcon, EyeOff, RotateCcw, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Archive as ArchiveIcon, EyeOff, RotateCcw, CheckCircle2, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { AIPanel } from "@/components/AIPanel";
 import { getEmail } from "@/lib/emails";
+import { quickAssess } from "@/lib/heuristics";
+import { CategoryBadge, ConfidenceTag, ReasonList } from "@/components/LoadBadge";
 import { useLang, t } from "@/lib/i18n";
 import { useEmailState, setStatus, resetEmail } from "@/lib/email-store";
 
