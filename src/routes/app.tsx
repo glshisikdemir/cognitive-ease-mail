@@ -14,6 +14,7 @@ import {
 } from "@/lib/email-store";
 import { DailyBriefing } from "@/components/DailyBriefing";
 import { TrustStrip } from "@/components/TrustStrip";
+import { ProductFooter } from "@/components/ProductFooter";
 import {
   OperationalSection,
   type SectionKey,
@@ -183,6 +184,7 @@ function Index() {
 
         <p className="text-center text-xs text-muted-foreground">{t(lang, "positioning")}</p>
       </main>
+      <ProductFooter />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Archive as ArchiveIcon, EyeOff } from "lucide-react";
 import { TrustStrip } from "@/components/TrustStrip";
+import { ProductFooter } from "@/components/ProductFooter";
 import { Header } from "@/components/Header";
 import { CategoryBadge, ConfidenceTag, ReasonList } from "@/components/LoadBadge";
 import { emails as allEmails } from "@/lib/emails";
@@ -186,6 +187,7 @@ function PriorityPage() {
           <TrustStrip />
         </div>
       </main>
+      <ProductFooter />
     </div>
   );
 }

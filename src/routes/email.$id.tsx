@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate, notFound } from "@tanstack/react-ro
 import { ArrowLeft, Archive as ArchiveIcon, EyeOff, RotateCcw, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
+import { ProductFooter } from "@/components/ProductFooter";
 import { AIPanel } from "@/components/AIPanel";
 import { getEmail } from "@/lib/emails";
 import { quickAssess } from "@/lib/heuristics";
@@ -171,6 +172,7 @@ function EmailDetail() {
           </aside>
         </div>
       </main>
+      <ProductFooter />
     </div>
   );
 }
