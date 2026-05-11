@@ -168,9 +168,16 @@ function LoginPage() {
       <footer className="px-6 py-5 text-center">
         <p className="text-xs text-muted-foreground">
           By continuing you agree to our{" "}
-          <span className="text-foreground/80">Terms</span> &{" "}
-          <span className="text-foreground/80">Privacy</span>.
+          <Link to="/terms" className="text-foreground/80 hover:text-foreground underline-offset-4 hover:underline">Terms</Link>{" "}
+          &{" "}
+          <Link to="/privacy" className="text-foreground/80 hover:text-foreground underline-offset-4 hover:underline">Privacy</Link>.
         </p>
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
+          <Link to="/security" className="hover:text-foreground">Security</Link>
+          <Link to="/cookies" className="hover:text-foreground">Cookies</Link>
+          <Link to="/ai-transparency" className="hover:text-foreground">AI transparency</Link>
+          <Link to="/pilot-status" className="hover:text-foreground">Pilot status</Link>
+        </div>
       </footer>
     </main>
   );
