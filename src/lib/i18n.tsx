@@ -384,6 +384,44 @@ const dict: Dict = {
   language: { en: "Language", tr: "Dil" },
   sentToast: { en: "Sent. One less decision to carry.", tr: "Gönderildi. Taşınacak bir karar daha eksildi." },
   byIsura: { en: "Drafted by ISURA · awaiting your approval", tr: "ISURA tarafından hazırlandı · onayınızı bekliyor" },
+
+  // Product navigation
+  navWorkspace: { en: "Workspace", tr: "Çalışma alanı" },
+  navPriority: { en: "Priority", tr: "Öncelik" },
+  navTrust: { en: "Trust", tr: "Güven" },
+  navHelp: { en: "Help", tr: "Yardım" },
+
+  // Product footer
+  footerTagline: { en: "The operational cognition platform.", tr: "Operasyonel biliş platformu." },
+  footerProduct: { en: "Product", tr: "Ürün" },
+  footerCompany: { en: "Company", tr: "Şirket" },
+  footerLegal: { en: "Legal & trust", tr: "Yasal ve güven" },
+  footerLinkWorkspace: { en: "Workspace", tr: "Çalışma alanı" },
+  footerLinkPriority: { en: "Priority queue", tr: "Öncelik kuyruğu" },
+  footerLinkLanding: { en: "Overview", tr: "Genel bakış" },
+  footerLinkPhilosophy: { en: "Philosophy", tr: "Felsefe" },
+  footerLinkContact: { en: "Contact", tr: "İletişim" },
+  footerLinkTrust: { en: "Trust & security", tr: "Güven ve güvenlik" },
+  footerLinkPrivacy: { en: "Privacy", tr: "Gizlilik" },
+  footerLinkTerms: { en: "Terms", tr: "Şartlar" },
+  footerCopy: { en: "© ISURA. Operational clarity, quietly applied.", tr: "© ISURA. Operasyonel netlik, sessizce uygulanır." },
+  footerStatus: { en: "All systems calm", tr: "Tüm sistemler sakin" },
+
+  // Premium empty states
+  emptyDecisionTitle: { en: "No decisions on your desk.", tr: "Masanızda karar yok." },
+  emptyDecisionBody: { en: "ISURA is watching. You'll see something here only when it truly requires you.", tr: "ISURA izliyor. Yalnızca gerçekten gerektiğinde burada bir şey göreceksiniz." },
+  emptyRiskTitle: { en: "No operational risks detected.", tr: "Operasyonel risk tespit edilmedi." },
+  emptyRiskBody: { en: "Nothing on the horizon carries downstream consequence right now.", tr: "Şu anda ufukta sonuç doğuran bir şey yok." },
+  emptyWaitingTitle: { en: "Nothing is waiting on others.", tr: "Karşı taraftan beklenen bir şey yok." },
+  emptyWaitingBody: { en: "External threads are settled. ISURA will track the next one for you.", tr: "Dış konular yerinde. Bir sonrakini ISURA sizin için takip edecek." },
+  emptyFollowupTitle: { en: "No follow-ups overdue.", tr: "Geciken takip yok." },
+  emptyFollowupBody: { en: "Conversations are flowing. No nudges to send.", tr: "Yazışmalar akışta. Gönderilecek hatırlatma yok." },
+  emptyReviewTitle: { en: "No drafts pending review.", tr: "İncelenecek taslak yok." },
+  emptyReviewBody: { en: "ISURA hasn't prepared anything new since you last looked.", tr: "Son baktığınızdan beri ISURA yeni bir şey hazırlamadı." },
+  emptyLowTitle: { en: "Quiet zone is quiet.", tr: "Sessiz bölge sessiz." },
+  emptyLowBody: { en: "No low-value noise to filter today.", tr: "Bugün süzülecek düşük değerli gürültü yok." },
+  emptyResolvedTitle: { en: "Nothing resolved yet.", tr: "Henüz çözülen bir şey yok." },
+  emptyResolvedBody: { en: "Items you file, reply to, or quiet in this session will land here.", tr: "Bu oturumda arşivlediğiniz, yanıtladığınız veya sessizleştirdikleriniz burada görünür." },
 };
 
 export function t(lang: Lang, key: keyof typeof dict | string, vars?: Record<string, string | number>): string {
