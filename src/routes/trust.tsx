@@ -1,6 +1,7 @@
 import { ShieldCheck, Lock, KeyRound, Hand, FileLock2, BrainCircuit, Settings2, ArrowLeft } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
+import { ProductFooter } from "@/components/ProductFooter";
 import { useLang, t } from "@/lib/i18n";
 
 export const Route = createFileRoute("/trust")({
