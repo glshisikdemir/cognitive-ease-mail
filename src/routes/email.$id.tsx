@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { AIPanel } from "@/components/AIPanel";
 import { getEmail } from "@/lib/emails";
+import { quickAssess } from "@/lib/heuristics";
+import { CategoryBadge, ConfidenceTag, ReasonList } from "@/components/LoadBadge";
 import { useLang, t } from "@/lib/i18n";
 import { useEmailState, setStatus, resetEmail } from "@/lib/email-store";
 
@@ -35,6 +37,7 @@ function EmailDetail() {
   const { lang } = useLang();
   const state = useEmailState(email.id);
   const navigate = useNavigate();
+  const assessment = quickAssess(email);
   const date = new Date(email.receivedAt).toLocaleString(lang === "tr" ? "tr-TR" : "en-US", {
     weekday: "short",
     month: "short",
@@ -128,7 +131,11 @@ function EmailDetail() {
         <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)]">
           <article className="overflow-hidden rounded-2xl border border-border/70 bg-surface">
             <header className="border-b border-border/70 px-7 py-6">
-              <h1 className="font-display text-2xl leading-tight text-foreground">{email.subject}</h1>
+              <div className="flex flex-wrap items-center gap-2">
+                <CategoryBadge category={assessment.category} />
+                <ConfidenceTag confidence={assessment.confidence} />
+              </div>
+              <h1 className="mt-3 font-display text-2xl leading-tight text-foreground">{email.subject}</h1>
               <div className="mt-3 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-sm font-medium text-accent-foreground">
                   {email.sender[0]}
@@ -139,6 +146,19 @@ function EmailDetail() {
                 </div>
               </div>
             </header>
+
+            {assessment.reasons.length > 0 && (
+              <section className="border-b border-border/70 bg-background/40 px-7 py-5">
+                <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                  {t(lang, "operationalReasoning")}
+                </div>
+                <div className="mt-2 text-sm font-medium text-foreground">
+                  {t(lang, "whyThisMatters")}
+                </div>
+                <ReasonList reasons={assessment.reasons} />
+              </section>
+            )}
+
             <div className="px-7 py-6">
               <pre className="whitespace-pre-wrap font-sans text-[15px] leading-relaxed text-foreground">
                 {email.body}

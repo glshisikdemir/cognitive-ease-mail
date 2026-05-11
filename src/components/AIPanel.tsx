@@ -167,6 +167,9 @@ export function AIPanel({ email }: { email: Email }) {
               {stored.status === "replied" ? t(lang, "replied") : t(lang, "approveSend")}
             </button>
           </div>
+          <p className="pt-2 text-[11px] text-muted-foreground">
+            {t(lang, "trustNoAutoSend")}
+          </p>
         </Section>
       </div>
     </div>
