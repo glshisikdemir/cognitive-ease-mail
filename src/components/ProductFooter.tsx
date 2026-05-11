@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { FlaskConical } from "lucide-react";
 import { useLang, t } from "@/lib/i18n";
 
 export function ProductFooter() {
@@ -18,14 +19,18 @@ export function ProductFooter() {
       links: [
         { to: "/" as const, label: t(lang, "footerLinkPhilosophy"), hash: "why" },
         { to: "/" as const, label: t(lang, "footerLinkContact"), hash: "access" },
+        { to: "/pilot-status" as const, label: t(lang, "footerLinkPilot") },
       ],
     },
     {
       heading: t(lang, "footerLegal"),
       links: [
+        { to: "/privacy" as const, label: t(lang, "footerLinkPrivacy") },
+        { to: "/terms" as const, label: t(lang, "footerLinkTerms") },
+        { to: "/cookies" as const, label: t(lang, "footerLinkCookies") },
+        { to: "/security" as const, label: t(lang, "footerLinkSecurity") },
+        { to: "/ai-transparency" as const, label: t(lang, "footerLinkAI") },
         { to: "/trust" as const, label: t(lang, "footerLinkTrust") },
-        { to: "/trust" as const, label: t(lang, "footerLinkPrivacy") },
-        { to: "/trust" as const, label: t(lang, "footerLinkTerms") },
       ],
     },
   ];
@@ -51,10 +56,24 @@ export function ProductFooter() {
             <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-muted-foreground">
               {t(lang, "footerTagline")}
             </p>
-            <div className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-background px-2.5 py-1 text-[11px] text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              {t(lang, "footerStatus")}
+
+            <div className="mt-5 flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-background px-2.5 py-1 text-[11px] text-muted-foreground">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                {t(lang, "footerStatus")}
+              </span>
+              <Link
+                to="/pilot-status"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-background px-2.5 py-1 text-[11px] text-muted-foreground transition hover:text-foreground"
+              >
+                <FlaskConical className="h-3 w-3" />
+                {t(lang, "pilotBadge")}
+              </Link>
             </div>
+
+            <p className="mt-4 max-w-xs text-[12px] leading-relaxed text-muted-foreground">
+              {t(lang, "footerPilotLine")}
+            </p>
           </div>
 
           <div className="grid gap-8 md:col-span-7 md:grid-cols-3">

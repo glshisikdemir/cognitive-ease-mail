@@ -16,6 +16,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useLang, type Lang } from "@/lib/i18n";
+import { PilotNotice } from "@/components/PilotNotice";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -234,7 +235,10 @@ function Welcome({ lang, onNext }: { lang: Lang; onNext: () => void }) {
       <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
         {tr(lang, "welcomeBody")}
       </p>
-      <div className="mt-9 flex items-center justify-center">
+      <div className="mx-auto mt-8 max-w-md">
+        <PilotNotice variant="banner" />
+      </div>
+      <div className="mt-8 flex items-center justify-center">
         <button onClick={onNext} className="btn-primary">
           {tr(lang, "welcomeBegin")}
           <ArrowRight className="h-3.5 w-3.5" />

@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Mail, Sparkles, ArrowRight, Loader2 } from "lucide-react";
+import { PilotNotice } from "@/components/PilotNotice";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -64,13 +65,17 @@ function LoginPage() {
       {/* Center */}
       <div className="flex-1 flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-sm">
-          <div className="text-center mb-10">
+          <div className="text-center mb-8">
             <h1 className="text-[28px] leading-tight font-semibold tracking-tight text-foreground">
               Welcome to ISURA
             </h1>
             <p className="mt-3 text-[15px] text-muted-foreground">
               Sign in to access your cognitive inbox assistant
             </p>
+          </div>
+
+          <div className="mb-6">
+            <PilotNotice variant="banner" />
           </div>
 
           {sent ? (
@@ -163,9 +168,16 @@ function LoginPage() {
       <footer className="px-6 py-5 text-center">
         <p className="text-xs text-muted-foreground">
           By continuing you agree to our{" "}
-          <span className="text-foreground/80">Terms</span> &{" "}
-          <span className="text-foreground/80">Privacy</span>.
+          <Link to="/terms" className="text-foreground/80 hover:text-foreground underline-offset-4 hover:underline">Terms</Link>{" "}
+          &{" "}
+          <Link to="/privacy" className="text-foreground/80 hover:text-foreground underline-offset-4 hover:underline">Privacy</Link>.
         </p>
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-muted-foreground">
+          <Link to="/security" className="hover:text-foreground">Security</Link>
+          <Link to="/cookies" className="hover:text-foreground">Cookies</Link>
+          <Link to="/ai-transparency" className="hover:text-foreground">AI transparency</Link>
+          <Link to="/pilot-status" className="hover:text-foreground">Pilot status</Link>
+        </div>
       </footer>
     </main>
   );
