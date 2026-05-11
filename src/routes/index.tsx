@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   ArrowRight,
   ShieldCheck,
@@ -12,8 +13,13 @@ import {
   AlertTriangle,
   Clock,
   Inbox,
+  CheckCircle2,
+  CalendarDays,
+  Mail,
+  UserRound,
 } from "lucide-react";
 import { useLang, type Lang } from "@/lib/i18n";
+import { submitWaitlist } from "@/lib/waitlist.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
