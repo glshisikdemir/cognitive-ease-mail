@@ -16,6 +16,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useLang, type Lang } from "@/lib/i18n";
+import { PilotNotice } from "@/components/PilotNotice";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
