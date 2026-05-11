@@ -856,17 +856,42 @@ function FinalCTA({ lang }: { lang: Lang }) {
 
 function Footer({ lang }: { lang: Lang }) {
   return (
-    <footer>
-      <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 px-6 py-10 text-[12px] text-muted-foreground sm:flex-row sm:items-center">
-        <p>{tr(lang, "footerCopy")}</p>
-        <div className="flex items-center gap-5">
-          <Link to="/trust" className="hover:text-foreground">
-            {tr(lang, "footerTrust")}
-          </Link>
-          <Link to="/app" className="hover:text-foreground">
-            {tr(lang, "footerAccess")}
-          </Link>
+    <footer className="border-t border-border/60 bg-surface/40">
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        <div className="flex flex-col gap-4 text-[12px] text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <p>{tr(lang, "footerCopy")}</p>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <Link to="/privacy" className="hover:text-foreground">
+              {lang === "tr" ? "Gizlilik" : "Privacy"}
+            </Link>
+            <Link to="/terms" className="hover:text-foreground">
+              {lang === "tr" ? "Şartlar" : "Terms"}
+            </Link>
+            <Link to="/cookies" className="hover:text-foreground">
+              {lang === "tr" ? "Çerezler" : "Cookies"}
+            </Link>
+            <Link to="/security" className="hover:text-foreground">
+              {lang === "tr" ? "Güvenlik" : "Security"}
+            </Link>
+            <Link to="/ai-transparency" className="hover:text-foreground">
+              {lang === "tr" ? "AI şeffaflığı" : "AI transparency"}
+            </Link>
+            <Link to="/pilot-status" className="hover:text-foreground">
+              {lang === "tr" ? "Pilot durumu" : "Pilot status"}
+            </Link>
+            <Link to="/trust" className="hover:text-foreground">
+              {tr(lang, "footerTrust")}
+            </Link>
+            <Link to="/app" className="hover:text-foreground">
+              {tr(lang, "footerAccess")}
+            </Link>
+          </div>
         </div>
+        <p className="mt-4 max-w-2xl text-[11px] leading-relaxed text-muted-foreground">
+          {lang === "tr"
+            ? "ISURA şu anda özel pilot sürecindedir. Özellikler ve sistem davranışları test sürecinde değişebilir."
+            : "ISURA is currently in private pilot. Features and system behavior may evolve during testing."}
+        </p>
       </div>
     </footer>
   );
