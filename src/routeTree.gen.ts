@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrustRouteImport } from './routes/trust'
 import { Route as PriorityRouteImport } from './routes/priority'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
@@ -24,6 +25,11 @@ const TrustRoute = TrustRouteImport.update({
 const PriorityRoute = PriorityRouteImport.update({
   id: '/priority',
   path: '/priority',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/priority': typeof PriorityRoute
   '/trust': typeof TrustRoute
   '/email/$id': typeof EmailIdRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/priority': typeof PriorityRoute
   '/trust': typeof TrustRoute
   '/email/$id': typeof EmailIdRoute
@@ -68,20 +76,36 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRoute
   '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
   '/priority': typeof PriorityRoute
   '/trust': typeof TrustRoute
   '/email/$id': typeof EmailIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/login' | '/priority' | '/trust' | '/email/$id'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/login'
+    | '/onboarding'
+    | '/priority'
+    | '/trust'
+    | '/email/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/login' | '/priority' | '/trust' | '/email/$id'
+  to:
+    | '/'
+    | '/app'
+    | '/login'
+    | '/onboarding'
+    | '/priority'
+    | '/trust'
+    | '/email/$id'
   id:
     | '__root__'
     | '/'
     | '/app'
     | '/login'
+    | '/onboarding'
     | '/priority'
     | '/trust'
     | '/email/$id'
@@ -91,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRoute
   LoginRoute: typeof LoginRoute
+  OnboardingRoute: typeof OnboardingRoute
   PriorityRoute: typeof PriorityRoute
   TrustRoute: typeof TrustRoute
   EmailIdRoute: typeof EmailIdRoute
@@ -110,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/priority'
       fullPath: '/priority'
       preLoaderRoute: typeof PriorityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -147,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRoute,
   LoginRoute: LoginRoute,
+  OnboardingRoute: OnboardingRoute,
   PriorityRoute: PriorityRoute,
   TrustRoute: TrustRoute,
   EmailIdRoute: EmailIdRoute,
