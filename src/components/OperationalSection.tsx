@@ -84,6 +84,24 @@ const sectionSubKey: Record<SectionKey, string> = {
   low: "sec_low_sub",
   resolved: "sec_resolved_sub",
 };
+const sectionEmptyTitleKey: Record<SectionKey, string> = {
+  decision: "emptyDecisionTitle",
+  risk: "emptyRiskTitle",
+  waiting: "emptyWaitingTitle",
+  followup: "emptyFollowupTitle",
+  review: "emptyReviewTitle",
+  low: "emptyLowTitle",
+  resolved: "emptyResolvedTitle",
+};
+const sectionEmptyBodyKey: Record<SectionKey, string> = {
+  decision: "emptyDecisionBody",
+  risk: "emptyRiskBody",
+  waiting: "emptyWaitingBody",
+  followup: "emptyFollowupBody",
+  review: "emptyReviewBody",
+  low: "emptyLowBody",
+  resolved: "emptyResolvedBody",
+};
 
 export function OperationalSection({
   section,
