@@ -231,7 +231,7 @@ function Nav({ lang }: { lang: Lang }) {
   return (
     <header className="sticky top-0 z-30 border-b border-border/50 bg-background/75 backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-6">
-        <Link to="/landing" className="flex items-center gap-2.5">
+        <Link to="/" className="flex items-center gap-2.5">
           <span className="grid h-7 w-7 place-items-center rounded-md bg-foreground text-background">
             <span className="font-display text-sm font-semibold leading-none">I</span>
           </span>
