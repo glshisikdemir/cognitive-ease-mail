@@ -18,6 +18,7 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as AiTransparencyRouteImport } from './routes/ai-transparency'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EmailIdRouteImport } from './routes/email.$id'
 
@@ -66,6 +67,11 @@ const AppRoute = AppRouteImport.update({
   path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AiTransparencyRoute = AiTransparencyRouteImport.update({
+  id: '/ai-transparency',
+  path: '/ai-transparency',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -79,6 +85,7 @@ const EmailIdRoute = EmailIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-transparency': typeof AiTransparencyRoute
   '/app': typeof AppRoute
   '/cookies': typeof CookiesRoute
   '/login': typeof LoginRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-transparency': typeof AiTransparencyRoute
   '/app': typeof AppRoute
   '/cookies': typeof CookiesRoute
   '/login': typeof LoginRoute
@@ -106,6 +114,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ai-transparency': typeof AiTransparencyRoute
   '/app': typeof AppRoute
   '/cookies': typeof CookiesRoute
   '/login': typeof LoginRoute
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ai-transparency'
     | '/app'
     | '/cookies'
     | '/login'
@@ -134,6 +144,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ai-transparency'
     | '/app'
     | '/cookies'
     | '/login'
@@ -147,6 +158,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/ai-transparency'
     | '/app'
     | '/cookies'
     | '/login'
@@ -161,6 +173,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AiTransparencyRoute: typeof AiTransparencyRoute
   AppRoute: typeof AppRoute
   CookiesRoute: typeof CookiesRoute
   LoginRoute: typeof LoginRoute
@@ -238,6 +251,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ai-transparency': {
+      id: '/ai-transparency'
+      path: '/ai-transparency'
+      fullPath: '/ai-transparency'
+      preLoaderRoute: typeof AiTransparencyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -257,6 +277,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AiTransparencyRoute: AiTransparencyRoute,
   AppRoute: AppRoute,
   CookiesRoute: CookiesRoute,
   LoginRoute: LoginRoute,
