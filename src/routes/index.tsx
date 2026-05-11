@@ -692,7 +692,7 @@ function Footer({ lang }: { lang: Lang }) {
           <Link to="/trust" className="hover:text-foreground">
             {tr(lang, "footerTrust")}
           </Link>
-          <Link to="/" className="hover:text-foreground">
+          <Link to="/app" className="hover:text-foreground">
             {tr(lang, "footerAccess")}
           </Link>
         </div>
