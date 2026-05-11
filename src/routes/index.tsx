@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   ArrowRight,
   ShieldCheck,
@@ -12,8 +13,13 @@ import {
   AlertTriangle,
   Clock,
   Inbox,
+  CheckCircle2,
+  CalendarDays,
+  Mail,
+  UserRound,
 } from "lucide-react";
 import { useLang, type Lang } from "@/lib/i18n";
+import { submitWaitlist } from "@/lib/waitlist.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -196,8 +202,45 @@ const L: Copy = {
     tr: "Az sayıda operatör, kurucu ve ekibi karşılıyoruz. Pilot süresince katılım ücretsizdir.",
   },
   finalCta: { en: "Join private pilot", tr: "Özel pilota katıl" },
-  finalPlaceholder: { en: "you@work.com", tr: "siz@isiniz.com" },
-  finalSent: { en: "Thank you. We'll be in touch shortly.", tr: "Teşekkürler. Kısa süre içinde size ulaşacağız." },
+  finalSubmitting: { en: "Securing your spot…", tr: "Yeriniz ayrılıyor…" },
+  fieldEmail: { en: "Work email", tr: "İş e-postası" },
+  fieldName: { en: "Name (optional)", tr: "İsim (opsiyonel)" },
+  fieldCompany: { en: "Company (optional)", tr: "Şirket (opsiyonel)" },
+  fieldRole: { en: "Role (optional)", tr: "Rol (opsiyonel)" },
+  finalPlaceholderEmail: { en: "you@work.com", tr: "siz@isiniz.com" },
+  finalPlaceholderName: { en: "Your name", tr: "Adınız" },
+  finalPlaceholderCompany: { en: "Company", tr: "Şirket" },
+  finalPlaceholderRole: { en: "e.g. COO, Head of Operations", tr: "örn. COO, Operasyon Müdürü" },
+  finalErrorInvalid: { en: "Please enter a valid work email.", tr: "Lütfen geçerli bir iş e-postası girin." },
+  finalErrorGeneric: { en: "Something went quiet on our side. Try again in a moment.", tr: "Tarafımızda bir şey sessizleşti. Birazdan tekrar deneyin." },
+
+  // Premium confirmation state
+  confirmEyebrow: { en: "You're on the list", tr: "Listedesiniz" },
+  confirmTitle: {
+    en: "You're on the list for ISURA private pilot access.",
+    tr: "ISURA özel pilot erişimi için listedesiniz.",
+  },
+  confirmAlready: {
+    en: "You're already on the list. We'll be in touch when a slot opens.",
+    tr: "Zaten listedesiniz. Kontenjan açılınca size ulaşacağız.",
+  },
+  confirmTimeline_h: { en: "Estimated onboarding", tr: "Tahmini başlangıç" },
+  confirmTimeline: { en: "2–4 weeks", tr: "2–4 hafta" },
+  confirmFounder_h: { en: "Founder-led onboarding", tr: "Kurucu eşliğinde başlangıç" },
+  confirmFounder: {
+    en: "When your slot opens, a founder personally walks you through setup.",
+    tr: "Sıranız geldiğinde bir kurucu kuruluma sizinle bizzat eşlik eder.",
+  },
+  confirmEmail_h: { en: "Confirmation sent", tr: "Onay gönderildi" },
+  confirmEmail: {
+    en: "Check your inbox for a calm welcome from ISURA.",
+    tr: "Gelen kutunuza ISURA'dan sakin bir karşılama bekleyin.",
+  },
+  confirmTrust1: { en: "ISURA never sends emails without your approval.", tr: "ISURA, onayınız olmadan asla e-posta göndermez." },
+  confirmTrust2: { en: "Read-only inbox analysis available.", tr: "Yalnızca okuma modu mevcuttur." },
+  confirmTrust3: { en: "Disconnect access anytime.", tr: "Erişimi istediğiniz an kesin." },
+  confirmTrust4: { en: "Your emails are never used to train AI models.", tr: "E-postalarınız hiçbir AI modelini eğitmek için kullanılmaz." },
+
   footerCopy: { en: "© ISURA. Operational cognition, quietly applied.", tr: "© ISURA. Operasyonel biliş, sessizce uygulanır." },
   footerAccess: { en: "Open workspace", tr: "Çalışma alanını aç" },
   footerTrust: { en: "Trust & security", tr: "Güven ve güvenlik" },
@@ -615,16 +658,50 @@ function Vision({ lang }: { lang: Lang }) {
 /* ----------------------------- Final CTA ----------------------------- */
 
 function FinalCTA({ lang }: { lang: Lang }) {
+  const submitFn = useServerFn(submitWaitlist);
   const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
-  const submit = (e: React.FormEvent) => {
+  const [name, setName] = useState("");
+  const [company, setCompany] = useState("");
+  const [role, setRole] = useState("");
+  const [state, setState] = useState<
+    | { kind: "idle" }
+    | { kind: "submitting" }
+    | { kind: "done"; status: "created" | "already_signed_up" }
+    | { kind: "error"; message: string }
+  >({ kind: "idle" });
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!/^\S+@\S+\.\S+$/.test(email)) return;
-    setSent(true);
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      setState({ kind: "error", message: tr(lang, "finalErrorInvalid") });
+      return;
+    }
+    setState({ kind: "submitting" });
+    try {
+      const res = await submitFn({
+        data: { email, name, company, role, language: lang, source: "landing" },
+      });
+      if (res.ok) {
+        setState({ kind: "done", status: res.status });
+      } else {
+        setState({
+          kind: "error",
+          message:
+            res.error === "invalid"
+              ? tr(lang, "finalErrorInvalid")
+              : tr(lang, "finalErrorGeneric"),
+        });
+      }
+    } catch {
+      setState({ kind: "error", message: tr(lang, "finalErrorGeneric") });
+    }
   };
+
+  const isDone = state.kind === "done";
+
   return (
     <section id="access" className="border-b border-border/50">
-      <div className="relative mx-auto max-w-4xl px-6 py-28 text-center">
+      <div className="relative mx-auto max-w-4xl px-6 py-28">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 h-full opacity-60"
@@ -634,47 +711,141 @@ function FinalCTA({ lang }: { lang: Lang }) {
           }}
         />
         <div className="relative">
-          <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-            {tr(lang, "finalEyebrow")}
-          </div>
-          <h2 className="mt-3 font-display text-4xl leading-[1.05] tracking-tight sm:text-5xl">
-            {tr(lang, "finalTitle")}
-          </h2>
-          <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
-            {tr(lang, "finalSub")}
-          </p>
+          {!isDone ? (
+            <div className="text-center">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                {tr(lang, "finalEyebrow")}
+              </div>
+              <h2 className="mt-3 font-display text-4xl leading-[1.05] tracking-tight sm:text-5xl">
+                {tr(lang, "finalTitle")}
+              </h2>
+              <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
+                {tr(lang, "finalSub")}
+              </p>
 
-          {sent ? (
-            <p className="mt-9 inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-[13px] text-foreground">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              {tr(lang, "finalSent")}
-            </p>
-          ) : (
-            <form
-              onSubmit={submit}
-              className="mx-auto mt-9 flex w-full max-w-md items-center gap-2 rounded-full border border-border bg-background p-1 shadow-sm"
-            >
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={tr(lang, "finalPlaceholder")}
-                className="flex-1 bg-transparent px-4 py-2 text-[14px] text-foreground placeholder:text-muted-foreground/70 outline-none"
-              />
-              <button
-                type="submit"
-                className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-4 py-2 text-[13px] font-medium text-background transition hover:opacity-90"
+              <form
+                onSubmit={submit}
+                className="mx-auto mt-10 grid w-full max-w-xl gap-2.5 text-left"
               >
-                {tr(lang, "finalCta")}
-                <ArrowRight className="h-3.5 w-3.5" />
-              </button>
-            </form>
-          )}
+                <input
+                  type="email"
+                  required
+                  autoComplete="email"
+                  maxLength={320}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={tr(lang, "finalPlaceholderEmail")}
+                  aria-label={tr(lang, "fieldEmail")}
+                  className="rounded-md border border-border bg-background px-4 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground/70 outline-none focus:border-foreground/40"
+                />
+                <div className="grid gap-2.5 sm:grid-cols-2">
+                  <input
+                    type="text"
+                    autoComplete="name"
+                    maxLength={120}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder={tr(lang, "finalPlaceholderName")}
+                    aria-label={tr(lang, "fieldName")}
+                    className="rounded-md border border-border bg-background px-4 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground/70 outline-none focus:border-foreground/40"
+                  />
+                  <input
+                    type="text"
+                    autoComplete="organization"
+                    maxLength={160}
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                    placeholder={tr(lang, "finalPlaceholderCompany")}
+                    aria-label={tr(lang, "fieldCompany")}
+                    className="rounded-md border border-border bg-background px-4 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground/70 outline-none focus:border-foreground/40"
+                  />
+                </div>
+                <input
+                  type="text"
+                  autoComplete="organization-title"
+                  maxLength={120}
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  placeholder={tr(lang, "finalPlaceholderRole")}
+                  aria-label={tr(lang, "fieldRole")}
+                  className="rounded-md border border-border bg-background px-4 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground/70 outline-none focus:border-foreground/40"
+                />
+                <button
+                  type="submit"
+                  disabled={state.kind === "submitting"}
+                  className="mt-1 inline-flex items-center justify-center gap-1.5 rounded-md bg-foreground px-4 py-2.5 text-[13px] font-medium text-background transition hover:opacity-90 disabled:opacity-60"
+                >
+                  {state.kind === "submitting"
+                    ? tr(lang, "finalSubmitting")
+                    : tr(lang, "finalCta")}
+                  {state.kind !== "submitting" && <ArrowRight className="h-3.5 w-3.5" />}
+                </button>
+                {state.kind === "error" && (
+                  <p className="mt-1 text-center text-[12px] text-rose-600">
+                    {state.message}
+                  </p>
+                )}
+              </form>
 
-          <p className="mt-5 text-[12px] text-muted-foreground">
-            {tr(lang, "heroTrust")}
-          </p>
+              <p className="mt-6 inline-flex items-center justify-center gap-1.5 text-[12px] text-muted-foreground">
+                <ShieldCheck className="h-3 w-3" />
+                {tr(lang, "heroTrust")}
+              </p>
+            </div>
+          ) : (
+            <div className="mx-auto max-w-2xl text-center">
+              <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border/70 bg-surface px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                {tr(lang, "confirmEyebrow")}
+              </div>
+              <h2 className="mt-6 font-display text-3xl leading-[1.1] tracking-tight sm:text-4xl">
+                {tr(lang, "confirmTitle")}
+              </h2>
+              {state.kind === "done" && state.status === "already_signed_up" && (
+                <p className="mt-4 text-[14px] text-muted-foreground">
+                  {tr(lang, "confirmAlready")}
+                </p>
+              )}
+
+              <div className="mx-auto mt-10 grid max-w-xl gap-3 text-left sm:grid-cols-3">
+                {[
+                  { Icon: CalendarDays, h: "confirmTimeline_h", b: "confirmTimeline" },
+                  { Icon: UserRound, h: "confirmFounder_h", b: "confirmFounder" },
+                  { Icon: Mail, h: "confirmEmail_h", b: "confirmEmail" },
+                ].map(({ Icon, h, b }) => (
+                  <div
+                    key={h}
+                    className="rounded-2xl border border-border/60 bg-surface p-5"
+                  >
+                    <Icon className="h-4 w-4 text-foreground/70" />
+                    <div className="mt-3 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                      {tr(lang, h as keyof typeof L)}
+                    </div>
+                    <p className="mt-1 text-[13px] leading-relaxed text-foreground">
+                      {tr(lang, b as keyof typeof L)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <ul className="mx-auto mt-8 grid max-w-xl gap-2 text-left">
+                {[
+                  { Icon: Hand, k: "confirmTrust1" },
+                  { Icon: Eye, k: "confirmTrust2" },
+                  { Icon: Lock, k: "confirmTrust3" },
+                  { Icon: ShieldCheck, k: "confirmTrust4" },
+                ].map(({ Icon, k }) => (
+                  <li
+                    key={k}
+                    className="flex items-start gap-2.5 text-[13px] leading-relaxed text-muted-foreground"
+                  >
+                    <Icon className="mt-0.5 h-3.5 w-3.5 flex-none text-foreground/60" />
+                    <span>{tr(lang, k as keyof typeof L)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </section>

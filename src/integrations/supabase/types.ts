@@ -14,7 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      waitlist_signups: {
+        Row: {
+          company: string | null
+          confirmation_sent_at: string | null
+          created_at: string
+          email: string
+          id: string
+          ip_hash: string | null
+          language: Database["public"]["Enums"]["waitlist_lang"]
+          name: string | null
+          notes: string | null
+          onboarding_status: Database["public"]["Enums"]["waitlist_onboarding_status"]
+          role: string | null
+          source: string
+          updated_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          company?: string | null
+          confirmation_sent_at?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          ip_hash?: string | null
+          language?: Database["public"]["Enums"]["waitlist_lang"]
+          name?: string | null
+          notes?: string | null
+          onboarding_status?: Database["public"]["Enums"]["waitlist_onboarding_status"]
+          role?: string | null
+          source?: string
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          company?: string | null
+          confirmation_sent_at?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          ip_hash?: string | null
+          language?: Database["public"]["Enums"]["waitlist_lang"]
+          name?: string | null
+          notes?: string | null
+          onboarding_status?: Database["public"]["Enums"]["waitlist_onboarding_status"]
+          role?: string | null
+          source?: string
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +73,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      waitlist_lang: "en" | "tr"
+      waitlist_onboarding_status:
+        | "pending"
+        | "invited"
+        | "onboarded"
+        | "declined"
+        | "archived"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +206,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      waitlist_lang: ["en", "tr"],
+      waitlist_onboarding_status: [
+        "pending",
+        "invited",
+        "onboarded",
+        "declined",
+        "archived",
+      ],
+    },
   },
 } as const
