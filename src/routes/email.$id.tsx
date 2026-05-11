@@ -37,6 +37,7 @@ function EmailDetail() {
   const { lang } = useLang();
   const state = useEmailState(email.id);
   const navigate = useNavigate();
+  const assessment = quickAssess(email);
   const date = new Date(email.receivedAt).toLocaleString(lang === "tr" ? "tr-TR" : "en-US", {
     weekday: "short",
     month: "short",
