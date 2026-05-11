@@ -187,6 +187,7 @@ function PriorityPage() {
           <TrustStrip />
         </div>
       </main>
+      <ProductFooter />
     </div>
   );
 }
