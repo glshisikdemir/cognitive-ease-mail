@@ -25,6 +25,7 @@ import {
   type EmailStatus,
 } from "@/lib/email-store";
 import { CategoryBadge, ConfidenceTag, ReasonList } from "@/components/LoadBadge";
+import { DailyBriefing } from "@/components/DailyBriefing";
 
 const tabSchema = z.enum(["active", "replied", "archived", "ignored"]);
 type Tab = z.infer<typeof tabSchema>;
@@ -110,19 +111,19 @@ function Index() {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="mx-auto max-w-5xl space-y-10 px-6 py-10">
-        {/* Header */}
+        {/* Daily operational briefing */}
+        <DailyBriefing items={enriched.map((e) => ({ assessment: e.assessment, status: e.state.status }))} />
+
+        {/* Section header */}
         <section className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">
               <Inbox className="h-3.5 w-3.5" />
               {t(lang, "inbox")}
             </div>
-            <h1 className="mt-2 font-display text-3xl text-foreground sm:text-4xl">
+            <h1 className="mt-2 font-display text-2xl text-foreground sm:text-3xl">
               {counts.active === 0 ? t(lang, "allCaughtUp") : t(lang, "heroTitle")}
             </h1>
-            <p className="mt-1.5 max-w-xl text-sm text-muted-foreground">
-              {t(lang, "heroSubtitle")}
-            </p>
           </div>
           <Link
             to="/priority"
