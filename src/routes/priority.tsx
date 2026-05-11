@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Archive as ArchiveIcon, EyeOff, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, Archive as ArchiveIcon, EyeOff } from "lucide-react";
+import { TrustStrip } from "@/components/TrustStrip";
 import { Header } from "@/components/Header";
 import { CategoryBadge, ConfidenceTag, ReasonList } from "@/components/LoadBadge";
 import { emails as allEmails } from "@/lib/emails";
@@ -181,10 +182,9 @@ function PriorityPage() {
           </div>
         )}
 
-        <p className="mt-8 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
-          <ShieldCheck className="h-3.5 w-3.5" />
-          {t(lang, "trustNoAutoSend")}
-        </p>
+        <div className="mt-10">
+          <TrustStrip />
+        </div>
       </main>
     </div>
   );
