@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate, notFound } from "@tanstack/react-router";
-import { ArrowLeft, Archive as ArchiveIcon, EyeOff, RotateCcw, CheckCircle2, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Archive as ArchiveIcon, EyeOff, RotateCcw, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { AIPanel } from "@/components/AIPanel";
