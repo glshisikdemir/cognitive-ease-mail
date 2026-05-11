@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useLang, type Lang } from "@/lib/i18n";
 import { submitWaitlist } from "@/lib/waitlist.functions";
+import { PilotNotice } from "@/components/PilotNotice";
 
 export const Route = createFileRoute("/")({
   head: () => ({
