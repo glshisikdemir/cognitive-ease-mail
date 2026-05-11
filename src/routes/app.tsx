@@ -184,6 +184,7 @@ function Index() {
 
         <p className="text-center text-xs text-muted-foreground">{t(lang, "positioning")}</p>
       </main>
+      <ProductFooter />
     </div>
   );
 }
