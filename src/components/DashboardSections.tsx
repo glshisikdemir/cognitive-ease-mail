@@ -84,7 +84,7 @@ export function PrimaryActions({ activeView }: { activeView: DashboardView }) {
   return (
     <section className="grid gap-3 sm:grid-cols-3">
       {actions.map((a) => {
-        const isActive = a.to === "/" && activeView === a.view;
+        const isActive = a.to === "/app" && "view" in a && activeView === a.view;
         const linkProps =
           a.to === "/priority"
             ? { to: "/priority" as const }
