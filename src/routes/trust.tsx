@@ -107,6 +107,7 @@ function TrustPage() {
           <p className="mt-2 text-sm text-muted-foreground">{t(lang, "trustClosingBody")}</p>
         </section>
       </main>
+      <ProductFooter />
     </div>
   );
 }
