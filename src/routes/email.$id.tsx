@@ -172,6 +172,7 @@ function EmailDetail() {
           </aside>
         </div>
       </main>
+      <ProductFooter />
     </div>
   );
 }
