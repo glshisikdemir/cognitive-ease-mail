@@ -5,6 +5,51 @@ export type Lang = "en" | "tr";
 type Dict = Record<string, { en: string; tr: string }>;
 
 const dict: Dict = {
+  // Daily briefing
+  dailyBriefing: { en: "Daily operational briefing", tr: "Günlük operasyonel brifing" },
+  greet_morning: { en: "Good morning.", tr: "Günaydın." },
+  greet_afternoon: { en: "Good afternoon.", tr: "İyi günler." },
+  greet_evening: { en: "Good evening.", tr: "İyi akşamlar." },
+  greet_night: { en: "Working late.", tr: "Geç saatler." },
+  briefing_intro: {
+    en: "ISURA analyzed your inbox and organized your operational attention.",
+    tr: "ISURA gelen kutunuzu analiz etti ve operasyonel dikkatinizi düzenledi.",
+  },
+  brief_urgent: {
+    en: "{n} urgent threads require decisions.",
+    tr: "{n} acil konu kararınızı bekliyor.",
+  },
+  brief_risks: {
+    en: "{n} contract-related operational risk detected.",
+    tr: "{n} sözleşme kaynaklı operasyonel risk tespit edildi.",
+  },
+  brief_waiting: {
+    en: "{n} threads waiting on others — follow-up risk.",
+    tr: "{n} konu başkalarını bekliyor — takip riski.",
+  },
+  brief_filtered: {
+    en: "{n} low-priority interruptions filtered.",
+    tr: "{n} düşük öncelikli kesinti süzüldü.",
+  },
+  brief_drafts: {
+    en: "{n} responses prepared and waiting for your approval.",
+    tr: "{n} yanıt hazırlandı, onayınızı bekliyor.",
+  },
+  brief_clear: {
+    en: "Nothing urgent. Your operational queue is calm.",
+    tr: "Acil bir şey yok. Operasyon kuyruğunuz sakin.",
+  },
+  brief_load_label: { en: "Estimated mental load reduced", tr: "Tahmini bilişsel yük azalması" },
+  brief_load_value: { en: "{h}h recovered", tr: "{h} sa geri kazanıldı" },
+  brief_closing: {
+    en: "Begin with what carries consequence. ISURA holds the rest.",
+    tr: "Sonuç doğuranla başlayın. Geri kalanı ISURA tutar.",
+  },
+  brief_closing_calm: {
+    en: "Use this stillness. Deep work belongs to you today.",
+    tr: "Bu sakinliği kullanın. Bugün derin çalışma sizin.",
+  },
+
   appName: { en: "ISURA", tr: "ISURA" },
   appTagline: { en: "Operational cognition, quietly applied.", tr: "Operasyonel biliş, sessizce uygulanır." },
   inbox: { en: "Operations", tr: "Operasyon" },
