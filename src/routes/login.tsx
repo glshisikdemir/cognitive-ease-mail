@@ -1,8 +1,9 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Mail, Sparkles, ArrowRight, Loader2 } from "lucide-react";
 import { PilotNotice } from "@/components/PilotNotice";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -18,33 +19,55 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
-  const navigate = useNavigate();
+  
   const [mode, setMode] = useState<"choice" | "email">("choice");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState<"google" | "email" | null>(null);
   const [sent, setSent] = useState(false);
 
-  const onGoogle = () => {
+  const onGoogle = async () => {
     setLoading("google");
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: `${window.location.origin}/onboarding` },
+      });
+      if (error) throw error;
+      // Browser will redirect to Google.
+    } catch (err) {
       setLoading(null);
-      toast.success("Signed in. Welcome back.");
-      navigate({ to: "/onboarding" });
-    }, 900);
+      const message =
+        err instanceof Error ? err.message : "Could not start Google sign-in.";
+      toast.error(message);
+    }
   };
 
-  const onEmail = (e: FormEvent) => {
+  const onEmail = async (e: FormEvent) => {
     e.preventDefault();
     if (!/^\S+@\S+\.\S+$/.test(email)) {
       toast.error("Please enter a valid email.");
       return;
     }
     setLoading("email");
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/onboarding`,
+        },
+      });
+      if (error) throw error;
       setLoading(null);
       setSent(true);
       toast.success("Magic link sent. Check your inbox.");
-    }, 900);
+    } catch (err) {
+      setLoading(null);
+      const message =
+        err instanceof Error
+          ? err.message
+          : "We couldn't send the magic link. Please try again.";
+      toast.error(message);
+    }
   };
 
   return (
