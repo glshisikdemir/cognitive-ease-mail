@@ -25,27 +25,49 @@ function LoginPage() {
   const [loading, setLoading] = useState<"google" | "email" | null>(null);
   const [sent, setSent] = useState(false);
 
-  const onGoogle = () => {
+  const onGoogle = async () => {
     setLoading("google");
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: `${window.location.origin}/onboarding` },
+      });
+      if (error) throw error;
+      // Browser will redirect to Google.
+    } catch (err) {
       setLoading(null);
-      toast.success("Signed in. Welcome back.");
-      navigate({ to: "/onboarding" });
-    }, 900);
+      const message =
+        err instanceof Error ? err.message : "Could not start Google sign-in.";
+      toast.error(message);
+    }
   };
 
-  const onEmail = (e: FormEvent) => {
+  const onEmail = async (e: FormEvent) => {
     e.preventDefault();
     if (!/^\S+@\S+\.\S+$/.test(email)) {
       toast.error("Please enter a valid email.");
       return;
     }
     setLoading("email");
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/onboarding`,
+        },
+      });
+      if (error) throw error;
       setLoading(null);
       setSent(true);
       toast.success("Magic link sent. Check your inbox.");
-    }, 900);
+    } catch (err) {
+      setLoading(null);
+      const message =
+        err instanceof Error
+          ? err.message
+          : "We couldn't send the magic link. Please try again.";
+      toast.error(message);
+    }
   };
 
   return (
