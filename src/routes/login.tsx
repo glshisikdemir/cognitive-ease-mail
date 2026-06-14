@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Mail, Sparkles, ArrowRight, Loader2 } from "lucide-react";
 import { PilotNotice } from "@/components/PilotNotice";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
