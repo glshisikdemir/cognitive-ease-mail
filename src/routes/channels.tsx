@@ -129,10 +129,12 @@ function ChannelsPage() {
           {sending ? t(lang, "channelsSending") : t(lang, "channelsSend")}
         </button>
       </main>
+      <ConnectionWizard open={wizardOpen} onOpenChange={setWizardOpen} />
       <ProductFooter />
     </div>
   );
 }
+
 
 function ChannelCard({
   channel,
