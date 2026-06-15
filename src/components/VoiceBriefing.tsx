@@ -293,6 +293,10 @@ export function VoiceBriefing() {
         changeRate(-0.25);
         return "slower";
       }
+      if (has("reply", "draft", "yanıt", "yanıtla", "cevap", "taslak")) {
+        void generateDraftForCurrent();
+        return "reply";
+      }
       if (has("repeat", "tekrar", "yeniden", "restart", "baştan")) {
         handleRestart();
         return "repeat";
