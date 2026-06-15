@@ -416,6 +416,27 @@ export function VoiceBriefing() {
             <RotateCcw className="h-4 w-4" />
           </button>
 
+          {/* Speed control */}
+          <div className="flex items-center gap-1 rounded-full border border-border bg-surface px-1.5 py-1">
+            <button
+              onClick={() => changeRate(-0.25)}
+              className="flex h-7 w-7 items-center justify-center rounded-full text-foreground transition hover:bg-surface-muted"
+              aria-label={t(lang, "cmd_slower")}
+            >
+              −
+            </button>
+            <span className="min-w-[3rem] text-center text-xs font-medium tabular-nums text-muted-foreground">
+              {t(lang, "voiceSpeed")} {rate.toFixed(2)}×
+            </span>
+            <button
+              onClick={() => changeRate(0.25)}
+              className="flex h-7 w-7 items-center justify-center rounded-full text-foreground transition hover:bg-surface-muted"
+              aria-label={t(lang, "cmd_faster")}
+            >
+              +
+            </button>
+          </div>
+
           {/* Voice command toggle */}
           <button
             onClick={toggleListening}
