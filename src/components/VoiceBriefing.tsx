@@ -352,6 +352,19 @@ export function VoiceBriefing() {
       setLastHeard(raw);
       const has = (...words: string[]) => words.some((w) => text.includes(w));
 
+      // While a draft is awaiting approval, prioritize confirm / cancel
+      if (pendingRef.current) {
+        if (has("approve", "confirm", "onayla", "onaylıyorum", "gönder", "evet", "tamam", "kabul")) {
+          approveDraft();
+          return "approve";
+        }
+        if (has("cancel", "discard", "iptal", "vazgeç", "hayır", "reddet", "boşver")) {
+          cancelDraft();
+          return "cancel";
+        }
+      }
+
+
       if (has("play", "oynat", "başlat", "devam", "dinle")) {
         if (!playing) speakFrom(currentRef.current);
         return "play";
