@@ -15,6 +15,8 @@ import {
 import { DailyBriefing } from "@/components/DailyBriefing";
 import { TrustStrip } from "@/components/TrustStrip";
 import { ProductFooter } from "@/components/ProductFooter";
+import { AddEmailPanel } from "@/components/AddEmailPanel";
+import { useCustomEmails } from "@/lib/custom-emails";
 import {
   OperationalSection,
   type SectionKey,
@@ -38,14 +40,15 @@ export const Route = createFileRoute("/app")({
 function Index() {
   const { lang } = useLang();
   const store = useEmailStore();
+  const custom = useCustomEmails();
 
   const enriched: WorkspaceItem[] = useMemo(
     () =>
-      allEmails.map((email) => {
+      [...custom, ...allEmails].map((email) => {
         const status = (store[email.id]?.status ?? "active") as EmailStatus;
         return { email, status, assessment: quickAssess(email) };
       }),
-    [store],
+    [store, custom],
   );
 
   const relief = useMemo(
@@ -166,8 +169,12 @@ function Index() {
           </Link>
         </section>
 
+        {/* Manual email add */}
+        <AddEmailPanel />
+
         {/* Operational sections */}
         <div className="space-y-4">
+
           {order.map((key) => (
             <OperationalSection
               key={key}

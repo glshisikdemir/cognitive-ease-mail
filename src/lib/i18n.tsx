@@ -5,7 +5,26 @@ export type Lang = "en" | "tr";
 type Dict = Record<string, { en: string; tr: string }>;
 
 const dict: Dict = {
+  // Manual email add
+  addEmailOpen: { en: "Add an email", tr: "E-posta ekle" },
+  addEmailClose: { en: "Close", tr: "Kapat" },
+  addEmailTitle: { en: "Add an email manually", tr: "Elle e-posta ekle" },
+  addEmailDesc: {
+    en: "Paste an email to analyze it alongside your workspace. Stored only on this device.",
+    tr: "Çalışma alanınızda analiz etmek için bir e-posta yapıştırın. Yalnızca bu cihazda saklanır.",
+  },
+  addEmailSender: { en: "Sender name", tr: "Gönderen adı" },
+  addEmailSenderEmail: { en: "Sender email", tr: "Gönderen e-postası" },
+  addEmailSubject: { en: "Subject", tr: "Konu" },
+  addEmailBody: { en: "Email body", tr: "E-posta metni" },
+  addEmailSubmit: { en: "Add to workspace", tr: "Çalışma alanına ekle" },
+  addEmailAdded: { en: "Email added", tr: "E-posta eklendi" },
+  addEmailRemoved: { en: "Email removed", tr: "E-posta kaldırıldı" },
+  addEmailRemove: { en: "Remove", tr: "Kaldır" },
+  addEmailRequired: { en: "Subject and body are required", tr: "Konu ve metin gerekli" },
+  addEmailManual: { en: "Manually added", tr: "Elle eklendi" },
   // Operational sections
+
   workspaceTitle: { en: "Operational workspace", tr: "Operasyonel çalışma alanı" },
   workspaceSubtitle: {
     en: "Organized by what each thread asks of you — not by folders.",
