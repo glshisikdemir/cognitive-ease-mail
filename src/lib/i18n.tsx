@@ -55,6 +55,40 @@ const dict: Dict = {
   asst_concise_d: { en: "Short, to-the-point summary.", tr: "Kısa ve net özet." },
   asst_formal: { en: "Formal assistant", tr: "Resmi asistan" },
   asst_formal_d: { en: "Polished, professional tone.", tr: "Resmi, profesyonel ton." },
+  // Connection wizard
+  wizOpen: { en: "Connection wizard", tr: "Bağlantı sihirbazı" },
+  wizTitle: { en: "Connect your channels", tr: "Kanallarını bağla" },
+  wizSubtitle: {
+    en: "Follow the steps for each channel. ISURA only needs send access.",
+    tr: "Her kanal için adımları izle. ISURA yalnızca gönderim erişimine ihtiyaç duyar.",
+  },
+  wizStep: { en: "Step", tr: "Adım" },
+  wizOf: { en: "of", tr: "/" },
+  wizBack: { en: "Back", tr: "Geri" },
+  wizNext: { en: "Next", tr: "İleri" },
+  wizDone: { en: "Finish", tr: "Bitir" },
+  wizRecheck: { en: "Re-check status", tr: "Durumu yeniden kontrol et" },
+  wizChecking: { en: "Checking…", tr: "Kontrol ediliyor…" },
+  wizConnected: { en: "Connected", tr: "Bağlandı" },
+  wizNotConnected: { en: "Not connected yet", tr: "Henüz bağlanmadı" },
+  wizOpenConnectors: { en: "Open Connectors", tr: "Connectors'ı aç" },
+  wizConnectorsHint: {
+    en: "Open the Connectors panel (left sidebar) and connect the service below, then return here and re-check.",
+    tr: "Connectors panelini (sol kenar çubuğu) açıp aşağıdaki servisi bağla, sonra buraya dönüp yeniden kontrol et.",
+  },
+  // Slack steps
+  wizSlackS1: { en: "Open Connectors and choose Slack.", tr: "Connectors'ı aç ve Slack'i seç." },
+  wizSlackS2: { en: "Authorize ISURA for your Slack workspace.", tr: "ISURA'yı Slack çalışma alanın için yetkilendir." },
+  wizSlackS3: { en: "Pick the channel name in the Channels page (e.g. #operations).", tr: "Kanallar sayfasında kanal adını gir (ör. #operasyon)." },
+  // Telegram steps
+  wizTgS1: { en: "Create a bot with @BotFather and copy its token.", tr: "@BotFather ile bot oluştur ve token'ını kopyala." },
+  wizTgS2: { en: "Open Connectors and connect Telegram with that token.", tr: "Connectors'ı aç ve Telegram'ı bu token ile bağla." },
+  wizTgS3: { en: "Send a message to your bot, then enter your chat ID on the Channels page.", tr: "Botuna bir mesaj gönder, ardından Kanallar sayfasında chat ID'ni gir." },
+  // WhatsApp steps
+  wizWaS1: { en: "Open Connectors and connect Twilio (Account SID + API key).", tr: "Connectors'ı aç ve Twilio'yu bağla (Account SID + API anahtarı)." },
+  wizWaS2: { en: "Enable a WhatsApp sender number in Twilio (sandbox or approved).", tr: "Twilio'da bir WhatsApp gönderen numarası etkinleştir (sandbox veya onaylı)." },
+  wizWaS3: { en: "Add the TWILIO_WHATSAPP_FROM secret with that number.", tr: "Bu numarayı TWILIO_WHATSAPP_FROM gizli anahtarı olarak ekle." },
+  wizWaS4: { en: "Enter the recipient WhatsApp number on the Channels page.", tr: "Kanallar sayfasında alıcı WhatsApp numarasını gir." },
   // Operational sections
 
 
