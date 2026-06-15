@@ -252,6 +252,14 @@ export function VoiceBriefing() {
         handlePrev();
         return "previous";
       }
+      if (has("faster", "hızlan", "hızlandır", "hızlı")) {
+        changeRate(0.25);
+        return "faster";
+      }
+      if (has("slower", "yavaşla", "yavaşlat", "yavaş")) {
+        changeRate(-0.25);
+        return "slower";
+      }
       if (has("repeat", "tekrar", "yeniden", "restart", "baştan")) {
         handleRestart();
         return "repeat";
