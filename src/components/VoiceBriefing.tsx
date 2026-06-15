@@ -521,6 +521,7 @@ export function VoiceBriefing() {
             "cmd_repeat",
             "cmd_faster",
             "cmd_slower",
+            "cmd_reply",
             "cmd_priority",
             "cmd_workspace",
           ].map((k) => (
