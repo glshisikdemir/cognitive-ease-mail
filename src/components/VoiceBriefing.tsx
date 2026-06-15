@@ -472,7 +472,10 @@ export function VoiceBriefing() {
             "cmd_next",
             "cmd_prev",
             "cmd_repeat",
+            "cmd_faster",
+            "cmd_slower",
             "cmd_priority",
+            "cmd_workspace",
           ].map((k) => (
             <div
               key={k}
