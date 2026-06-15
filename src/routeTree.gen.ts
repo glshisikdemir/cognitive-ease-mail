@@ -23,6 +23,7 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as AiTransparencyRouteImport } from './routes/ai-transparency'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EmailIdRouteImport } from './routes/email.$id'
+import { Route as ApiTtsRouteImport } from './routes/api/tts'
 
 const TrustRoute = TrustRouteImport.update({
   id: '/trust',
@@ -94,6 +95,11 @@ const EmailIdRoute = EmailIdRouteImport.update({
   path: '/email/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiTtsRoute = ApiTtsRouteImport.update({
+  id: '/api/tts',
+  path: '/api/tts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/security': typeof SecurityRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
+  '/api/tts': typeof ApiTtsRoute
   '/email/$id': typeof EmailIdRoute
 }
 export interface FileRoutesByTo {
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/security': typeof SecurityRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
+  '/api/tts': typeof ApiTtsRoute
   '/email/$id': typeof EmailIdRoute
 }
 export interface FileRoutesById {
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/security': typeof SecurityRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
+  '/api/tts': typeof ApiTtsRoute
   '/email/$id': typeof EmailIdRoute
 }
 export interface FileRouteTypes {
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/security'
     | '/terms'
     | '/trust'
+    | '/api/tts'
     | '/email/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/security'
     | '/terms'
     | '/trust'
+    | '/api/tts'
     | '/email/$id'
   id:
     | '__root__'
@@ -192,6 +203,7 @@ export interface FileRouteTypes {
     | '/security'
     | '/terms'
     | '/trust'
+    | '/api/tts'
     | '/email/$id'
   fileRoutesById: FileRoutesById
 }
@@ -209,6 +221,7 @@ export interface RootRouteChildren {
   SecurityRoute: typeof SecurityRoute
   TermsRoute: typeof TermsRoute
   TrustRoute: typeof TrustRoute
+  ApiTtsRoute: typeof ApiTtsRoute
   EmailIdRoute: typeof EmailIdRoute
 }
 
@@ -312,6 +325,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmailIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/tts': {
+      id: '/api/tts'
+      path: '/api/tts'
+      fullPath: '/api/tts'
+      preLoaderRoute: typeof ApiTtsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -329,6 +349,7 @@ const rootRouteChildren: RootRouteChildren = {
   SecurityRoute: SecurityRoute,
   TermsRoute: TermsRoute,
   TrustRoute: TrustRoute,
+  ApiTtsRoute: ApiTtsRoute,
   EmailIdRoute: EmailIdRoute,
 }
 export const routeTree = rootRouteImport

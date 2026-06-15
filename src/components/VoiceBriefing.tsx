@@ -50,6 +50,9 @@ export function VoiceBriefing() {
   const recRef = useRef<AnyRec>(null);
   const currentRef = useRef(0);
   const segRef = useRef<BriefingSegment[] | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioCache = useRef<Map<string, string>>(new Map());
+  const playTokenRef = useRef(0);
   segRef.current = segments;
   currentRef.current = current;
 
@@ -87,32 +90,31 @@ export function VoiceBriefing() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
 
-  // --- Detect support ---
+  // --- Detect support (ElevenLabs handles playback; native TTS is only a fallback) ---
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const hasTTS = "speechSynthesis" in window;
-    setSupported(hasTTS);
-    // warm up voices
-    if (hasTTS) window.speechSynthesis.getVoices();
+    setSupported(true);
+    // warm up native voices for the fallback path
+    if ("speechSynthesis" in window) window.speechSynthesis.getVoices();
   }, []);
 
   const stopSpeaking = useCallback(() => {
+    playTokenRef.current += 1;
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
     if (typeof window !== "undefined" && window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
     setPlaying(false);
   }, []);
 
-  const speakFrom = useCallback(
-    (index: number) => {
+  // Fallback to the browser's built-in speech synthesis
+  const speakBrowser = useCallback(
+    (index: number, token: number) => {
       const segs = segRef.current;
       if (!segs || typeof window === "undefined" || !window.speechSynthesis) return;
       window.speechSynthesis.cancel();
-      if (index < 0 || index >= segs.length) {
-        setPlaying(false);
-        return;
-      }
-      setCurrent(index);
       const u = new SpeechSynthesisUtterance(segs[index].spoken);
       const voice = pickVoice(lang);
       if (voice) u.voice = voice;
@@ -120,12 +122,10 @@ export function VoiceBriefing() {
       u.rate = 1;
       u.pitch = 1;
       u.onend = () => {
+        if (token !== playTokenRef.current) return;
         const next = index + 1;
-        if (next < segs.length) {
-          speakFrom(next);
-        } else {
-          setPlaying(false);
-        }
+        if (next < segs.length) speakFromRef.current?.(next);
+        else setPlaying(false);
       };
       window.speechSynthesis.speak(u);
       setPlaying(true);
@@ -133,15 +133,76 @@ export function VoiceBriefing() {
     [lang],
   );
 
+  // Fetch ElevenLabs audio (cached per segment) as an object URL
+  const fetchAudioUrl = useCallback(
+    async (text: string) => {
+      const key = `${lang}::${text}`;
+      const cached = audioCache.current.get(key);
+      if (cached) return cached;
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, lang }),
+      });
+      if (!res.ok) throw new Error("tts_failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      audioCache.current.set(key, url);
+      return url;
+    },
+    [lang],
+  );
+
+  const speakFrom = useCallback(
+    async (index: number) => {
+      const segs = segRef.current;
+      if (!segs) return;
+      if (index < 0 || index >= segs.length) {
+        setPlaying(false);
+        return;
+      }
+      const token = ++playTokenRef.current;
+      if (audioRef.current) audioRef.current.pause();
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      setCurrent(index);
+      setPlaying(true);
+      try {
+        const url = await fetchAudioUrl(segs[index].spoken);
+        if (token !== playTokenRef.current) return;
+        let audio = audioRef.current;
+        if (!audio) {
+          audio = new Audio();
+          audioRef.current = audio;
+        }
+        audio.onended = () => {
+          if (token !== playTokenRef.current) return;
+          const next = index + 1;
+          if (next < segs.length) void speakFromRef.current?.(next);
+          else setPlaying(false);
+        };
+        audio.src = url;
+        await audio.play();
+      } catch {
+        // Graceful fallback to native TTS
+        if (token !== playTokenRef.current) return;
+        speakBrowser(index, token);
+      }
+    },
+    [fetchAudioUrl, speakBrowser],
+  );
+
+  const speakFromRef = useRef(speakFrom);
+  speakFromRef.current = speakFrom;
+
   const handlePlayPause = useCallback(() => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
     if (playing) {
-      window.speechSynthesis.cancel();
-      setPlaying(false);
+      stopSpeaking();
     } else {
-      speakFrom(currentRef.current);
+      void speakFrom(currentRef.current);
     }
-  }, [playing, speakFrom]);
+  }, [playing, speakFrom, stopSpeaking]);
 
   const handleNext = useCallback(() => {
     const segs = segRef.current;
@@ -228,9 +289,14 @@ export function VoiceBriefing() {
 
   // Cleanup
   useEffect(() => {
+    const cache = audioCache.current;
     return () => {
+      playTokenRef.current += 1;
+      audioRef.current?.pause();
       if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel();
       recRef.current?.stop?.();
+      cache.forEach((url) => URL.revokeObjectURL(url));
+      cache.clear();
     };
   }, []);
 
