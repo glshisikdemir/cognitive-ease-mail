@@ -256,6 +256,75 @@ export function VoiceBriefing() {
   const speakFromRef = useRef(speakFrom);
   speakFromRef.current = speakFrom;
 
+  // Speak arbitrary text (used for draft summaries / confirmation prompts)
+  const speakText = useCallback(
+    async (text: string) => {
+      const token = ++playTokenRef.current;
+      if (audioRef.current) audioRef.current.pause();
+      if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel();
+      setPlaying(true);
+      try {
+        const url = await fetchAudioUrl(text);
+        if (token !== playTokenRef.current) return;
+        let audio = audioRef.current;
+        if (!audio) {
+          audio = new Audio();
+          audioRef.current = audio;
+        }
+        audio.onended = () => {
+          if (token === playTokenRef.current) setPlaying(false);
+        };
+        audio.src = url;
+        audio.playbackRate = rateRef.current;
+        await audio.play();
+      } catch {
+        if (token !== playTokenRef.current) return;
+        if (typeof window !== "undefined" && window.speechSynthesis) {
+          const u = new SpeechSynthesisUtterance(text);
+          const voice = pickVoice(lang);
+          if (voice) u.voice = voice;
+          u.lang = lang === "tr" ? "tr-TR" : "en-US";
+          u.rate = rateRef.current;
+          u.onend = () => {
+            if (token === playTokenRef.current) setPlaying(false);
+          };
+          window.speechSynthesis.speak(u);
+        } else {
+          setPlaying(false);
+        }
+      }
+    },
+    [fetchAudioUrl, lang],
+  );
+  speakTextRef.current = speakText;
+
+  // Approve / discard the pending draft (after the spoken summary)
+  const approveDraft = useCallback(() => {
+    const p = pendingRef.current;
+    if (!p) return;
+    setReplyDraft(p.emailId, p.draft);
+    setStatus(p.emailId, "replied");
+    setPending(null);
+    playTokenRef.current += 1;
+    if (audioRef.current) audioRef.current.pause();
+    if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel();
+    setPlaying(false);
+    toast.success(`${t(lang, "voiceDraftApproved")} — ${p.subject}`);
+    speakTextRef.current?.(t(lang, "voiceDraftApprovedSpoken"));
+  }, [lang]);
+
+  const cancelDraft = useCallback(() => {
+    if (!pendingRef.current) return;
+    setPending(null);
+    playTokenRef.current += 1;
+    if (audioRef.current) audioRef.current.pause();
+    if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel();
+    setPlaying(false);
+    toast.message(t(lang, "voiceDraftDiscarded"));
+  }, [lang]);
+
+
+
   const handlePlayPause = useCallback(() => {
     if (playing) {
       stopSpeaking();
