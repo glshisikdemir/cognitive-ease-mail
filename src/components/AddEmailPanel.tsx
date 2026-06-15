@@ -60,7 +60,7 @@ export function AddEmailPanel() {
               <input
                 value={sender}
                 onChange={(e) => setSender(e.target.value)}
-                className="form-input"
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
                 maxLength={120}
               />
             </Field>
@@ -69,7 +69,7 @@ export function AddEmailPanel() {
                 value={senderEmail}
                 onChange={(e) => setSenderEmail(e.target.value)}
                 type="email"
-                className="form-input"
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
                 maxLength={200}
               />
             </Field>
@@ -78,7 +78,7 @@ export function AddEmailPanel() {
             <input
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              className="form-input"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
               maxLength={250}
             />
           </Field>
@@ -87,7 +87,7 @@ export function AddEmailPanel() {
               value={body}
               onChange={(e) => setBody(e.target.value)}
               rows={6}
-              className="form-input resize-y"
+              className="w-full resize-y rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
               maxLength={8000}
             />
           </Field>
