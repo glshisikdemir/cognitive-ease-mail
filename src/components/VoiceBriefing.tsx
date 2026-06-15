@@ -54,8 +54,19 @@ export function VoiceBriefing() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCache = useRef<Map<string, string>>(new Map());
   const playTokenRef = useRef(0);
+  const rateRef = useRef(1);
   segRef.current = segments;
   currentRef.current = current;
+  rateRef.current = rate;
+
+  const changeRate = useCallback((delta: number) => {
+    setRate((prev) => {
+      const next = Math.min(2, Math.max(0.5, Math.round((prev + delta) * 10) / 10));
+      rateRef.current = next;
+      if (audioRef.current) audioRef.current.playbackRate = next;
+      return next;
+    });
+  }, []);
 
   // --- Load briefing script ---
   const load = useCallback(async () => {
