@@ -46,6 +46,7 @@ export function VoiceBriefing() {
   const [listening, setListening] = useState(false);
   const [supported, setSupported] = useState(true);
   const [lastHeard, setLastHeard] = useState<string>("");
+  const [rate, setRate] = useState(1);
 
   const recRef = useRef<AnyRec>(null);
   const currentRef = useRef(0);
@@ -53,8 +54,19 @@ export function VoiceBriefing() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCache = useRef<Map<string, string>>(new Map());
   const playTokenRef = useRef(0);
+  const rateRef = useRef(1);
   segRef.current = segments;
   currentRef.current = current;
+  rateRef.current = rate;
+
+  const changeRate = useCallback((delta: number) => {
+    setRate((prev) => {
+      const next = Math.min(2, Math.max(0.5, Math.round((prev + delta) * 10) / 10));
+      rateRef.current = next;
+      if (audioRef.current) audioRef.current.playbackRate = next;
+      return next;
+    });
+  }, []);
 
   // --- Load briefing script ---
   const load = useCallback(async () => {
@@ -119,7 +131,7 @@ export function VoiceBriefing() {
       const voice = pickVoice(lang);
       if (voice) u.voice = voice;
       u.lang = lang === "tr" ? "tr-TR" : "en-US";
-      u.rate = 1;
+      u.rate = rateRef.current;
       u.pitch = 1;
       u.onend = () => {
         if (token !== playTokenRef.current) return;
@@ -183,6 +195,7 @@ export function VoiceBriefing() {
           else setPlaying(false);
         };
         audio.src = url;
+        audio.playbackRate = rateRef.current;
         await audio.play();
       } catch {
         // Graceful fallback to native TTS
@@ -239,6 +252,14 @@ export function VoiceBriefing() {
         handlePrev();
         return "previous";
       }
+      if (has("faster", "hızlan", "hızlandır", "hızlı")) {
+        changeRate(0.25);
+        return "faster";
+      }
+      if (has("slower", "yavaşla", "yavaşlat", "yavaş")) {
+        changeRate(-0.25);
+        return "slower";
+      }
       if (has("repeat", "tekrar", "yeniden", "restart", "baştan")) {
         handleRestart();
         return "repeat";
@@ -253,7 +274,7 @@ export function VoiceBriefing() {
       }
       return null;
     },
-    [playing, speakFrom, stopSpeaking, handleNext, handlePrev, handleRestart, navigate],
+    [playing, speakFrom, stopSpeaking, handleNext, handlePrev, handleRestart, changeRate, navigate],
   );
 
   // --- Speech recognition (voice commands) ---
@@ -395,6 +416,27 @@ export function VoiceBriefing() {
             <RotateCcw className="h-4 w-4" />
           </button>
 
+          {/* Speed control */}
+          <div className="flex items-center gap-1 rounded-full border border-border bg-surface px-1.5 py-1">
+            <button
+              onClick={() => changeRate(-0.25)}
+              className="flex h-7 w-7 items-center justify-center rounded-full text-foreground transition hover:bg-surface-muted"
+              aria-label={t(lang, "cmd_slower")}
+            >
+              −
+            </button>
+            <span className="min-w-[3rem] text-center text-xs font-medium tabular-nums text-muted-foreground">
+              {t(lang, "voiceSpeed")} {rate.toFixed(2)}×
+            </span>
+            <button
+              onClick={() => changeRate(0.25)}
+              className="flex h-7 w-7 items-center justify-center rounded-full text-foreground transition hover:bg-surface-muted"
+              aria-label={t(lang, "cmd_faster")}
+            >
+              +
+            </button>
+          </div>
+
           {/* Voice command toggle */}
           <button
             onClick={toggleListening}
@@ -430,7 +472,10 @@ export function VoiceBriefing() {
             "cmd_next",
             "cmd_prev",
             "cmd_repeat",
+            "cmd_faster",
+            "cmd_slower",
             "cmd_priority",
+            "cmd_workspace",
           ].map((k) => (
             <div
               key={k}

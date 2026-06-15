@@ -542,6 +542,10 @@ const dict: Dict = {
   cmd_prev: { en: "“Previous” / “Önceki” — go back", tr: "“Önceki” / “Previous” — geri dön" },
   cmd_repeat: { en: "“Repeat” / “Baştan” — restart briefing", tr: "“Baştan” / “Repeat” — brifingi yeniden başlat" },
   cmd_priority: { en: "“Priority” / “Öncelik” — open priority queue", tr: "“Öncelik” / “Priority” — öncelik kuyruğunu aç" },
+  cmd_workspace: { en: "“Inbox” / “Gelen kutusu” — open workspace", tr: "“Gelen kutusu” / “Inbox” — çalışma alanını aç" },
+  cmd_faster: { en: "“Faster” / “Hızlandır” — speed up playback", tr: "“Hızlandır” / “Faster” — oynatmayı hızlandır" },
+  cmd_slower: { en: "“Slower” / “Yavaşlat” — slow down playback", tr: "“Yavaşlat” / “Slower” — oynatmayı yavaşlat" },
+  voiceSpeed: { en: "Speed", tr: "Hız" },
 };
 
 export function t(lang: Lang, key: keyof typeof dict | string, vars?: Record<string, string | number>): string {
