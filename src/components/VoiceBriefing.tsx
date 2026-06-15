@@ -407,7 +407,7 @@ export function VoiceBriefing() {
       }
       return null;
     },
-    [playing, speakFrom, stopSpeaking, handleNext, handlePrev, handleRestart, changeRate, generateDraftForCurrent, navigate],
+    [playing, speakFrom, stopSpeaking, handleNext, handlePrev, handleRestart, changeRate, generateDraftForCurrent, approveDraft, cancelDraft, navigate],
   );
 
   // --- Speech recognition (voice commands) ---
