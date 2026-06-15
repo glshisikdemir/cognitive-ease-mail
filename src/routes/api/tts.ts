@@ -1,10 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
-// Calm, warm narration voices for the briefing experience.
-// Sarah (EN) — composed, clear; Charlotte works well for multilingual incl. TR.
-const VOICE_EN = "EXAVITQu4vr4xnSDxMaL"; // Sarah
-const VOICE_TR = "XB0fDUnXU5powFXDhCwa"; // Charlotte (multilingual)
+// Calm, warm narration voice. eleven_multilingual_v2 handles EN + TR naturally.
+const VOICE_EN = "EXAVITQu4vr4xnSDxMaL"; // Sarah — composed, clear
+const VOICE_TR = "EXAVITQu4vr4xnSDxMaL"; // Sarah (multilingual model speaks Turkish)
 
 const BodySchema = z.object({
   text: z.string().min(1).max(5000),
