@@ -40,14 +40,15 @@ export const Route = createFileRoute("/app")({
 function Index() {
   const { lang } = useLang();
   const store = useEmailStore();
+  const custom = useCustomEmails();
 
   const enriched: WorkspaceItem[] = useMemo(
     () =>
-      allEmails.map((email) => {
+      [...custom, ...allEmails].map((email) => {
         const status = (store[email.id]?.status ?? "active") as EmailStatus;
         return { email, status, assessment: quickAssess(email) };
       }),
-    [store],
+    [store, custom],
   );
 
   const relief = useMemo(
