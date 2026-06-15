@@ -12,12 +12,14 @@ import {
   Radio,
   Volume2,
   PenLine,
+  Check,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { generateBriefing, type BriefingSegment } from "@/lib/briefing.functions";
 import { analyzeEmail } from "@/lib/analyze.functions";
 import { emails as allEmails } from "@/lib/emails";
-import { setReplyDraft } from "@/lib/email-store";
+import { setReplyDraft, setStatus } from "@/lib/email-store";
 import { quickAssess } from "@/lib/heuristics";
 import { useLang, t, type Lang } from "@/lib/i18n";
 
@@ -52,6 +54,7 @@ export function VoiceBriefing() {
   const [lastHeard, setLastHeard] = useState<string>("");
   const [rate, setRate] = useState(1);
   const [drafting, setDrafting] = useState(false);
+  const [pending, setPending] = useState<{ emailId: string; subject: string; draft: string } | null>(null);
 
   const recRef = useRef<AnyRec>(null);
   const currentRef = useRef(0);
@@ -60,8 +63,11 @@ export function VoiceBriefing() {
   const audioCache = useRef<Map<string, string>>(new Map());
   const playTokenRef = useRef(0);
   const rateRef = useRef(1);
+  const pendingRef = useRef<{ emailId: string; subject: string; draft: string } | null>(null);
+  const speakTextRef = useRef<((text: string) => void) | null>(null);
   segRef.current = segments;
   currentRef.current = current;
+  pendingRef.current = pending;
   rateRef.current = rate;
 
   const changeRate = useCallback((delta: number) => {
@@ -92,7 +98,15 @@ export function VoiceBriefing() {
         data: { sender: email.sender, subject: email.subject, body: email.body, regenerate: true },
       });
       setReplyDraft(email.id, result.replyDraft);
+      setPending({ emailId: email.id, subject: email.subject, draft: result.replyDraft });
       toast.success(`${t(lang, "voiceDraftReady")} — ${email.subject}`, { id: "voice-draft" });
+      // Read a short spoken summary aloud, then wait for the user's confirmation
+      const preview = summarizeDraft(result.replyDraft);
+      const spoken =
+        lang === "tr"
+          ? `${email.subject} için yanıt taslağı hazır. İşte özet: ${preview} Göndermemi onaylıyor musunuz? Onaylamak için "onayla", vazgeçmek için "iptal" deyin.`
+          : `Reply draft ready for ${email.subject}. Here's the summary: ${preview} Do you approve sending it? Say "approve" to confirm or "cancel" to discard.`;
+      speakTextRef.current?.(spoken);
     } catch {
       toast.error(t(lang, "voiceDraftFailed"), { id: "voice-draft" });
     } finally {
@@ -242,6 +256,75 @@ export function VoiceBriefing() {
   const speakFromRef = useRef(speakFrom);
   speakFromRef.current = speakFrom;
 
+  // Speak arbitrary text (used for draft summaries / confirmation prompts)
+  const speakText = useCallback(
+    async (text: string) => {
+      const token = ++playTokenRef.current;
+      if (audioRef.current) audioRef.current.pause();
+      if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel();
+      setPlaying(true);
+      try {
+        const url = await fetchAudioUrl(text);
+        if (token !== playTokenRef.current) return;
+        let audio = audioRef.current;
+        if (!audio) {
+          audio = new Audio();
+          audioRef.current = audio;
+        }
+        audio.onended = () => {
+          if (token === playTokenRef.current) setPlaying(false);
+        };
+        audio.src = url;
+        audio.playbackRate = rateRef.current;
+        await audio.play();
+      } catch {
+        if (token !== playTokenRef.current) return;
+        if (typeof window !== "undefined" && window.speechSynthesis) {
+          const u = new SpeechSynthesisUtterance(text);
+          const voice = pickVoice(lang);
+          if (voice) u.voice = voice;
+          u.lang = lang === "tr" ? "tr-TR" : "en-US";
+          u.rate = rateRef.current;
+          u.onend = () => {
+            if (token === playTokenRef.current) setPlaying(false);
+          };
+          window.speechSynthesis.speak(u);
+        } else {
+          setPlaying(false);
+        }
+      }
+    },
+    [fetchAudioUrl, lang],
+  );
+  speakTextRef.current = speakText;
+
+  // Approve / discard the pending draft (after the spoken summary)
+  const approveDraft = useCallback(() => {
+    const p = pendingRef.current;
+    if (!p) return;
+    setReplyDraft(p.emailId, p.draft);
+    setStatus(p.emailId, "replied");
+    setPending(null);
+    playTokenRef.current += 1;
+    if (audioRef.current) audioRef.current.pause();
+    if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel();
+    setPlaying(false);
+    toast.success(`${t(lang, "voiceDraftApproved")} — ${p.subject}`);
+    speakTextRef.current?.(t(lang, "voiceDraftApprovedSpoken"));
+  }, [lang]);
+
+  const cancelDraft = useCallback(() => {
+    if (!pendingRef.current) return;
+    setPending(null);
+    playTokenRef.current += 1;
+    if (audioRef.current) audioRef.current.pause();
+    if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel();
+    setPlaying(false);
+    toast.message(t(lang, "voiceDraftDiscarded"));
+  }, [lang]);
+
+
+
   const handlePlayPause = useCallback(() => {
     if (playing) {
       stopSpeaking();
@@ -268,6 +351,19 @@ export function VoiceBriefing() {
       const text = raw.toLowerCase().trim();
       setLastHeard(raw);
       const has = (...words: string[]) => words.some((w) => text.includes(w));
+
+      // While a draft is awaiting approval, prioritize confirm / cancel
+      if (pendingRef.current) {
+        if (has("approve", "confirm", "onayla", "onaylıyorum", "gönder", "evet", "tamam", "kabul")) {
+          approveDraft();
+          return "approve";
+        }
+        if (has("cancel", "discard", "iptal", "vazgeç", "hayır", "reddet", "boşver")) {
+          cancelDraft();
+          return "cancel";
+        }
+      }
+
 
       if (has("play", "oynat", "başlat", "devam", "dinle")) {
         if (!playing) speakFrom(currentRef.current);
@@ -311,7 +407,7 @@ export function VoiceBriefing() {
       }
       return null;
     },
-    [playing, speakFrom, stopSpeaking, handleNext, handlePrev, handleRestart, changeRate, generateDraftForCurrent, navigate],
+    [playing, speakFrom, stopSpeaking, handleNext, handlePrev, handleRestart, changeRate, generateDraftForCurrent, approveDraft, cancelDraft, navigate],
   );
 
   // --- Speech recognition (voice commands) ---
@@ -508,6 +604,39 @@ export function VoiceBriefing() {
         )}
       </section>
 
+      {/* Pending draft — awaiting voice/manual approval */}
+      {pending && (
+        <section className="rounded-2xl border border-primary/40 bg-primary/5 px-6 py-6">
+          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary">
+            <PenLine className="h-3.5 w-3.5" />
+            {t(lang, "voiceAwaitingApproval")}
+          </div>
+          <h3 className="mt-3 font-display text-base text-foreground">{pending.subject}</h3>
+          <p className="mt-2 max-w-2xl whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+            {pending.draft}
+          </p>
+          <p className="mt-3 text-xs text-muted-foreground">{t(lang, "voiceApprovalHint")}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              onClick={approveDraft}
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+            >
+              <Check className="h-4 w-4" />
+              {t(lang, "voiceApprove")}
+            </button>
+            <button
+              onClick={cancelDraft}
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground transition hover:bg-surface-muted"
+            >
+              <X className="h-4 w-4" />
+              {t(lang, "voiceDiscard")}
+            </button>
+          </div>
+        </section>
+      )}
+
+
+
       {/* Command reference */}
       <section className="rounded-2xl border border-border/70 bg-surface px-6 py-6">
         <h3 className="font-display text-base text-foreground">{t(lang, "voiceCommandsTitle")}</h3>
@@ -522,6 +651,7 @@ export function VoiceBriefing() {
             "cmd_faster",
             "cmd_slower",
             "cmd_reply",
+            "cmd_confirm",
             "cmd_priority",
             "cmd_workspace",
           ].map((k) => (
@@ -537,6 +667,16 @@ export function VoiceBriefing() {
     </div>
   );
 }
+
+// Condense a reply draft into 1–2 sentences for the spoken summary
+function summarizeDraft(draft: string): string {
+  const clean = draft.replace(/\s+/g, " ").trim();
+  const sentences = clean.split(/(?<=[.!?])\s+/).filter(Boolean);
+  const picked = sentences.slice(0, 2).join(" ");
+  const summary = picked || clean;
+  return summary.length > 260 ? `${summary.slice(0, 257).trimEnd()}…` : summary;
+}
+
 
 function weight(category: string): number {
   switch (category) {
