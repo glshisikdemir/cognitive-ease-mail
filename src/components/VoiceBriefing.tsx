@@ -98,7 +98,15 @@ export function VoiceBriefing() {
         data: { sender: email.sender, subject: email.subject, body: email.body, regenerate: true },
       });
       setReplyDraft(email.id, result.replyDraft);
+      setPending({ emailId: email.id, subject: email.subject, draft: result.replyDraft });
       toast.success(`${t(lang, "voiceDraftReady")} — ${email.subject}`, { id: "voice-draft" });
+      // Read a short spoken summary aloud, then wait for the user's confirmation
+      const preview = summarizeDraft(result.replyDraft);
+      const spoken =
+        lang === "tr"
+          ? `${email.subject} için yanıt taslağı hazır. İşte özet: ${preview} Göndermemi onaylıyor musunuz? Onaylamak için "onayla", vazgeçmek için "iptal" deyin.`
+          : `Reply draft ready for ${email.subject}. Here's the summary: ${preview} Do you approve sending it? Say "approve" to confirm or "cancel" to discard.`;
+      speakTextRef.current?.(spoken);
     } catch {
       toast.error(t(lang, "voiceDraftFailed"), { id: "voice-draft" });
     } finally {
