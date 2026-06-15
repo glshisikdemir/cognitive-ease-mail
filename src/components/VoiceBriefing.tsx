@@ -73,6 +73,34 @@ export function VoiceBriefing() {
     });
   }, []);
 
+  // Generate an AI reply draft for the email behind the current segment
+  const draftingRef = useRef(false);
+  const generateDraftForCurrent = useCallback(async () => {
+    const segs = segRef.current;
+    if (!segs || draftingRef.current) return;
+    const seg = segs[currentRef.current];
+    const email = seg?.emailId ? allEmails.find((e) => e.id === seg.emailId) : undefined;
+    if (!email) {
+      toast.error(t(lang, "voiceNoEmail"));
+      return;
+    }
+    draftingRef.current = true;
+    setDrafting(true);
+    toast.loading(t(lang, "voiceDrafting"), { id: "voice-draft" });
+    try {
+      const result = await analyzeFn({
+        data: { sender: email.sender, subject: email.subject, body: email.body, regenerate: true },
+      });
+      setReplyDraft(email.id, result.replyDraft);
+      toast.success(`${t(lang, "voiceDraftReady")} — ${email.subject}`, { id: "voice-draft" });
+    } catch {
+      toast.error(t(lang, "voiceDraftFailed"), { id: "voice-draft" });
+    } finally {
+      draftingRef.current = false;
+      setDrafting(false);
+    }
+  }, [analyzeFn, lang]);
+
   // --- Load briefing script ---
   const load = useCallback(async () => {
     setLoading(true);
