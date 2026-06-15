@@ -50,6 +50,9 @@ export function VoiceBriefing() {
   const recRef = useRef<AnyRec>(null);
   const currentRef = useRef(0);
   const segRef = useRef<BriefingSegment[] | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioCache = useRef<Map<string, string>>(new Map());
+  const playTokenRef = useRef(0);
   segRef.current = segments;
   currentRef.current = current;
 
