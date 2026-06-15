@@ -142,5 +142,16 @@ Elena`,
 ];
 
 export function getEmail(id: string): Email | undefined {
-  return emails.find((e) => e.id === id);
+  const found = emails.find((e) => e.id === id);
+  if (found) return found;
+  if (typeof window !== "undefined") {
+    try {
+      const raw = window.localStorage.getItem("isura.custom-emails.v1");
+      const list = raw ? (JSON.parse(raw) as Email[]) : [];
+      return list.find((e) => e.id === id);
+    } catch {
+      return undefined;
+    }
+  }
+  return undefined;
 }
