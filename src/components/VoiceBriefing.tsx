@@ -131,7 +131,7 @@ export function VoiceBriefing() {
       const voice = pickVoice(lang);
       if (voice) u.voice = voice;
       u.lang = lang === "tr" ? "tr-TR" : "en-US";
-      u.rate = 1;
+      u.rate = rateRef.current;
       u.pitch = 1;
       u.onend = () => {
         if (token !== playTokenRef.current) return;
