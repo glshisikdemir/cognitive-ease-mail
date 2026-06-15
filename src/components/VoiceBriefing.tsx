@@ -612,9 +612,17 @@ export function VoiceBriefing() {
             {t(lang, "voiceAwaitingApproval")}
           </div>
           <h3 className="mt-3 font-display text-base text-foreground">{pending.subject}</h3>
-          <p className="mt-2 max-w-2xl whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
-            {pending.draft}
-          </p>
+          <label className="mt-3 block text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+            {t(lang, "voiceEditDraft")}
+          </label>
+          <textarea
+            value={pending.draft}
+            onChange={(e) =>
+              setPending((prev) => (prev ? { ...prev, draft: e.target.value } : prev))
+            }
+            rows={6}
+            className="mt-2 w-full resize-y rounded-xl border border-border bg-surface px-4 py-3 text-sm leading-relaxed text-foreground outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
+          />
           <p className="mt-3 text-xs text-muted-foreground">{t(lang, "voiceApprovalHint")}</p>
           <div className="mt-4 flex flex-wrap gap-2">
             <button

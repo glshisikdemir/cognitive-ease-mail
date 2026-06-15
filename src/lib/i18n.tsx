@@ -567,6 +567,7 @@ const dict: Dict = {
     en: "I'll read a summary aloud. Say “approve” to confirm or “cancel” to discard.",
     tr: "Sesli bir özet okuyacağım. Onaylamak için “onayla”, vazgeçmek için “iptal” deyin.",
   },
+  voiceEditDraft: { en: "Edit draft before approving", tr: "Onaylamadan önce taslağı düzenleyin" },
   voiceApprove: { en: "Approve & mark replied", tr: "Onayla ve yanıtlandı işaretle" },
   voiceDiscard: { en: "Discard", tr: "Vazgeç" },
   voiceDraftApproved: { en: "Reply approved", tr: "Yanıt onaylandı" },
