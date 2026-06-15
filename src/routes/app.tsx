@@ -169,8 +169,12 @@ function Index() {
           </Link>
         </section>
 
+        {/* Manual email add */}
+        <AddEmailPanel />
+
         {/* Operational sections */}
         <div className="space-y-4">
+
           {order.map((key) => (
             <OperationalSection
               key={key}
