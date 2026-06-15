@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Mail, MessageCircle, Slack as SlackIcon, Send, Radio } from "lucide-react";
+import { Mail, MessageCircle, Slack as SlackIcon, Send, Radio, Wand2 } from "lucide-react";
+import { ConnectionWizard } from "@/components/ConnectionWizard";
 import { Header } from "@/components/Header";
 import { ProductFooter } from "@/components/ProductFooter";
 import { useLang, t } from "@/lib/i18n";
@@ -45,6 +46,7 @@ function ChannelsPage() {
   const custom = useCustomEmails();
   const sendFn = useServerFn(sendBriefing);
   const [sending, setSending] = useState(false);
+  const [wizardOpen, setWizardOpen] = useState(false);
 
   const emails = useMemo(() => {
     return [...custom, ...staticEmails].map((e) => ({
@@ -102,7 +104,15 @@ function ChannelsPage() {
           <p className="mt-1 max-w-xl text-sm text-muted-foreground">
             {t(lang, "channelsSubtitle")}
           </p>
+          <button
+            onClick={() => setWizardOpen(true)}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+          >
+            <Wand2 className="h-4 w-4" />
+            {t(lang, "wizOpen")}
+          </button>
         </section>
+
 
         <div className="space-y-4">
           {CHANNELS.map((c) => (
@@ -119,10 +129,12 @@ function ChannelsPage() {
           {sending ? t(lang, "channelsSending") : t(lang, "channelsSend")}
         </button>
       </main>
+      <ConnectionWizard open={wizardOpen} onOpenChange={setWizardOpen} />
       <ProductFooter />
     </div>
   );
 }
+
 
 function ChannelCard({
   channel,
