@@ -604,6 +604,39 @@ export function VoiceBriefing() {
         )}
       </section>
 
+      {/* Pending draft — awaiting voice/manual approval */}
+      {pending && (
+        <section className="rounded-2xl border border-primary/40 bg-primary/5 px-6 py-6">
+          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary">
+            <PenLine className="h-3.5 w-3.5" />
+            {t(lang, "voiceAwaitingApproval")}
+          </div>
+          <h3 className="mt-3 font-display text-base text-foreground">{pending.subject}</h3>
+          <p className="mt-2 max-w-2xl whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+            {pending.draft}
+          </p>
+          <p className="mt-3 text-xs text-muted-foreground">{t(lang, "voiceApprovalHint")}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              onClick={approveDraft}
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+            >
+              <Check className="h-4 w-4" />
+              {t(lang, "voiceApprove")}
+            </button>
+            <button
+              onClick={cancelDraft}
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground transition hover:bg-surface-muted"
+            >
+              <X className="h-4 w-4" />
+              {t(lang, "voiceDiscard")}
+            </button>
+          </div>
+        </section>
+      )}
+
+
+
       {/* Command reference */}
       <section className="rounded-2xl border border-border/70 bg-surface px-6 py-6">
         <h3 className="font-display text-base text-foreground">{t(lang, "voiceCommandsTitle")}</h3>
