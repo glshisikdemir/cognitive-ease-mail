@@ -54,6 +54,7 @@ export function VoiceBriefing() {
   const [lastHeard, setLastHeard] = useState<string>("");
   const [rate, setRate] = useState(1);
   const [drafting, setDrafting] = useState(false);
+  const [pending, setPending] = useState<{ emailId: string; subject: string; draft: string } | null>(null);
 
   const recRef = useRef<AnyRec>(null);
   const currentRef = useRef(0);
