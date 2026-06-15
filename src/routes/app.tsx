@@ -15,6 +15,8 @@ import {
 import { DailyBriefing } from "@/components/DailyBriefing";
 import { TrustStrip } from "@/components/TrustStrip";
 import { ProductFooter } from "@/components/ProductFooter";
+import { AddEmailPanel } from "@/components/AddEmailPanel";
+import { useCustomEmails } from "@/lib/custom-emails";
 import {
   OperationalSection,
   type SectionKey,
