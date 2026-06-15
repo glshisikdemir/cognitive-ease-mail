@@ -18,6 +18,7 @@ import { Route as PilotStatusRouteImport } from './routes/pilot-status'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as ChannelsRouteImport } from './routes/channels'
 import { Route as BriefingRouteImport } from './routes/briefing'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AiTransparencyRouteImport } from './routes/ai-transparency'
@@ -70,6 +71,11 @@ const CookiesRoute = CookiesRouteImport.update({
   path: '/cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChannelsRoute = ChannelsRouteImport.update({
+  id: '/channels',
+  path: '/channels',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BriefingRoute = BriefingRouteImport.update({
   id: '/briefing',
   path: '/briefing',
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/ai-transparency': typeof AiTransparencyRoute
   '/app': typeof AppRoute
   '/briefing': typeof BriefingRoute
+  '/channels': typeof ChannelsRoute
   '/cookies': typeof CookiesRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/ai-transparency': typeof AiTransparencyRoute
   '/app': typeof AppRoute
   '/briefing': typeof BriefingRoute
+  '/channels': typeof ChannelsRoute
   '/cookies': typeof CookiesRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
@@ -141,6 +149,7 @@ export interface FileRoutesById {
   '/ai-transparency': typeof AiTransparencyRoute
   '/app': typeof AppRoute
   '/briefing': typeof BriefingRoute
+  '/channels': typeof ChannelsRoute
   '/cookies': typeof CookiesRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/ai-transparency'
     | '/app'
     | '/briefing'
+    | '/channels'
     | '/cookies'
     | '/login'
     | '/onboarding'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/ai-transparency'
     | '/app'
     | '/briefing'
+    | '/channels'
     | '/cookies'
     | '/login'
     | '/onboarding'
@@ -194,6 +205,7 @@ export interface FileRouteTypes {
     | '/ai-transparency'
     | '/app'
     | '/briefing'
+    | '/channels'
     | '/cookies'
     | '/login'
     | '/onboarding'
@@ -212,6 +224,7 @@ export interface RootRouteChildren {
   AiTransparencyRoute: typeof AiTransparencyRoute
   AppRoute: typeof AppRoute
   BriefingRoute: typeof BriefingRoute
+  ChannelsRoute: typeof ChannelsRoute
   CookiesRoute: typeof CookiesRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
@@ -290,6 +303,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/channels': {
+      id: '/channels'
+      path: '/channels'
+      fullPath: '/channels'
+      preLoaderRoute: typeof ChannelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/briefing': {
       id: '/briefing'
       path: '/briefing'
@@ -340,6 +360,7 @@ const rootRouteChildren: RootRouteChildren = {
   AiTransparencyRoute: AiTransparencyRoute,
   AppRoute: AppRoute,
   BriefingRoute: BriefingRoute,
+  ChannelsRoute: ChannelsRoute,
   CookiesRoute: CookiesRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
