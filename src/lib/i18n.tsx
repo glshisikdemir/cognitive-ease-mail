@@ -500,6 +500,48 @@ const dict: Dict = {
     en: "ISURA is in private pilot. Behavior may evolve during testing.",
     tr: "ISURA özel pilot sürecindedir. Davranışlar test sürecinde değişebilir.",
   },
+
+  // Audio briefing & voice commands
+  navBriefing: { en: "Briefing", tr: "Brifing" },
+  briefingEyebrow: { en: "Audio briefing", tr: "Sesli brifing" },
+  briefingTitle: { en: "Listen to your inbox.", tr: "Gelen kutunuzu dinleyin." },
+  briefingSubtitle: {
+    en: "ISURA narrates your operational briefing like a calm podcast — segment by segment, with commentary. Control it with your voice.",
+    tr: "ISURA operasyonel brifinginizi sakin bir podcast gibi anlatır — bölüm bölüm, yorumlarıyla. Sesinizle kontrol edin.",
+  },
+  briefingPreparing: { en: "Preparing your audio briefing…", tr: "Sesli brifinginiz hazırlanıyor…" },
+  briefingNowPlaying: { en: "Now playing", tr: "Şimdi çalıyor" },
+  briefingSegment: { en: "Segment", tr: "Bölüm" },
+  briefingPlay: { en: "Play", tr: "Oynat" },
+  briefingPause: { en: "Pause", tr: "Duraklat" },
+  briefingNext: { en: "Next", tr: "Sonraki" },
+  briefingPrev: { en: "Previous", tr: "Önceki" },
+  briefingRestart: { en: "Restart", tr: "Baştan" },
+
+  voiceStart: { en: "Voice commands", tr: "Sesli komut" },
+  voiceStop: { en: "Listening… tap to stop", tr: "Dinleniyor… durdurmak için dokun" },
+  voiceListening: { en: "Listening for voice commands.", tr: "Sesli komutlar dinleniyor." },
+  voiceCommand: { en: "Command", tr: "Komut" },
+  voiceHeard: { en: "Heard", tr: "Algılanan" },
+  voiceNotSupported: {
+    en: "Voice recognition isn't supported in this browser. Try Chrome.",
+    tr: "Bu tarayıcı ses tanımayı desteklemiyor. Chrome'u deneyin.",
+  },
+  voiceTTSUnsupported: {
+    en: "Audio playback isn't supported in this browser.",
+    tr: "Bu tarayıcı sesli oynatmayı desteklemiyor.",
+  },
+  voiceCommandsTitle: { en: "Voice commands", tr: "Sesli komutlar" },
+  voiceCommandsSub: {
+    en: "Tap “Voice commands”, then speak naturally in English or Turkish.",
+    tr: "“Sesli komut”a dokunun, ardından İngilizce veya Türkçe doğal konuşun.",
+  },
+  cmd_play: { en: "“Play” / “Oynat” — start listening", tr: "“Oynat” / “Play” — dinlemeyi başlat" },
+  cmd_pause: { en: "“Pause” / “Duraklat” — stop the voice", tr: "“Duraklat” / “Pause” — sesi durdur" },
+  cmd_next: { en: "“Next” / “Sonraki” — skip ahead", tr: "“Sonraki” / “Next” — ileri atla" },
+  cmd_prev: { en: "“Previous” / “Önceki” — go back", tr: "“Önceki” / “Previous” — geri dön" },
+  cmd_repeat: { en: "“Repeat” / “Baştan” — restart briefing", tr: "“Baştan” / “Repeat” — brifingi yeniden başlat" },
+  cmd_priority: { en: "“Priority” / “Öncelik” — open priority queue", tr: "“Öncelik” / “Priority” — öncelik kuyruğunu aç" },
 };
 
 export function t(lang: Lang, key: keyof typeof dict | string, vars?: Record<string, string | number>): string {
