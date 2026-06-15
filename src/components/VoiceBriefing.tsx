@@ -290,9 +290,14 @@ export function VoiceBriefing() {
 
   // Cleanup
   useEffect(() => {
+    const cache = audioCache.current;
     return () => {
+      playTokenRef.current += 1;
+      audioRef.current?.pause();
       if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel();
       recRef.current?.stop?.();
+      cache.forEach((url) => URL.revokeObjectURL(url));
+      cache.clear();
     };
   }, []);
 
