@@ -63,8 +63,11 @@ export function VoiceBriefing() {
   const audioCache = useRef<Map<string, string>>(new Map());
   const playTokenRef = useRef(0);
   const rateRef = useRef(1);
+  const pendingRef = useRef<{ emailId: string; subject: string; draft: string } | null>(null);
+  const speakTextRef = useRef<((text: string) => void) | null>(null);
   segRef.current = segments;
   currentRef.current = current;
+  pendingRef.current = pending;
   rateRef.current = rate;
 
   const changeRate = useCallback((delta: number) => {
