@@ -622,6 +622,16 @@ export function VoiceBriefing() {
   );
 }
 
+// Condense a reply draft into 1–2 sentences for the spoken summary
+function summarizeDraft(draft: string): string {
+  const clean = draft.replace(/\s+/g, " ").trim();
+  const sentences = clean.split(/(?<=[.!?])\s+/).filter(Boolean);
+  const picked = sentences.slice(0, 2).join(" ");
+  const summary = picked || clean;
+  return summary.length > 260 ? `${summary.slice(0, 257).trimEnd()}…` : summary;
+}
+
+
 function weight(category: string): number {
   switch (category) {
     case "risk":
