@@ -90,13 +90,12 @@ export function VoiceBriefing() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
 
-  // --- Detect support ---
+  // --- Detect support (ElevenLabs handles playback; native TTS is only a fallback) ---
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const hasTTS = "speechSynthesis" in window;
-    setSupported(hasTTS);
-    // warm up voices
-    if (hasTTS) window.speechSynthesis.getVoices();
+    setSupported(true);
+    // warm up native voices for the fallback path
+    if ("speechSynthesis" in window) window.speechSynthesis.getVoices();
   }, []);
 
   const stopSpeaking = useCallback(() => {
