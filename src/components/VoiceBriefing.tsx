@@ -474,10 +474,20 @@ export function VoiceBriefing() {
             </button>
           </div>
 
+          {/* Generate reply draft */}
+          <button
+            onClick={() => void generateDraftForCurrent()}
+            disabled={drafting}
+            className="ml-auto inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground transition hover:bg-surface-muted disabled:opacity-50"
+          >
+            <PenLine className={`h-4 w-4 ${drafting ? "animate-pulse" : ""}`} />
+            {drafting ? t(lang, "voiceDrafting") : t(lang, "voiceDraftReply")}
+          </button>
+
           {/* Voice command toggle */}
           <button
             onClick={toggleListening}
-            className={`ml-auto inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
+            className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
               listening
                 ? "border-primary bg-primary/10 text-primary"
                 : "border-border bg-surface text-foreground hover:bg-surface-muted"
