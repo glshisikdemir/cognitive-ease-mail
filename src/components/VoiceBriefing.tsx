@@ -195,6 +195,7 @@ export function VoiceBriefing() {
           else setPlaying(false);
         };
         audio.src = url;
+        audio.playbackRate = rateRef.current;
         await audio.play();
       } catch {
         // Graceful fallback to native TTS
