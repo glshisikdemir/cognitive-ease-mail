@@ -605,6 +605,7 @@ export function VoiceBriefing() {
             "cmd_faster",
             "cmd_slower",
             "cmd_reply",
+            "cmd_confirm",
             "cmd_priority",
             "cmd_workspace",
           ].map((k) => (
