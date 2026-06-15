@@ -46,6 +46,7 @@ export function VoiceBriefing() {
   const [listening, setListening] = useState(false);
   const [supported, setSupported] = useState(true);
   const [lastHeard, setLastHeard] = useState<string>("");
+  const [rate, setRate] = useState(1);
 
   const recRef = useRef<AnyRec>(null);
   const currentRef = useRef(0);
