@@ -40,6 +40,7 @@ export function VoiceBriefing() {
   const { lang } = useLang();
   const navigate = useNavigate();
   const fn = useServerFn(generateBriefing);
+  const analyzeFn = useServerFn(analyzeEmail);
 
   const [segments, setSegments] = useState<BriefingSegment[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -50,6 +51,7 @@ export function VoiceBriefing() {
   const [supported, setSupported] = useState(true);
   const [lastHeard, setLastHeard] = useState<string>("");
   const [rate, setRate] = useState(1);
+  const [drafting, setDrafting] = useState(false);
 
   const recRef = useRef<AnyRec>(null);
   const currentRef = useRef(0);
