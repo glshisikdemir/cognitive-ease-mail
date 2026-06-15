@@ -104,7 +104,15 @@ function ChannelsPage() {
           <p className="mt-1 max-w-xl text-sm text-muted-foreground">
             {t(lang, "channelsSubtitle")}
           </p>
+          <button
+            onClick={() => setWizardOpen(true)}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+          >
+            <Wand2 className="h-4 w-4" />
+            {t(lang, "wizOpen")}
+          </button>
         </section>
+
 
         <div className="space-y-4">
           {CHANNELS.map((c) => (
