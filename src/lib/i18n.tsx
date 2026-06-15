@@ -546,6 +546,18 @@ const dict: Dict = {
   cmd_faster: { en: "“Faster” / “Hızlandır” — speed up playback", tr: "“Hızlandır” / “Faster” — oynatmayı hızlandır" },
   cmd_slower: { en: "“Slower” / “Yavaşlat” — slow down playback", tr: "“Yavaşlat” / “Slower” — oynatmayı yavaşlat" },
   voiceSpeed: { en: "Speed", tr: "Hız" },
+  cmd_reply: {
+    en: "“Reply” / “Yanıtla” — draft a reply for the current email",
+    tr: "“Yanıtla” / “Reply” — mevcut e-posta için taslak oluştur",
+  },
+  voiceDraftReply: { en: "Draft reply", tr: "Yanıt taslağı" },
+  voiceDrafting: { en: "Drafting reply…", tr: "Yanıt taslağı hazırlanıyor…" },
+  voiceDraftReady: { en: "Reply draft ready", tr: "Yanıt taslağı hazır" },
+  voiceDraftFailed: { en: "Couldn't generate a draft.", tr: "Taslak oluşturulamadı." },
+  voiceNoEmail: {
+    en: "This segment isn't tied to an email.",
+    tr: "Bu bölüm bir e-postaya bağlı değil.",
+  },
 };
 
 export function t(lang: Lang, key: keyof typeof dict | string, vars?: Record<string, string | number>): string {

@@ -11,10 +11,13 @@ import {
   MicOff,
   Radio,
   Volume2,
+  PenLine,
 } from "lucide-react";
 import { toast } from "sonner";
 import { generateBriefing, type BriefingSegment } from "@/lib/briefing.functions";
+import { analyzeEmail } from "@/lib/analyze.functions";
 import { emails as allEmails } from "@/lib/emails";
+import { setReplyDraft } from "@/lib/email-store";
 import { quickAssess } from "@/lib/heuristics";
 import { useLang, t, type Lang } from "@/lib/i18n";
 
@@ -37,6 +40,7 @@ export function VoiceBriefing() {
   const { lang } = useLang();
   const navigate = useNavigate();
   const fn = useServerFn(generateBriefing);
+  const analyzeFn = useServerFn(analyzeEmail);
 
   const [segments, setSegments] = useState<BriefingSegment[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -47,6 +51,7 @@ export function VoiceBriefing() {
   const [supported, setSupported] = useState(true);
   const [lastHeard, setLastHeard] = useState<string>("");
   const [rate, setRate] = useState(1);
+  const [drafting, setDrafting] = useState(false);
 
   const recRef = useRef<AnyRec>(null);
   const currentRef = useRef(0);
@@ -67,6 +72,34 @@ export function VoiceBriefing() {
       return next;
     });
   }, []);
+
+  // Generate an AI reply draft for the email behind the current segment
+  const draftingRef = useRef(false);
+  const generateDraftForCurrent = useCallback(async () => {
+    const segs = segRef.current;
+    if (!segs || draftingRef.current) return;
+    const seg = segs[currentRef.current];
+    const email = seg?.emailId ? allEmails.find((e) => e.id === seg.emailId) : undefined;
+    if (!email) {
+      toast.error(t(lang, "voiceNoEmail"));
+      return;
+    }
+    draftingRef.current = true;
+    setDrafting(true);
+    toast.loading(t(lang, "voiceDrafting"), { id: "voice-draft" });
+    try {
+      const result = await analyzeFn({
+        data: { sender: email.sender, subject: email.subject, body: email.body, regenerate: true },
+      });
+      setReplyDraft(email.id, result.replyDraft);
+      toast.success(`${t(lang, "voiceDraftReady")} — ${email.subject}`, { id: "voice-draft" });
+    } catch {
+      toast.error(t(lang, "voiceDraftFailed"), { id: "voice-draft" });
+    } finally {
+      draftingRef.current = false;
+      setDrafting(false);
+    }
+  }, [analyzeFn, lang]);
 
   // --- Load briefing script ---
   const load = useCallback(async () => {
@@ -260,6 +293,10 @@ export function VoiceBriefing() {
         changeRate(-0.25);
         return "slower";
       }
+      if (has("reply", "draft", "yanıt", "yanıtla", "cevap", "taslak")) {
+        void generateDraftForCurrent();
+        return "reply";
+      }
       if (has("repeat", "tekrar", "yeniden", "restart", "baştan")) {
         handleRestart();
         return "repeat";
@@ -274,7 +311,7 @@ export function VoiceBriefing() {
       }
       return null;
     },
-    [playing, speakFrom, stopSpeaking, handleNext, handlePrev, handleRestart, changeRate, navigate],
+    [playing, speakFrom, stopSpeaking, handleNext, handlePrev, handleRestart, changeRate, generateDraftForCurrent, navigate],
   );
 
   // --- Speech recognition (voice commands) ---
@@ -437,10 +474,20 @@ export function VoiceBriefing() {
             </button>
           </div>
 
+          {/* Generate reply draft */}
+          <button
+            onClick={() => void generateDraftForCurrent()}
+            disabled={drafting}
+            className="ml-auto inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground transition hover:bg-surface-muted disabled:opacity-50"
+          >
+            <PenLine className={`h-4 w-4 ${drafting ? "animate-pulse" : ""}`} />
+            {drafting ? t(lang, "voiceDrafting") : t(lang, "voiceDraftReply")}
+          </button>
+
           {/* Voice command toggle */}
           <button
             onClick={toggleListening}
-            className={`ml-auto inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
+            className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
               listening
                 ? "border-primary bg-primary/10 text-primary"
                 : "border-border bg-surface text-foreground hover:bg-surface-muted"
@@ -474,6 +521,7 @@ export function VoiceBriefing() {
             "cmd_repeat",
             "cmd_faster",
             "cmd_slower",
+            "cmd_reply",
             "cmd_priority",
             "cmd_workspace",
           ].map((k) => (
