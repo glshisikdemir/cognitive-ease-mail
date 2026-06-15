@@ -11,10 +11,13 @@ import {
   MicOff,
   Radio,
   Volume2,
+  PenLine,
 } from "lucide-react";
 import { toast } from "sonner";
 import { generateBriefing, type BriefingSegment } from "@/lib/briefing.functions";
+import { analyzeEmail } from "@/lib/analyze.functions";
 import { emails as allEmails } from "@/lib/emails";
+import { setReplyDraft } from "@/lib/email-store";
 import { quickAssess } from "@/lib/heuristics";
 import { useLang, t, type Lang } from "@/lib/i18n";
 
