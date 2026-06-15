@@ -558,6 +558,23 @@ const dict: Dict = {
     en: "This segment isn't tied to an email.",
     tr: "Bu bölüm bir e-postaya bağlı değil.",
   },
+  cmd_confirm: {
+    en: "“Approve” / “Onayla” — confirm, or “Cancel” / “İptal” to discard",
+    tr: "“Onayla” / “Approve” — onayla, vazgeçmek için “İptal” / “Cancel”",
+  },
+  voiceAwaitingApproval: { en: "Awaiting your approval", tr: "Onayınız bekleniyor" },
+  voiceApprovalHint: {
+    en: "I'll read a summary aloud. Say “approve” to confirm or “cancel” to discard.",
+    tr: "Sesli bir özet okuyacağım. Onaylamak için “onayla”, vazgeçmek için “iptal” deyin.",
+  },
+  voiceApprove: { en: "Approve & mark replied", tr: "Onayla ve yanıtlandı işaretle" },
+  voiceDiscard: { en: "Discard", tr: "Vazgeç" },
+  voiceDraftApproved: { en: "Reply approved", tr: "Yanıt onaylandı" },
+  voiceDraftApprovedSpoken: {
+    en: "Great, the reply has been approved and marked as replied.",
+    tr: "Harika, yanıt onaylandı ve yanıtlandı olarak işaretlendi.",
+  },
+  voiceDraftDiscarded: { en: "Draft discarded.", tr: "Taslak iptal edildi." },
 };
 
 export function t(lang: Lang, key: keyof typeof dict | string, vars?: Record<string, string | number>): string {
