@@ -15,12 +15,24 @@ import {
   Slack as SlackIcon,
   Send,
   ArrowRight,
+  AlertCircle,
 } from "lucide-react";
 import { useLang, t } from "@/lib/i18n";
 import {
   getConnectionStatus,
   type ConnectionStatus,
 } from "@/lib/connection-status.functions";
+import { sendTestMessage } from "@/lib/send-test.functions";
+import { useChannelSettings } from "@/lib/channel-settings";
+
+type ChannelId = "slack" | "telegram" | "whatsapp";
+
+const TEST_PLACEHOLDER: Record<ChannelId, string> = {
+  slack: "wizTestSlackPh",
+  telegram: "wizTestTgPh",
+  whatsapp: "wizTestWaPh",
+};
+
 
 type StepDef = {
   id: "slack" | "telegram" | "whatsapp";
@@ -58,10 +70,21 @@ export function ConnectionWizard({
   onOpenChange: (v: boolean) => void;
 }) {
   const { lang } = useLang();
+  const settings = useChannelSettings();
   const statusFn = useServerFn(getConnectionStatus);
+  const testFn = useServerFn(sendTestMessage);
   const [index, setIndex] = useState(0);
   const [status, setStatus] = useState<ConnectionStatus | null>(null);
   const [checking, setChecking] = useState(false);
+  const [testTargets, setTestTargets] = useState<Record<ChannelId, string>>({
+    slack: "",
+    telegram: "",
+    whatsapp: "",
+  });
+  const [sending, setSending] = useState(false);
+  const [testResult, setTestResult] = useState<
+    Record<ChannelId, { ok: boolean; reason?: string } | null>
+  >({ slack: null, telegram: null, whatsapp: null });
 
   const check = async () => {
     setChecking(true);
@@ -78,14 +101,45 @@ export function ConnectionWizard({
     if (open) {
       setIndex(0);
       check();
+      setTestResult({ slack: null, telegram: null, whatsapp: null });
+      setTestTargets({
+        slack: settings.slack.target,
+        telegram: settings.telegram.target,
+        whatsapp: settings.whatsapp.target,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
 
   const current = WIZARD[index];
   const Icon = current.icon;
   const connected = status ? current.isConnected(status) : false;
   const isLast = index === WIZARD.length - 1;
+
+  const channelId = current.id as ChannelId;
+  const testTarget = testTargets[channelId];
+  const result = testResult[channelId];
+
+  const runTest = async () => {
+    if (!testTarget.trim()) {
+      setTestResult((r) => ({ ...r, [channelId]: { ok: false, reason: "no_target" } }));
+      return;
+    }
+    setSending(true);
+    setTestResult((r) => ({ ...r, [channelId]: null }));
+    try {
+      const res = await testFn({
+        data: { channel: channelId, target: testTarget.trim(), lang },
+      });
+      setTestResult((r) => ({ ...r, [channelId]: res }));
+    } catch {
+      setTestResult((r) => ({ ...r, [channelId]: { ok: false, reason: "error" } }));
+    } finally {
+      setSending(false);
+    }
+  };
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -174,6 +228,73 @@ export function ConnectionWizard({
             <RefreshCw className={`h-3.5 w-3.5 ${checking ? "animate-spin" : ""}`} />
             {checking ? t(lang, "wizChecking") : t(lang, "wizRecheck")}
           </button>
+
+          {/* Test message step */}
+          <div className="mt-4 border-t border-border/70 pt-4">
+            <div className="flex items-center gap-2">
+              <Send className="h-3.5 w-3.5 text-primary" />
+              <p className="text-sm font-medium text-foreground">
+                {t(lang, "wizTestTitle")}
+              </p>
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t(lang, "wizTestHint")}
+            </p>
+
+            {connected ? (
+              <>
+                <label className="mt-3 block text-xs font-medium text-muted-foreground">
+                  {t(lang, "wizTestTargetLabel")}
+                </label>
+                <div className="mt-1.5 flex gap-2">
+                  <input
+                    value={testTarget}
+                    onChange={(e) =>
+                      setTestTargets((tt) => ({ ...tt, [channelId]: e.target.value }))
+                    }
+                    placeholder={t(lang, TEST_PLACEHOLDER[channelId])}
+                    className="flex-1 rounded-lg border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary"
+                  />
+                  <button
+                    onClick={runTest}
+                    disabled={sending}
+                    className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
+                  >
+                    <Send className="h-3.5 w-3.5" />
+                    {sending ? t(lang, "wizTestSending") : t(lang, "wizTestSend")}
+                  </button>
+                </div>
+                {result && (
+                  <div
+                    className={`mt-2.5 flex items-start gap-2 rounded-lg px-3 py-2 text-xs ${
+                      result.ok
+                        ? "bg-primary/10 text-primary"
+                        : "bg-destructive/10 text-destructive"
+                    }`}
+                  >
+                    {result.ok ? (
+                      <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                    ) : (
+                      <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                    )}
+                    <span>
+                      {result.ok
+                        ? t(lang, "wizTestSuccess")
+                        : result.reason === "no_target"
+                          ? t(lang, "wizTestNeedTarget")
+                          : `${t(lang, "wizTestFailed")} ${result.reason ?? "error"}`}
+                    </span>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="mt-3 flex items-center gap-2 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
+                <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                {t(lang, "wizTestNotConnected")}
+              </p>
+            )}
+          </div>
+
         </div>
 
         <div className="flex items-center justify-between">
