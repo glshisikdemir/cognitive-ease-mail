@@ -141,6 +141,7 @@ function ChannelsPage() {
         </button>
       </main>
       <ConnectionWizard open={wizardOpen} onOpenChange={setWizardOpen} />
+      <EmailWizard open={emailWizardOpen} onOpenChange={setEmailWizardOpen} />
       <ProductFooter />
     </div>
   );
