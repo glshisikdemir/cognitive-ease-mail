@@ -105,6 +105,35 @@ const dict: Dict = {
   wizTestSuccess: { en: "Test message sent! Check your channel.", tr: "Test mesajı gönderildi! Kanalını kontrol et." },
   wizTestFailed: { en: "Couldn't send. Reason:", tr: "Gönderilemedi. Sebep:" },
   wizTestNotConnected: { en: "Connect this channel first, then test.", tr: "Önce bu kanalı bağla, sonra test et." },
+  // Email connection wizard
+  emailWizOpen: { en: "Email setup wizard", tr: "E-posta sihirbazı" },
+  emailWizTitle: { en: "Connect the email channel", tr: "E-posta kanalını bağla" },
+  emailWizSubtitle: {
+    en: "Pick a verified domain and the sender address your briefings come from.",
+    tr: "Doğrulanmış bir alan adı ve brifinglerinin geleceği gönderen adresini seç.",
+  },
+  emailWizStep1: { en: "Choose domain", tr: "Alan adı seç" },
+  emailWizStep2: { en: "Sender address", tr: "Gönderen adresi" },
+  emailWizStep3: { en: "Review", tr: "Özet" },
+  emailWizDomainLabel: { en: "Verified domains", tr: "Doğrulanmış alan adları" },
+  emailWizDomainHint: {
+    en: "Only verified domains can send email. Manage domains in Cloud → Emails.",
+    tr: "Yalnızca doğrulanmış alan adları e-posta gönderebilir. Alan adlarını Cloud → Emails'ten yönet.",
+  },
+  emailWizLocalLabel: { en: "Sender name (before @)", tr: "Gönderen adı (@ öncesi)" },
+  emailWizLocalPh: { en: "briefings", tr: "briefings" },
+  emailWizPresets: { en: "Quick picks", tr: "Hızlı seçimler" },
+  emailWizInvalidLocal: {
+    en: "Use letters, numbers, dots, dashes or underscores.",
+    tr: "Harf, rakam, nokta, tire veya alt çizgi kullan.",
+  },
+  emailWizPreview: { en: "Your sender address", tr: "Gönderen adresin" },
+  emailWizReviewSender: { en: "Sender", tr: "Gönderen" },
+  emailWizReviewDomain: { en: "Domain", tr: "Alan adı" },
+  emailWizSave: { en: "Save & enable email", tr: "Kaydet ve e-postayı aç" },
+  emailWizSaved: { en: "Email sender saved.", tr: "Gönderen adresi kaydedildi." },
+  emailWizBack: { en: "Back", tr: "Geri" },
+  emailWizNext: { en: "Next", tr: "İleri" },
   // Operational sections
 
 
