@@ -15,12 +15,24 @@ import {
   Slack as SlackIcon,
   Send,
   ArrowRight,
+  AlertCircle,
 } from "lucide-react";
 import { useLang, t } from "@/lib/i18n";
 import {
   getConnectionStatus,
   type ConnectionStatus,
 } from "@/lib/connection-status.functions";
+import { sendTestMessage } from "@/lib/send-test.functions";
+import { useChannelSettings } from "@/lib/channel-settings";
+
+type ChannelId = "slack" | "telegram" | "whatsapp";
+
+const TEST_PLACEHOLDER: Record<ChannelId, string> = {
+  slack: "wizTestSlackPh",
+  telegram: "wizTestTgPh",
+  whatsapp: "wizTestWaPh",
+};
+
 
 type StepDef = {
   id: "slack" | "telegram" | "whatsapp";
