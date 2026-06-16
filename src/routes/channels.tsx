@@ -48,6 +48,7 @@ function ChannelsPage() {
   const sendFn = useServerFn(sendBriefing);
   const [sending, setSending] = useState(false);
   const [wizardOpen, setWizardOpen] = useState(false);
+  const [emailWizardOpen, setEmailWizardOpen] = useState(false);
 
   const emails = useMemo(() => {
     return [...custom, ...staticEmails].map((e) => ({
