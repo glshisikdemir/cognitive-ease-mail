@@ -8,6 +8,7 @@ export type ChannelConfig = {
   enabled: boolean;
   assistant: AssistantId;
   target: string; // phone (E.164), slack channel, telegram chat id, or email
+  from?: string; // sender address (email channel only), e.g. briefings@isura.tech
 };
 
 export type ChannelSettings = Record<ChannelId, ChannelConfig>;
