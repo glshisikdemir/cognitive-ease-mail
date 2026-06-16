@@ -117,6 +117,30 @@ export function ConnectionWizard({
   const connected = status ? current.isConnected(status) : false;
   const isLast = index === WIZARD.length - 1;
 
+  const channelId = current.id as ChannelId;
+  const testTarget = testTargets[channelId];
+  const result = testResult[channelId];
+
+  const runTest = async () => {
+    if (!testTarget.trim()) {
+      setTestResult((r) => ({ ...r, [channelId]: { ok: false, reason: "no_target" } }));
+      return;
+    }
+    setSending(true);
+    setTestResult((r) => ({ ...r, [channelId]: null }));
+    try {
+      const res = await testFn({
+        data: { channel: channelId, target: testTarget.trim(), lang },
+      });
+      setTestResult((r) => ({ ...r, [channelId]: res }));
+    } catch {
+      setTestResult((r) => ({ ...r, [channelId]: { ok: false, reason: "error" } }));
+    } finally {
+      setSending(false);
+    }
+  };
+
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
