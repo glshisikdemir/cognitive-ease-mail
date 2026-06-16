@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Mail, MessageCircle, Slack as SlackIcon, Send, Radio, Wand2 } from "lucide-react";
 import { ConnectionWizard } from "@/components/ConnectionWizard";
+import { EmailWizard } from "@/components/EmailWizard";
 import { Header } from "@/components/Header";
 import { ProductFooter } from "@/components/ProductFooter";
 import { useLang, t } from "@/lib/i18n";
