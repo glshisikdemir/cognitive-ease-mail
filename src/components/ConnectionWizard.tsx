@@ -228,6 +228,73 @@ export function ConnectionWizard({
             <RefreshCw className={`h-3.5 w-3.5 ${checking ? "animate-spin" : ""}`} />
             {checking ? t(lang, "wizChecking") : t(lang, "wizRecheck")}
           </button>
+
+          {/* Test message step */}
+          <div className="mt-4 border-t border-border/70 pt-4">
+            <div className="flex items-center gap-2">
+              <Send className="h-3.5 w-3.5 text-primary" />
+              <p className="text-sm font-medium text-foreground">
+                {t(lang, "wizTestTitle")}
+              </p>
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t(lang, "wizTestHint")}
+            </p>
+
+            {connected ? (
+              <>
+                <label className="mt-3 block text-xs font-medium text-muted-foreground">
+                  {t(lang, "wizTestTargetLabel")}
+                </label>
+                <div className="mt-1.5 flex gap-2">
+                  <input
+                    value={testTarget}
+                    onChange={(e) =>
+                      setTestTargets((tt) => ({ ...tt, [channelId]: e.target.value }))
+                    }
+                    placeholder={t(lang, TEST_PLACEHOLDER[channelId])}
+                    className="flex-1 rounded-lg border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary"
+                  />
+                  <button
+                    onClick={runTest}
+                    disabled={sending}
+                    className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
+                  >
+                    <Send className="h-3.5 w-3.5" />
+                    {sending ? t(lang, "wizTestSending") : t(lang, "wizTestSend")}
+                  </button>
+                </div>
+                {result && (
+                  <div
+                    className={`mt-2.5 flex items-start gap-2 rounded-lg px-3 py-2 text-xs ${
+                      result.ok
+                        ? "bg-primary/10 text-primary"
+                        : "bg-destructive/10 text-destructive"
+                    }`}
+                  >
+                    {result.ok ? (
+                      <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                    ) : (
+                      <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                    )}
+                    <span>
+                      {result.ok
+                        ? t(lang, "wizTestSuccess")
+                        : result.reason === "no_target"
+                          ? t(lang, "wizTestNeedTarget")
+                          : `${t(lang, "wizTestFailed")} ${result.reason ?? "error"}`}
+                    </span>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="mt-3 flex items-center gap-2 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
+                <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                {t(lang, "wizTestNotConnected")}
+              </p>
+            )}
+          </div>
+
         </div>
 
         <div className="flex items-center justify-between">
