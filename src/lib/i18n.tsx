@@ -89,6 +89,22 @@ const dict: Dict = {
   wizWaS2: { en: "Enable a WhatsApp sender number in Twilio (sandbox or approved).", tr: "Twilio'da bir WhatsApp gönderen numarası etkinleştir (sandbox veya onaylı)." },
   wizWaS3: { en: "Add the TWILIO_WHATSAPP_FROM secret with that number.", tr: "Bu numarayı TWILIO_WHATSAPP_FROM gizli anahtarı olarak ekle." },
   wizWaS4: { en: "Enter the recipient WhatsApp number on the Channels page.", tr: "Kanallar sayfasında alıcı WhatsApp numarasını gir." },
+  // Test message step
+  wizTestTitle: { en: "Send a test message", tr: "Test mesajı gönder" },
+  wizTestHint: {
+    en: "Send a quick test to confirm delivery works before you finish.",
+    tr: "Bitirmeden önce gönderimin çalıştığını doğrulamak için hızlı bir test gönder.",
+  },
+  wizTestTargetLabel: { en: "Destination", tr: "Hedef" },
+  wizTestSlackPh: { en: "#channel or channel name", tr: "#kanal veya kanal adı" },
+  wizTestTgPh: { en: "Telegram chat ID", tr: "Telegram chat ID" },
+  wizTestWaPh: { en: "+15551234567", tr: "+905551234567" },
+  wizTestSend: { en: "Send test message", tr: "Test mesajı gönder" },
+  wizTestSending: { en: "Sending…", tr: "Gönderiliyor…" },
+  wizTestNeedTarget: { en: "Enter a destination first.", tr: "Önce bir hedef gir." },
+  wizTestSuccess: { en: "Test message sent! Check your channel.", tr: "Test mesajı gönderildi! Kanalını kontrol et." },
+  wizTestFailed: { en: "Couldn't send. Reason:", tr: "Gönderilemedi. Sebep:" },
+  wizTestNotConnected: { en: "Connect this channel first, then test.", tr: "Önce bu kanalı bağla, sonra test et." },
   // Operational sections
 
 
