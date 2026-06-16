@@ -70,10 +70,21 @@ export function ConnectionWizard({
   onOpenChange: (v: boolean) => void;
 }) {
   const { lang } = useLang();
+  const settings = useChannelSettings();
   const statusFn = useServerFn(getConnectionStatus);
+  const testFn = useServerFn(sendTestMessage);
   const [index, setIndex] = useState(0);
   const [status, setStatus] = useState<ConnectionStatus | null>(null);
   const [checking, setChecking] = useState(false);
+  const [testTargets, setTestTargets] = useState<Record<ChannelId, string>>({
+    slack: "",
+    telegram: "",
+    whatsapp: "",
+  });
+  const [sending, setSending] = useState(false);
+  const [testResult, setTestResult] = useState<
+    Record<ChannelId, { ok: boolean; reason?: string } | null>
+  >({ slack: null, telegram: null, whatsapp: null });
 
   const check = async () => {
     setChecking(true);
@@ -90,9 +101,16 @@ export function ConnectionWizard({
     if (open) {
       setIndex(0);
       check();
+      setTestResult({ slack: null, telegram: null, whatsapp: null });
+      setTestTargets({
+        slack: settings.slack.target,
+        telegram: settings.telegram.target,
+        whatsapp: settings.whatsapp.target,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
 
   const current = WIZARD[index];
   const Icon = current.icon;
