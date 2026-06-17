@@ -41,10 +41,15 @@ export function EmailWizard({
   const [step, setStep] = useState(0);
   const [domain, setDomain] = useState(EMAIL_DOMAINS[0]);
   const [localPart, setLocalPart] = useState("");
+  const [sending, setSending] = useState(false);
+  const [testResult, setTestResult] = useState<EmailTestResult | null>(null);
+  const sendTestFn = useServerFn(sendTestEmail);
 
   useEffect(() => {
     if (!open) return;
     setStep(0);
+    setSending(false);
+    setTestResult(null);
     const existing = settings.email.from;
     if (existing && existing.includes("@")) {
       const [lp, dm] = existing.split("@");
@@ -67,12 +72,28 @@ export function EmailWizard({
     t(lang, "emailWizStep1"),
     t(lang, "emailWizStep2"),
     t(lang, "emailWizStep3"),
+    t(lang, "emailWizStep4"),
   ];
 
-  const save = () => {
+  const saveAndContinue = () => {
     updateChannel("email", { from: sender, enabled: true });
     toast.success(t(lang, "emailWizSaved"));
-    onOpenChange(false);
+    setTestResult(null);
+    setStep(3);
+  };
+
+  const runTest = async () => {
+    if (!sender) return;
+    setSending(true);
+    setTestResult(null);
+    try {
+      const res = await sendTestFn({ data: { to: sender, lang } });
+      setTestResult(res);
+    } catch {
+      setTestResult({ ok: false, reason: "error" });
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
