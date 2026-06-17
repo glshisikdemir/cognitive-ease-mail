@@ -140,7 +140,12 @@ const dict: Dict = {
     en: "We'll send a test message to your sender address to verify delivery.",
     tr: "Teslimatı doğrulamak için gönderen adresine bir test mesajı göndereceğiz.",
   },
-  emailWizTestRecipient: { en: "Test will be sent to", tr: "Test gönderilecek adres" },
+  emailWizTestRecipient: { en: "Recipient email", tr: "Alıcı e-postası" },
+  emailWizTestRecipientPh: { en: "you@example.com", tr: "siz@ornek.com" },
+  emailWizTestInvalid: {
+    en: "Enter a valid email address.",
+    tr: "Geçerli bir e-posta adresi gir.",
+  },
   emailWizTestSend: { en: "Send test email", tr: "Test e-postası gönder" },
   emailWizTestSending: { en: "Sending…", tr: "Gönderiliyor…" },
   emailWizTestSuccess: {

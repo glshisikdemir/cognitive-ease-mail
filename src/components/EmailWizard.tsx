@@ -43,6 +43,7 @@ export function EmailWizard({
   const [localPart, setLocalPart] = useState("");
   const [sending, setSending] = useState(false);
   const [testResult, setTestResult] = useState<EmailTestResult | null>(null);
+  const [testTo, setTestTo] = useState("");
   const sendTestFn = useServerFn(sendTestEmail);
 
   useEffect(() => {
@@ -50,6 +51,7 @@ export function EmailWizard({
     setStep(0);
     setSending(false);
     setTestResult(null);
+    setTestTo("");
     const existing = settings.email.from;
     if (existing && existing.includes("@")) {
       const [lp, dm] = existing.split("@");
@@ -68,6 +70,9 @@ export function EmailWizard({
     [valid, localPart, domain],
   );
 
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const testToValid = EMAIL_RE.test(testTo.trim());
+
   const labels = [
     t(lang, "emailWizStep1"),
     t(lang, "emailWizStep2"),
@@ -79,15 +84,16 @@ export function EmailWizard({
     updateChannel("email", { from: sender, enabled: true });
     toast.success(t(lang, "emailWizSaved"));
     setTestResult(null);
+    setTestTo(sender);
     setStep(3);
   };
 
   const runTest = async () => {
-    if (!sender) return;
+    if (!testToValid) return;
     setSending(true);
     setTestResult(null);
     try {
-      const res = await sendTestFn({ data: { to: sender, lang } });
+      const res = await sendTestFn({ data: { to: testTo.trim(), lang } });
       setTestResult(res);
     } catch {
       setTestResult({ ok: false, reason: "error" });
@@ -227,15 +233,35 @@ export function EmailWizard({
               <p className="mt-2 text-xs text-muted-foreground">
                 {t(lang, "emailWizTestHint")}
               </p>
-              <div className="mt-3 rounded-lg bg-primary/5 px-3 py-2.5">
-                <p className="text-xs text-muted-foreground">
-                  {t(lang, "emailWizTestRecipient")}
+              <label className="mt-4 flex items-center gap-2 text-sm font-medium text-foreground">
+                <AtSign className="h-4 w-4 text-primary" />
+                {t(lang, "emailWizTestRecipient")}
+              </label>
+              <input
+                type="email"
+                value={testTo}
+                onChange={(e) => setTestTo(e.target.value)}
+                placeholder={t(lang, "emailWizTestRecipientPh")}
+                className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
+              />
+              {testTo.trim() !== "" && !testToValid && (
+                <p className="mt-2 flex items-center gap-1.5 text-xs text-destructive">
+                  <AlertCircle className="h-3.5 w-3.5" />
+                  {t(lang, "emailWizTestInvalid")}
                 </p>
-                <p className="font-display text-sm text-foreground">{sender}</p>
-              </div>
+              )}
+              {sender && (
+                <button
+                  type="button"
+                  onClick={() => setTestTo(sender)}
+                  className="mt-2 rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground transition-colors hover:bg-muted"
+                >
+                  {sender}
+                </button>
+              )}
               <button
                 onClick={runTest}
-                disabled={sending || !sender}
+                disabled={sending || !testToValid}
                 className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
               >
                 {sending ? (
