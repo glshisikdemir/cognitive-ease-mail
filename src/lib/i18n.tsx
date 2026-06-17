@@ -130,10 +130,32 @@ const dict: Dict = {
   emailWizPreview: { en: "Your sender address", tr: "Gönderen adresin" },
   emailWizReviewSender: { en: "Sender", tr: "Gönderen" },
   emailWizReviewDomain: { en: "Domain", tr: "Alan adı" },
-  emailWizSave: { en: "Save & enable email", tr: "Kaydet ve e-postayı aç" },
+  emailWizSave: { en: "Save & continue", tr: "Kaydet ve devam et" },
   emailWizSaved: { en: "Email sender saved.", tr: "Gönderen adresi kaydedildi." },
   emailWizBack: { en: "Back", tr: "Geri" },
   emailWizNext: { en: "Next", tr: "İleri" },
+  emailWizStep4: { en: "Test email", tr: "Test e-postası" },
+  emailWizTestTitle: { en: "Send a test email", tr: "Test e-postası gönder" },
+  emailWizTestHint: {
+    en: "We'll send a test message to your sender address to verify delivery.",
+    tr: "Teslimatı doğrulamak için gönderen adresine bir test mesajı göndereceğiz.",
+  },
+  emailWizTestRecipient: { en: "Test will be sent to", tr: "Test gönderilecek adres" },
+  emailWizTestSend: { en: "Send test email", tr: "Test e-postası gönder" },
+  emailWizTestSending: { en: "Sending…", tr: "Gönderiliyor…" },
+  emailWizTestSuccess: {
+    en: "Test email sent! Check the inbox to confirm delivery.",
+    tr: "Test e-postası gönderildi! Teslimatı doğrulamak için gelen kutusunu kontrol et.",
+  },
+  emailWizTestFailed: {
+    en: "Could not send the test email. Please try again.",
+    tr: "Test e-postası gönderilemedi. Lütfen tekrar dene.",
+  },
+  emailWizTestNotReady: {
+    en: "Email sending isn't active yet. Connect the email domain to finish setup.",
+    tr: "E-posta gönderimi henüz aktif değil. Kurulumu tamamlamak için e-posta alan adını bağla.",
+  },
+  emailWizFinish: { en: "Finish", tr: "Bitir" },
   // Operational sections
 
 
