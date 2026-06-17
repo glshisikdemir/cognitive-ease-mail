@@ -217,12 +217,65 @@ export function EmailWizard({
               </div>
             </dl>
           )}
+
+          {step === 3 && (
+            <>
+              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                <Send className="h-4 w-4 text-primary" />
+                {t(lang, "emailWizTestTitle")}
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {t(lang, "emailWizTestHint")}
+              </p>
+              <div className="mt-3 rounded-lg bg-primary/5 px-3 py-2.5">
+                <p className="text-xs text-muted-foreground">
+                  {t(lang, "emailWizTestRecipient")}
+                </p>
+                <p className="font-display text-sm text-foreground">{sender}</p>
+              </div>
+              <button
+                onClick={runTest}
+                disabled={sending || !sender}
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+              >
+                {sending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+                {sending ? t(lang, "emailWizTestSending") : t(lang, "emailWizTestSend")}
+              </button>
+
+              {testResult && (
+                <div
+                  className={`mt-4 flex items-start gap-2 rounded-lg px-3 py-2.5 text-sm ${
+                    testResult.ok
+                      ? "bg-primary/10 text-foreground"
+                      : "bg-destructive/10 text-destructive"
+                  }`}
+                >
+                  {testResult.ok ? (
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                  ) : (
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                  )}
+                  <span>
+                    {testResult.ok
+                      ? t(lang, "emailWizTestSuccess")
+                      : testResult.reason === "not_ready"
+                        ? t(lang, "emailWizTestNotReady")
+                        : t(lang, "emailWizTestFailed")}
+                  </span>
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         <div className="flex items-center justify-between">
           <button
             onClick={() => setStep((s) => Math.max(0, s - 1))}
-            disabled={step === 0}
+            disabled={step === 0 || sending}
             className="rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40"
           >
             {t(lang, "emailWizBack")}
@@ -236,14 +289,22 @@ export function EmailWizard({
               {t(lang, "emailWizNext")}
               <ArrowRight className="h-4 w-4" />
             </button>
-          ) : (
+          ) : step === 2 ? (
             <button
-              onClick={save}
+              onClick={saveAndContinue}
               disabled={!valid}
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
             >
               <Check className="h-4 w-4" />
               {t(lang, "emailWizSave")}
+            </button>
+          ) : (
+            <button
+              onClick={() => onOpenChange(false)}
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            >
+              <Check className="h-4 w-4" />
+              {t(lang, "emailWizFinish")}
             </button>
           )}
         </div>
