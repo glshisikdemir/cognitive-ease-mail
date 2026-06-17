@@ -69,6 +69,9 @@ export function EmailWizard({
     [valid, localPart, domain],
   );
 
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const testToValid = EMAIL_RE.test(testTo.trim());
+
   const labels = [
     t(lang, "emailWizStep1"),
     t(lang, "emailWizStep2"),
@@ -80,15 +83,16 @@ export function EmailWizard({
     updateChannel("email", { from: sender, enabled: true });
     toast.success(t(lang, "emailWizSaved"));
     setTestResult(null);
+    setTestTo(sender);
     setStep(3);
   };
 
   const runTest = async () => {
-    if (!sender) return;
+    if (!testToValid) return;
     setSending(true);
     setTestResult(null);
     try {
-      const res = await sendTestFn({ data: { to: sender, lang } });
+      const res = await sendTestFn({ data: { to: testTo.trim(), lang } });
       setTestResult(res);
     } catch {
       setTestResult({ ok: false, reason: "error" });
