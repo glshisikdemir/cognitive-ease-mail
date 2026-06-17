@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   Dialog,
   DialogContent,
@@ -6,7 +7,17 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Mail, Globe, AtSign, Check, ArrowRight, AlertCircle } from "lucide-react";
+import {
+  Mail,
+  Globe,
+  AtSign,
+  Check,
+  ArrowRight,
+  AlertCircle,
+  Send,
+  Loader2,
+  CheckCircle2,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useLang, t } from "@/lib/i18n";
 import {
@@ -16,6 +27,7 @@ import {
   isValidLocalPart,
 } from "@/lib/email-domains";
 import { updateChannel, useChannelSettings } from "@/lib/channel-settings";
+import { sendTestEmail, type EmailTestResult } from "@/lib/send-test-email.functions";
 
 export function EmailWizard({
   open,
