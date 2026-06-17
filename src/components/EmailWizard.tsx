@@ -51,6 +51,7 @@ export function EmailWizard({
     setStep(0);
     setSending(false);
     setTestResult(null);
+    setTestTo("");
     const existing = settings.email.from;
     if (existing && existing.includes("@")) {
       const [lp, dm] = existing.split("@");
