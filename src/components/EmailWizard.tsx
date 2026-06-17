@@ -43,6 +43,7 @@ export function EmailWizard({
   const [localPart, setLocalPart] = useState("");
   const [sending, setSending] = useState(false);
   const [testResult, setTestResult] = useState<EmailTestResult | null>(null);
+  const [testTo, setTestTo] = useState("");
   const sendTestFn = useServerFn(sendTestEmail);
 
   useEffect(() => {
