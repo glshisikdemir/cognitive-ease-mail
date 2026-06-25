@@ -661,6 +661,42 @@ const dict: Dict = {
 
   // Audio briefing & voice commands
   navBriefing: { en: "Briefing", tr: "Brifing" },
+  navAssistant: { en: "Assistant", tr: "Asistan" },
+  // Voice assistant (conversational inbox control)
+  vaEyebrow: { en: "Voice assistant", tr: "Sesli asistan" },
+  vaTitle: { en: "Run your inbox by voice.", tr: "Gelen kutunuzu sesle yönetin." },
+  vaSubtitle: {
+    en: "Talk to ISURA. Ask it to read, summarize, and reply to any email — no typing. You confirm before anything is sent.",
+    tr: "ISURA ile konuşun. Herhangi bir e-postayı okumasını, özetlemesini ve yanıtlamasını isteyin — yazmadan. Hiçbir şey gönderilmeden önce siz onaylarsınız.",
+  },
+  vaEmpty: {
+    en: "Tap the mic and just talk. Try: \"Read me the most urgent email\" or \"Reply to Sarah's contract and say I'll sign before 6.\"",
+    tr: "Mikrofona dokunun ve konuşun. Deneyin: \"En acil e-postayı bana oku\" veya \"Sarah'nın sözleşmesine yanıt ver ve 6'dan önce imzalayacağımı söyle.\"",
+  },
+  vaHint: {
+    en: "Speak naturally. ISURA listens to one command at a time, then replies out loud.",
+    tr: "Doğal konuşun. ISURA her seferinde bir komut dinler, ardından sesli yanıt verir.",
+  },
+  vaIdle: { en: "Tap to speak", tr: "Konuşmak için dokunun" },
+  vaListening: { en: "Listening…", tr: "Dinliyor…" },
+  vaThinking: { en: "ISURA is thinking…", tr: "ISURA düşünüyor…" },
+  vaSpeaking: { en: "ISURA is speaking…", tr: "ISURA konuşuyor…" },
+  vaStart: { en: "Start listening", tr: "Dinlemeyi başlat" },
+  vaStop: { en: "Stop listening", tr: "Dinlemeyi durdur" },
+  vaError: { en: "Sorry, something went wrong. Please try again.", tr: "Üzgünüm, bir şeyler ters gitti. Lütfen tekrar deneyin." },
+  vaDraftReady: { en: "Reply drafted — confirm to send", tr: "Yanıt taslağı hazır — göndermek için onaylayın" },
+  vaSent: { en: "Reply sent", tr: "Yanıt gönderildi" },
+  vaArchived: { en: "Archived", tr: "Arşivlendi" },
+  vaIgnored: { en: "Ignored", tr: "Yok sayıldı" },
+  vaPendingTitle: { en: "Draft awaiting your confirmation", tr: "Onayınızı bekleyen taslak" },
+  vaPendingHint: {
+    en: "Say \"send it\" to confirm, or \"cancel\" to discard.",
+    tr: "Onaylamak için \"gönder\", iptal etmek için \"vazgeç\" deyin.",
+  },
+  vaEx1: { en: "Give me an overview", tr: "Bana genel bir özet ver" },
+  vaEx2: { en: "Reply to the demo request", tr: "Demo talebine yanıt ver" },
+  vaEx3: { en: "Archive the LinkedIn email", tr: "LinkedIn e-postasını arşivle" },
+  vaEx4: { en: "Ignore the newsletter", tr: "Bülteni yok say" },
   briefingEyebrow: { en: "Audio briefing", tr: "Sesli brifing" },
   briefingTitle: { en: "Listen to your inbox.", tr: "Gelen kutunuzu dinleyin." },
   briefingSubtitle: {
