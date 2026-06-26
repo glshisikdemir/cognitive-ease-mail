@@ -6,26 +6,40 @@ import { createLovableAiGatewayProvider } from "./ai-gateway";
 // What ISURA decided to do in response to a spoken command.
 const resultSchema = z.object({
   intent: z
-    .enum(["overview", "read", "summarize", "draft", "send", "archive", "ignore", "none"])
+    .enum(["overview", "read", "summarize", "draft", "send", "archive", "ignore", "compose", "none"])
     .describe(
-      "The action to perform: overview (summarize the whole inbox), read (read one email aloud), summarize (summarize one email), draft (write a reply draft and wait for confirmation), send (the user confirmed — finalize/send the reply), archive, ignore, or none (just talk / ask for clarification).",
+      "The action to perform: overview (summarize the whole inbox), read (read one email aloud), summarize (summarize one email), draft (write a reply draft and wait for confirmation), send (the user confirmed — finalize/send the pending reply OR pending new email), archive, ignore, compose (write a brand-new outgoing email to someone and wait for confirmation), or none (just talk / ask for clarification).",
     ),
   emailId: z
     .string()
     .nullable()
-    .describe("The id of the email this command targets, or null when it targets the whole inbox or none."),
+    .describe("The id of the inbox email this command targets, or null when it targets the whole inbox, a new email, or none."),
   replyDraft: z
     .string()
     .nullable()
     .describe(
-      "When intent is draft or send: the full reply text to that email, written in the email's own language, ready to send. Otherwise null.",
+      "When intent is draft or send (for a reply): the full reply text to that inbox email, written in the email's own language, ready to send. Otherwise null.",
+    ),
+  compose: z
+    .object({
+      to: z
+        .string()
+        .nullable()
+        .describe("Recipient name or email address if the operator named one, otherwise null."),
+      subject: z.string().describe("A clear subject line for the new email."),
+      body: z.string().describe("The full, ready-to-send body of the new email, in the requested language."),
+    })
+    .nullable()
+    .describe(
+      "When intent is compose (or send finalizing a pending new email): the brand-new outgoing email. Otherwise null.",
     ),
   spoken: z
     .string()
     .describe(
-      "What ISURA says back to the operator, to be read aloud by a voice. Warm, calm, concise. In the target language. When a draft was written, read a short summary of it and ask for confirmation to send.",
+      "What ISURA says back to the operator, to be read aloud by a voice. Warm, calm, concise. In the target language. When a draft or new email was written, read a short summary of it and ask for confirmation to send.",
     ),
 });
+
 
 export type VoiceAssistantResult = z.infer<typeof resultSchema>;
 
@@ -36,6 +50,14 @@ export const interpretVoiceCommand = createServerFn({ method: "POST" })
         lang: z.enum(["en", "tr"]),
         transcript: z.string().min(1).max(2000),
         pendingEmailId: z.string().nullable().optional(),
+        pendingCompose: z
+          .object({
+            to: z.string().nullable(),
+            subject: z.string(),
+            body: z.string(),
+          })
+          .nullable()
+          .optional(),
         history: z
           .array(z.object({ role: z.enum(["user", "isura"]), text: z.string().max(2000) }))
           .max(12)
@@ -75,12 +97,14 @@ Capabilities:
 - "draft": when they ask you to reply / answer an email, WRITE the full reply in replyDraft (in the EMAIL's own language), then in spoken read a short summary of what you wrote and ask them to confirm sending. Honor their tone and instructions (e.g. "decline politely", "say yes and propose Tuesday").
 - "send": ONLY when the operator confirms an already-drafted reply (e.g. "yes send it", "onayla", "gönder"). Reuse the pending draft. Put the final reply text in replyDraft.
 - "archive" / "ignore": when they want to file or dismiss an email.
+- "compose": when the operator wants to write a BRAND-NEW outgoing email (not a reply to an inbox message) — e.g. "write a new email to the team about Friday's launch", "ekibe yarınki toplantı için yeni bir e-posta yaz". WRITE the full new email into compose.subject and compose.body (in ${langName} unless they ask otherwise), set compose.to to the recipient if they named one (otherwise null), then in spoken read a short summary and ask them to confirm sending. emailId = null.
+- "send": ONLY when the operator confirms something already drafted. If a pending REPLY exists, finalize it via replyDraft. If a pending NEW email exists, finalize it via compose (reuse the pending subject/body, refine only if asked). Recognize "yes send it", "onayla", "gönder".
 - "none": when unclear — ask a brief clarifying question in spoken.
 
 Rules:
 - Match emails loosely by sender name, subject topic, or order ("the first one", "Sarah's contract", "the demo request").
 - Keep spoken text natural for listening: no markdown, no bullets, no email addresses, 1-4 sentences.
-- Never invent emails that are not in the list. The operator stays fully in control — you draft, they confirm before anything is sent.`;
+- Never invent inbox emails that are not in the list. The operator stays fully in control — you draft, they confirm before anything is sent.`;
 
     const list = data.emails
       .map(
@@ -95,10 +119,14 @@ Rules:
         : "";
 
     const pending = data.pendingEmailId
-      ? `\n\nThere is a reply draft awaiting confirmation for email id=${data.pendingEmailId}. If the operator confirms, use intent "send".`
+      ? `\n\nThere is a reply draft awaiting confirmation for email id=${data.pendingEmailId}. If the operator confirms, use intent "send" with replyDraft.`
       : "";
 
-    const prompt = `Inbox (${data.emails.length} messages):\n\n${list}${convo}${pending}\n\nThe operator just said: "${data.transcript}"\n\nDecide the action and respond.`;
+    const pendingNew = data.pendingCompose
+      ? `\n\nThere is a NEW email awaiting confirmation — to: ${data.pendingCompose.to ?? "(unspecified)"}, subject: ${data.pendingCompose.subject}, body: ${data.pendingCompose.body}\nIf the operator confirms, use intent "send" and put the (possibly refined) email back in compose.`
+      : "";
+
+    const prompt = `Inbox (${data.emails.length} messages):\n\n${list}${convo}${pending}${pendingNew}\n\nThe operator just said: "${data.transcript}"\n\nDecide the action and respond.`;
 
     try {
       const { experimental_output } = await generateText({

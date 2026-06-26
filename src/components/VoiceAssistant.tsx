@@ -8,6 +8,7 @@ import {
 } from "@/lib/voice-assistant.functions";
 import { emails as allEmails } from "@/lib/emails";
 import { setReplyDraft, setStatus, useEmailStore } from "@/lib/email-store";
+import { addSentEmail } from "@/lib/sent-emails";
 import { useLang, t, type Lang } from "@/lib/i18n";
 
 // Web Speech API is experimental and loosely typed.
@@ -37,15 +38,18 @@ export function VoiceAssistant() {
   const [thinking, setThinking] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [pending, setPending] = useState<{ emailId: string; subject: string; draft: string } | null>(null);
+  const [pendingCompose, setPendingCompose] = useState<{ to: string | null; subject: string; body: string } | null>(null);
 
   const recRef = useRef<AnyRec>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const playTokenRef = useRef(0);
   const turnsRef = useRef<Turn[]>([]);
   const pendingRef = useRef<typeof pending>(null);
+  const pendingComposeRef = useRef<typeof pendingCompose>(null);
   const logRef = useRef<HTMLDivElement | null>(null);
   turnsRef.current = turns;
   pendingRef.current = pending;
+  pendingComposeRef.current = pendingCompose;
 
   useEffect(() => {
     if ("speechSynthesis" in window) window.speechSynthesis.getVoices();
@@ -109,7 +113,23 @@ export function VoiceAssistant() {
       if (r.intent === "draft" && email && r.replyDraft) {
         setReplyDraft(email.id, r.replyDraft);
         setPending({ emailId: email.id, subject: email.subject, draft: r.replyDraft });
+        setPendingCompose(null);
         toast.success(`${t(lang, "vaDraftReady")} — ${email.subject}`);
+      } else if (r.intent === "compose" && r.compose && r.compose.body) {
+        setPendingCompose({ to: r.compose.to, subject: r.compose.subject, body: r.compose.body });
+        setPending(null);
+        toast.success(`${t(lang, "vaComposeReady")} — ${r.compose.subject}`);
+      } else if (r.intent === "send" && (r.compose || pendingComposeRef.current) && !email) {
+        // Finalize a brand-new outgoing email.
+        const compose = r.compose ?? pendingComposeRef.current!;
+        addSentEmail({
+          to: compose.to ?? "",
+          subject: compose.subject,
+          body: compose.body,
+          via: "voice",
+        });
+        setPendingCompose(null);
+        toast.success(`${t(lang, "vaComposeSent")} — ${compose.subject}`);
       } else if (r.intent === "send" && email) {
         const draft = r.replyDraft ?? pendingRef.current?.draft ?? "";
         if (draft) setReplyDraft(email.id, draft);
@@ -143,6 +163,7 @@ export function VoiceAssistant() {
             lang,
             transcript: clean,
             pendingEmailId: pendingRef.current?.emailId ?? null,
+            pendingCompose: pendingComposeRef.current ?? null,
             history: turnsRef.current.slice(-8),
             emails: allEmails.map((e) => ({
               id: e.id,
@@ -267,6 +288,24 @@ export function VoiceAssistant() {
         </div>
       )}
 
+      {/* Pending NEW email confirmation banner */}
+      {pendingCompose && (
+        <div className="rounded-2xl border border-primary/40 bg-primary/5 px-5 py-4">
+          <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.16em] text-primary">
+            <Sparkles className="h-3.5 w-3.5" />
+            {t(lang, "vaComposePending")}
+          </div>
+          {pendingCompose.to && (
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t(lang, "composeTo")}: {pendingCompose.to}
+            </p>
+          )}
+          <p className="mt-1 text-sm font-medium text-foreground">{pendingCompose.subject}</p>
+          <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{pendingCompose.body}</p>
+          <p className="mt-3 text-xs text-muted-foreground">{t(lang, "vaPendingHint")}</p>
+        </div>
+      )}
+
       {/* Mic control */}
       <div className="flex flex-col items-center gap-4 rounded-2xl border border-border/70 bg-surface px-6 py-8">
         <button
@@ -291,12 +330,12 @@ export function VoiceAssistant() {
 
       {/* Example commands */}
       <div className="flex flex-wrap justify-center gap-2">
-        {[t(lang, "vaEx1"), t(lang, "vaEx2"), t(lang, "vaEx3"), t(lang, "vaEx4")].map((ex, i) => (
+        {[t(lang, "vaEx1"), t(lang, "vaEx2"), t(lang, "vaEx5"), t(lang, "vaEx3"), t(lang, "vaEx4")].map((ex, i) => (
           <span
             key={i}
             className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-xs text-muted-foreground"
           >
-            {i === 2 ? <Archive className="h-3 w-3" /> : i === 3 ? <EyeOff className="h-3 w-3" /> : <Mic className="h-3 w-3" />}
+            {i === 2 ? <Sparkles className="h-3 w-3" /> : i === 3 ? <Archive className="h-3 w-3" /> : i === 4 ? <EyeOff className="h-3 w-3" /> : <Mic className="h-3 w-3" />}
             {ex}
           </span>
         ))}
