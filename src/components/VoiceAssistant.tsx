@@ -8,6 +8,7 @@ import {
 } from "@/lib/voice-assistant.functions";
 import { emails as allEmails } from "@/lib/emails";
 import { setReplyDraft, setStatus, useEmailStore } from "@/lib/email-store";
+import { addSentEmail } from "@/lib/sent-emails";
 import { useLang, t, type Lang } from "@/lib/i18n";
 
 // Web Speech API is experimental and loosely typed.
