@@ -45,9 +45,11 @@ export function VoiceAssistant() {
   const playTokenRef = useRef(0);
   const turnsRef = useRef<Turn[]>([]);
   const pendingRef = useRef<typeof pending>(null);
+  const pendingComposeRef = useRef<typeof pendingCompose>(null);
   const logRef = useRef<HTMLDivElement | null>(null);
   turnsRef.current = turns;
   pendingRef.current = pending;
+  pendingComposeRef.current = pendingCompose;
 
   useEffect(() => {
     if ("speechSynthesis" in window) window.speechSynthesis.getVoices();
