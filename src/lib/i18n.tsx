@@ -697,6 +697,33 @@ const dict: Dict = {
   vaEx2: { en: "Reply to the demo request", tr: "Demo talebine yanıt ver" },
   vaEx3: { en: "Archive the LinkedIn email", tr: "LinkedIn e-postasını arşivle" },
   vaEx4: { en: "Ignore the newsletter", tr: "Bülteni yok say" },
+  vaEx5: { en: "Write a new email to the team", tr: "Ekibe yeni bir e-posta yaz" },
+  vaComposeReady: { en: "New email drafted — confirm to send", tr: "Yeni e-posta hazır — göndermek için onaylayın" },
+  vaComposePending: { en: "New email awaiting your confirmation", tr: "Onayınızı bekleyen yeni e-posta" },
+  vaComposeSent: { en: "Email sent", tr: "E-posta gönderildi" },
+  // Compose new email (written)
+  composeEyebrow: { en: "Compose a new email", tr: "Yeni e-posta oluştur" },
+  composeTitle: { en: "Write a new email", tr: "Yeni bir e-posta yaz" },
+  composeDesc: {
+    en: "Compose a brand-new email by hand, or let ISURA draft it for you. Nothing leaves until you send it.",
+    tr: "Yeni bir e-postayı elle yazın ya da ISURA sizin için taslak hazırlasın. Siz göndermeden hiçbir şey gitmez.",
+  },
+  composeTo: { en: "To", tr: "Kime" },
+  composeToPh: { en: "name@company.com", tr: "isim@sirket.com" },
+  composeSend: { en: "Send email", tr: "E-postayı gönder" },
+  composeSent: { en: "Email sent", tr: "E-posta gönderildi" },
+  composeRequired: { en: "A message is required", tr: "Bir mesaj gerekli" },
+  composeAI: { en: "Write with AI", tr: "AI ile yaz" },
+  composeAIPh: {
+    en: "Describe the email, e.g. \"thank the team and confirm Friday's launch\"",
+    tr: "E-postayı tarif edin, ör. \"ekibe teşekkür et ve Cuma lansmanını onayla\"",
+  },
+  composeAIGenerate: { en: "Generate", tr: "Oluştur" },
+  composeAIThinking: { en: "Writing…", tr: "Yazılıyor…" },
+  composeAIDone: { en: "Draft ready — review and send", tr: "Taslak hazır — gözden geçirip gönderin" },
+  // Sent emails
+  sentTitle: { en: "Sent", tr: "Gönderilenler" },
+  sentNoSubject: { en: "(no subject)", tr: "(konu yok)" },
   briefingEyebrow: { en: "Audio briefing", tr: "Sesli brifing" },
   briefingTitle: { en: "Listen to your inbox.", tr: "Gelen kutunuzu dinleyin." },
   briefingSubtitle: {
