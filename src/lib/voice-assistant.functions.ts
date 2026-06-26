@@ -119,10 +119,14 @@ Rules:
         : "";
 
     const pending = data.pendingEmailId
-      ? `\n\nThere is a reply draft awaiting confirmation for email id=${data.pendingEmailId}. If the operator confirms, use intent "send".`
+      ? `\n\nThere is a reply draft awaiting confirmation for email id=${data.pendingEmailId}. If the operator confirms, use intent "send" with replyDraft.`
       : "";
 
-    const prompt = `Inbox (${data.emails.length} messages):\n\n${list}${convo}${pending}\n\nThe operator just said: "${data.transcript}"\n\nDecide the action and respond.`;
+    const pendingNew = data.pendingCompose
+      ? `\n\nThere is a NEW email awaiting confirmation — to: ${data.pendingCompose.to ?? "(unspecified)"}, subject: ${data.pendingCompose.subject}, body: ${data.pendingCompose.body}\nIf the operator confirms, use intent "send" and put the (possibly refined) email back in compose.`
+      : "";
+
+    const prompt = `Inbox (${data.emails.length} messages):\n\n${list}${convo}${pending}${pendingNew}\n\nThe operator just said: "${data.transcript}"\n\nDecide the action and respond.`;
 
     try {
       const { experimental_output } = await generateText({
