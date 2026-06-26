@@ -6,26 +6,40 @@ import { createLovableAiGatewayProvider } from "./ai-gateway";
 // What ISURA decided to do in response to a spoken command.
 const resultSchema = z.object({
   intent: z
-    .enum(["overview", "read", "summarize", "draft", "send", "archive", "ignore", "none"])
+    .enum(["overview", "read", "summarize", "draft", "send", "archive", "ignore", "compose", "none"])
     .describe(
-      "The action to perform: overview (summarize the whole inbox), read (read one email aloud), summarize (summarize one email), draft (write a reply draft and wait for confirmation), send (the user confirmed — finalize/send the reply), archive, ignore, or none (just talk / ask for clarification).",
+      "The action to perform: overview (summarize the whole inbox), read (read one email aloud), summarize (summarize one email), draft (write a reply draft and wait for confirmation), send (the user confirmed — finalize/send the pending reply OR pending new email), archive, ignore, compose (write a brand-new outgoing email to someone and wait for confirmation), or none (just talk / ask for clarification).",
     ),
   emailId: z
     .string()
     .nullable()
-    .describe("The id of the email this command targets, or null when it targets the whole inbox or none."),
+    .describe("The id of the inbox email this command targets, or null when it targets the whole inbox, a new email, or none."),
   replyDraft: z
     .string()
     .nullable()
     .describe(
-      "When intent is draft or send: the full reply text to that email, written in the email's own language, ready to send. Otherwise null.",
+      "When intent is draft or send (for a reply): the full reply text to that inbox email, written in the email's own language, ready to send. Otherwise null.",
+    ),
+  compose: z
+    .object({
+      to: z
+        .string()
+        .nullable()
+        .describe("Recipient name or email address if the operator named one, otherwise null."),
+      subject: z.string().describe("A clear subject line for the new email."),
+      body: z.string().describe("The full, ready-to-send body of the new email, in the requested language."),
+    })
+    .nullable()
+    .describe(
+      "When intent is compose (or send finalizing a pending new email): the brand-new outgoing email. Otherwise null.",
     ),
   spoken: z
     .string()
     .describe(
-      "What ISURA says back to the operator, to be read aloud by a voice. Warm, calm, concise. In the target language. When a draft was written, read a short summary of it and ask for confirmation to send.",
+      "What ISURA says back to the operator, to be read aloud by a voice. Warm, calm, concise. In the target language. When a draft or new email was written, read a short summary of it and ask for confirmation to send.",
     ),
 });
+
 
 export type VoiceAssistantResult = z.infer<typeof resultSchema>;
 
