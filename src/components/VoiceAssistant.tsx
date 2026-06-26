@@ -113,7 +113,23 @@ export function VoiceAssistant() {
       if (r.intent === "draft" && email && r.replyDraft) {
         setReplyDraft(email.id, r.replyDraft);
         setPending({ emailId: email.id, subject: email.subject, draft: r.replyDraft });
+        setPendingCompose(null);
         toast.success(`${t(lang, "vaDraftReady")} — ${email.subject}`);
+      } else if (r.intent === "compose" && r.compose && r.compose.body) {
+        setPendingCompose({ to: r.compose.to, subject: r.compose.subject, body: r.compose.body });
+        setPending(null);
+        toast.success(`${t(lang, "vaComposeReady")} — ${r.compose.subject}`);
+      } else if (r.intent === "send" && (r.compose || pendingComposeRef.current) && !email) {
+        // Finalize a brand-new outgoing email.
+        const compose = r.compose ?? pendingComposeRef.current!;
+        addSentEmail({
+          to: compose.to ?? "",
+          subject: compose.subject,
+          body: compose.body,
+          via: "voice",
+        });
+        setPendingCompose(null);
+        toast.success(`${t(lang, "vaComposeSent")} — ${compose.subject}`);
       } else if (r.intent === "send" && email) {
         const draft = r.replyDraft ?? pendingRef.current?.draft ?? "";
         if (draft) setReplyDraft(email.id, draft);
