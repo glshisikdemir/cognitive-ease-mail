@@ -330,12 +330,12 @@ export function VoiceAssistant() {
 
       {/* Example commands */}
       <div className="flex flex-wrap justify-center gap-2">
-        {[t(lang, "vaEx1"), t(lang, "vaEx2"), t(lang, "vaEx3"), t(lang, "vaEx4")].map((ex, i) => (
+        {[t(lang, "vaEx1"), t(lang, "vaEx2"), t(lang, "vaEx5"), t(lang, "vaEx3"), t(lang, "vaEx4")].map((ex, i) => (
           <span
             key={i}
             className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-xs text-muted-foreground"
           >
-            {i === 2 ? <Archive className="h-3 w-3" /> : i === 3 ? <EyeOff className="h-3 w-3" /> : <Mic className="h-3 w-3" />}
+            {i === 2 ? <Sparkles className="h-3 w-3" /> : i === 3 ? <Archive className="h-3 w-3" /> : i === 4 ? <EyeOff className="h-3 w-3" /> : <Mic className="h-3 w-3" />}
             {ex}
           </span>
         ))}
