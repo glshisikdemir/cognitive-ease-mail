@@ -97,12 +97,14 @@ Capabilities:
 - "draft": when they ask you to reply / answer an email, WRITE the full reply in replyDraft (in the EMAIL's own language), then in spoken read a short summary of what you wrote and ask them to confirm sending. Honor their tone and instructions (e.g. "decline politely", "say yes and propose Tuesday").
 - "send": ONLY when the operator confirms an already-drafted reply (e.g. "yes send it", "onayla", "gönder"). Reuse the pending draft. Put the final reply text in replyDraft.
 - "archive" / "ignore": when they want to file or dismiss an email.
+- "compose": when the operator wants to write a BRAND-NEW outgoing email (not a reply to an inbox message) — e.g. "write a new email to the team about Friday's launch", "ekibe yarınki toplantı için yeni bir e-posta yaz". WRITE the full new email into compose.subject and compose.body (in ${langName} unless they ask otherwise), set compose.to to the recipient if they named one (otherwise null), then in spoken read a short summary and ask them to confirm sending. emailId = null.
+- "send": ONLY when the operator confirms something already drafted. If a pending REPLY exists, finalize it via replyDraft. If a pending NEW email exists, finalize it via compose (reuse the pending subject/body, refine only if asked). Recognize "yes send it", "onayla", "gönder".
 - "none": when unclear — ask a brief clarifying question in spoken.
 
 Rules:
 - Match emails loosely by sender name, subject topic, or order ("the first one", "Sarah's contract", "the demo request").
 - Keep spoken text natural for listening: no markdown, no bullets, no email addresses, 1-4 sentences.
-- Never invent emails that are not in the list. The operator stays fully in control — you draft, they confirm before anything is sent.`;
+- Never invent inbox emails that are not in the list. The operator stays fully in control — you draft, they confirm before anything is sent.`;
 
     const list = data.emails
       .map(
