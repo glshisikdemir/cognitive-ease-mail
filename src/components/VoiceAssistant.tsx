@@ -163,6 +163,7 @@ export function VoiceAssistant() {
             lang,
             transcript: clean,
             pendingEmailId: pendingRef.current?.emailId ?? null,
+            pendingCompose: pendingComposeRef.current ?? null,
             history: turnsRef.current.slice(-8),
             emails: allEmails.map((e) => ({
               id: e.id,
