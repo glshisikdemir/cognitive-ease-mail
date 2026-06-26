@@ -288,6 +288,24 @@ export function VoiceAssistant() {
         </div>
       )}
 
+      {/* Pending NEW email confirmation banner */}
+      {pendingCompose && (
+        <div className="rounded-2xl border border-primary/40 bg-primary/5 px-5 py-4">
+          <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.16em] text-primary">
+            <Sparkles className="h-3.5 w-3.5" />
+            {t(lang, "vaComposePending")}
+          </div>
+          {pendingCompose.to && (
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t(lang, "composeTo")}: {pendingCompose.to}
+            </p>
+          )}
+          <p className="mt-1 text-sm font-medium text-foreground">{pendingCompose.subject}</p>
+          <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{pendingCompose.body}</p>
+          <p className="mt-3 text-xs text-muted-foreground">{t(lang, "vaPendingHint")}</p>
+        </div>
+      )}
+
       {/* Mic control */}
       <div className="flex flex-col items-center gap-4 rounded-2xl border border-border/70 bg-surface px-6 py-8">
         <button
