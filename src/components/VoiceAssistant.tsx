@@ -38,6 +38,7 @@ export function VoiceAssistant() {
   const [thinking, setThinking] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [pending, setPending] = useState<{ emailId: string; subject: string; draft: string } | null>(null);
+  const [pendingCompose, setPendingCompose] = useState<{ to: string | null; subject: string; body: string } | null>(null);
 
   const recRef = useRef<AnyRec>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
