@@ -50,6 +50,14 @@ export const interpretVoiceCommand = createServerFn({ method: "POST" })
         lang: z.enum(["en", "tr"]),
         transcript: z.string().min(1).max(2000),
         pendingEmailId: z.string().nullable().optional(),
+        pendingCompose: z
+          .object({
+            to: z.string().nullable(),
+            subject: z.string(),
+            body: z.string(),
+          })
+          .nullable()
+          .optional(),
         history: z
           .array(z.object({ role: z.enum(["user", "isura"]), text: z.string().max(2000) }))
           .max(12)
