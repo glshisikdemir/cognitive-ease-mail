@@ -288,6 +288,7 @@ function Nav({ lang }: { lang: Lang }) {
           <a href="#how" className="transition-colors hover:text-foreground">{tr(lang, "navHow")}</a>
           <a href="#preview" className="transition-colors hover:text-foreground">{tr(lang, "navPreview")}</a>
           <a href="#trust" className="transition-colors hover:text-foreground">{tr(lang, "navTrust")}</a>
+          <Link to="/assistant" className="transition-colors hover:text-foreground">{lang === "tr" ? "Sesli asistan" : "Voice assistant"}</Link>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -357,6 +358,13 @@ function Hero({ lang }: { lang: Lang }) {
           >
             {tr(lang, "ctaSecondary")}
           </a>
+          <Link
+            to="/assistant"
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-5 py-2.5 text-sm font-medium text-foreground transition hover:bg-surface-muted"
+          >
+            {lang === "tr" ? "Sesli asistanı dene" : "Try the voice assistant"}
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
         </div>
         <p className="mt-6 inline-flex items-center gap-1.5 text-[12px] text-muted-foreground">
           <ShieldCheck className="h-3 w-3" />
