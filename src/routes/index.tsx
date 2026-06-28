@@ -288,6 +288,7 @@ function Nav({ lang }: { lang: Lang }) {
           <a href="#how" className="transition-colors hover:text-foreground">{tr(lang, "navHow")}</a>
           <a href="#preview" className="transition-colors hover:text-foreground">{tr(lang, "navPreview")}</a>
           <a href="#trust" className="transition-colors hover:text-foreground">{tr(lang, "navTrust")}</a>
+          <Link to="/assistant" className="transition-colors hover:text-foreground">{lang === "tr" ? "Sesli asistan" : "Voice assistant"}</Link>
         </nav>
 
         <div className="flex items-center gap-2">
