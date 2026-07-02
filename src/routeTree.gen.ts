@@ -18,6 +18,7 @@ import { Route as PilotStatusRouteImport } from './routes/pilot-status'
 import { Route as PermissionsRouteImport } from './routes/permissions'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as GuardianRouteImport } from './routes/guardian'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ChannelsRouteImport } from './routes/channels'
 import { Route as BriefingRouteImport } from './routes/briefing'
@@ -71,6 +72,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuardianRoute = GuardianRouteImport.update({
+  id: '/guardian',
+  path: '/guardian',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CookiesRoute = CookiesRouteImport.update({
@@ -127,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/briefing': typeof BriefingRoute
   '/channels': typeof ChannelsRoute
   '/cookies': typeof CookiesRoute
+  '/guardian': typeof GuardianRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/permissions': typeof PermissionsRoute
@@ -147,6 +154,7 @@ export interface FileRoutesByTo {
   '/briefing': typeof BriefingRoute
   '/channels': typeof ChannelsRoute
   '/cookies': typeof CookiesRoute
+  '/guardian': typeof GuardianRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/permissions': typeof PermissionsRoute
@@ -168,6 +176,7 @@ export interface FileRoutesById {
   '/briefing': typeof BriefingRoute
   '/channels': typeof ChannelsRoute
   '/cookies': typeof CookiesRoute
+  '/guardian': typeof GuardianRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/permissions': typeof PermissionsRoute
@@ -190,6 +199,7 @@ export interface FileRouteTypes {
     | '/briefing'
     | '/channels'
     | '/cookies'
+    | '/guardian'
     | '/login'
     | '/onboarding'
     | '/permissions'
@@ -210,6 +220,7 @@ export interface FileRouteTypes {
     | '/briefing'
     | '/channels'
     | '/cookies'
+    | '/guardian'
     | '/login'
     | '/onboarding'
     | '/permissions'
@@ -230,6 +241,7 @@ export interface FileRouteTypes {
     | '/briefing'
     | '/channels'
     | '/cookies'
+    | '/guardian'
     | '/login'
     | '/onboarding'
     | '/permissions'
@@ -251,6 +263,7 @@ export interface RootRouteChildren {
   BriefingRoute: typeof BriefingRoute
   ChannelsRoute: typeof ChannelsRoute
   CookiesRoute: typeof CookiesRoute
+  GuardianRoute: typeof GuardianRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
   PermissionsRoute: typeof PermissionsRoute
@@ -329,6 +342,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guardian': {
+      id: '/guardian'
+      path: '/guardian'
+      fullPath: '/guardian'
+      preLoaderRoute: typeof GuardianRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cookies': {
       id: '/cookies'
       path: '/cookies'
@@ -403,6 +423,7 @@ const rootRouteChildren: RootRouteChildren = {
   BriefingRoute: BriefingRoute,
   ChannelsRoute: ChannelsRoute,
   CookiesRoute: CookiesRoute,
+  GuardianRoute: GuardianRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   PermissionsRoute: PermissionsRoute,
