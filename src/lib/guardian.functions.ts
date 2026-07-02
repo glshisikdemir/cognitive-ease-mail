@@ -185,7 +185,7 @@ export const createDecision = createServerFn({ method: "POST" })
         business_impact: data.businessImpact ?? null,
         financial_impact: data.financialImpact ?? null,
         initiated_by: data.initiatedBy ?? "ISURA",
-        action_payload: data.actionPayload ?? {},
+        action_payload: (data.actionPayload ?? {}) as Json,
       })
       .select("id")
       .single();
