@@ -15,6 +15,7 @@ import { Route as SecurityRouteImport } from './routes/security'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PriorityRouteImport } from './routes/priority'
 import { Route as PilotStatusRouteImport } from './routes/pilot-status'
+import { Route as PermissionsRouteImport } from './routes/permissions'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CookiesRouteImport } from './routes/cookies'
@@ -55,6 +56,11 @@ const PriorityRoute = PriorityRouteImport.update({
 const PilotStatusRoute = PilotStatusRouteImport.update({
   id: '/pilot-status',
   path: '/pilot-status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PermissionsRoute = PermissionsRouteImport.update({
+  id: '/permissions',
+  path: '/permissions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/cookies': typeof CookiesRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/permissions': typeof PermissionsRoute
   '/pilot-status': typeof PilotStatusRoute
   '/priority': typeof PriorityRoute
   '/privacy': typeof PrivacyRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByTo {
   '/cookies': typeof CookiesRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/permissions': typeof PermissionsRoute
   '/pilot-status': typeof PilotStatusRoute
   '/priority': typeof PriorityRoute
   '/privacy': typeof PrivacyRoute
@@ -162,6 +170,7 @@ export interface FileRoutesById {
   '/cookies': typeof CookiesRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/permissions': typeof PermissionsRoute
   '/pilot-status': typeof PilotStatusRoute
   '/priority': typeof PriorityRoute
   '/privacy': typeof PrivacyRoute
@@ -183,6 +192,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/login'
     | '/onboarding'
+    | '/permissions'
     | '/pilot-status'
     | '/priority'
     | '/privacy'
@@ -202,6 +212,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/login'
     | '/onboarding'
+    | '/permissions'
     | '/pilot-status'
     | '/priority'
     | '/privacy'
@@ -221,6 +232,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/login'
     | '/onboarding'
+    | '/permissions'
     | '/pilot-status'
     | '/priority'
     | '/privacy'
@@ -241,6 +253,7 @@ export interface RootRouteChildren {
   CookiesRoute: typeof CookiesRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
+  PermissionsRoute: typeof PermissionsRoute
   PilotStatusRoute: typeof PilotStatusRoute
   PriorityRoute: typeof PriorityRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -293,6 +306,13 @@ declare module '@tanstack/react-router' {
       path: '/pilot-status'
       fullPath: '/pilot-status'
       preLoaderRoute: typeof PilotStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/permissions': {
+      id: '/permissions'
+      path: '/permissions'
+      fullPath: '/permissions'
+      preLoaderRoute: typeof PermissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -385,6 +405,7 @@ const rootRouteChildren: RootRouteChildren = {
   CookiesRoute: CookiesRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
+  PermissionsRoute: PermissionsRoute,
   PilotStatusRoute: PilotStatusRoute,
   PriorityRoute: PriorityRoute,
   PrivacyRoute: PrivacyRoute,
