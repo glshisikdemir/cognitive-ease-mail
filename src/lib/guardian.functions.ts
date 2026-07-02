@@ -208,7 +208,13 @@ export const updateDecisionStatus = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }): Promise<{ ok: true }> => {
     const { supabase, userId } = context;
-    const patch: Record<string, unknown> = { status: data.status };
+    const patch: {
+      status: DecisionStatus;
+      approved_by?: string;
+      approval_reason?: string;
+      executed_at?: string;
+      outcome?: string;
+    } = { status: data.status };
     if (data.status === "approved" || data.status === "rejected") {
       patch.approved_by = "human";
       if (data.approvalReason) patch.approval_reason = data.approvalReason;
