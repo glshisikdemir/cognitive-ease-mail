@@ -1,47 +1,43 @@
-# Kanal Asistanları — Plan
+# ISURA — Voice-First AI Operating System
 
-Kullanıcı her kanal için bir asistan seçebilecek (E-posta, WhatsApp, Slack, Telegram) ve ISURA brifingini/özetini bu kanallara **yalnızca gönderecek** (gönder-al değil).
+ISURA is not a CRM, not a mail app. It is a voice-first AI Decision Operating Layer.
+Principle: **"Autonomous execution. Human authority."**
 
-## 1. Uygulama içi seçim arayüzü (harici bağımlılık yok)
+## Slice 1 — Decision Guardian + Autonomy Levels ✅ (built)
 
-`/settings/channels` (veya `/app` içinde bir bölüm) rotası:
+Trust layer every autonomous action must pass through.
 
-- Her kanal için bir kart: **E-posta**, **WhatsApp**, **Slack**, **Telegram**.
-- Her kartta:
-  - Açık/Kapalı anahtarı (kanalı etkinleştir).
-  - Bir **asistan/persona** seçimi (ör. "Operasyonel asistan", "Kısa özet asistanı", "Resmi ton").
-  - Kanala özel hedef alanı: WhatsApp telefon (E.164), Slack kanal adı, Telegram chat ID, e-posta adresi.
-- Seçimler `localStorage` tabanlı bir store'da tutulur (`channel-settings.ts`), tıpkı mevcut `email-store` gibi.
-- i18n (EN/TR) anahtarları eklenir.
+- DB: `permission_settings` (per-user autonomy per category) + `decisions` (permanent
+  timeline: recommendation, reasoning, evidence, alternatives, confidence, risk,
+  impact, status, outcome). Auth-scoped via RLS.
+- Enums: `autonomy_category`, `autonomy_level` (L1 autonomous → L4 strategic),
+  `decision_status`, `risk_level`.
+- `src/lib/guardian.ts` — category/level/risk/status metadata + rules
+  (`requiresApproval`, `canEverExecute`).
+- `src/lib/guardian.functions.ts` — auth server fns: get/set permissions,
+  list/create/update decisions.
+- `/permissions` — Permission Center (configure autonomy per area).
+- `/guardian` — Guardian Dashboard (pending approvals w/ full explainability +
+  decision timeline; approve / reject / execute / undo).
 
-Bu adım tek başına çalışır; kullanıcı asistanlarını seçip yapılandırabilir.
+## Slice 2 — Voice-first campaign console (next)
+Speak to create campaigns; campaign dashboard (status, reply rate, meetings);
+voice approval before sending. Every proposed send routes through the Guardian
+(sales/pricing = L3 approval by default).
 
-## 2. Gönderim altyapısı (bağlantı gerektirir)
+## Slice 3 — Prospect discovery (Firecrawl)
+Voice → search orgs (schools/companies), read websites, build org profiles,
+collect decision makers/emails. Server-side via Firecrawl connector.
 
-"Sadece gönderme" için her kanal sunucu tarafında çağrılır:
+## Slice 4 — Real email sending
+Configure isura.tech sender domain + email infra. Personalized, throttled,
+individual sends after Guardian approval. Track delivery/opens/replies/meetings.
 
-- **Slack**: Lovable Slack connector → `chat.postMessage`.
-- **Telegram**: Lovable Telegram connector → `sendMessage`.
-- **WhatsApp**: Twilio connector → `Messages.json` (WhatsApp from/to).
+## Slice 5 — Smart follow-up, calendar, decision memory, learning, morning voice brief
+Autonomous mode: works in background, requests approval only for high-impact
+decisions per the Permission Center.
 
-Her biri için `createServerFn` ile bir gönderim fonksiyonu (`send-briefing.functions.ts`) yazılır; gateway üzerinden çağrı yapar. Brifing metni mevcut `briefing.functions.ts` çıktısından veya seçili asistana göre üretilir.
-
-UI'da "Brifingi gönder" butonu seçili/etkin kanallara metni yollar.
-
-### Gereken kullanıcı aksiyonu
-Gerçek gönderim için bağlantıların kurulması gerekir (her biri tek seferlik):
-- Slack connector bağlama
-- Telegram connector bağlama
-- Twilio connector bağlama (WhatsApp için)
-
-Bağlantı kurulmazsa ilgili kanal arayüzde "Bağlantı gerekli" olarak gösterilir.
-
-## Teknik notlar
-- Gönderim mantığı sunucu fonksiyonlarında; connector secret'ları `process.env`'den okunur, tarayıcıya sızmaz.
-- Girdi doğrulaması (telefon E.164, kanal adı, mesaj uzunluğu) Zod ile yapılır.
-- Önce Adım 1 (arayüz) uygulanır; Adım 2 için bağlantıları sırayla bağlamanı isteyeceğim.
-
-## Sıra
-1. Seçim arayüzü + store + i18n.
-2. Bağlantıları kur (Slack, Telegram, Twilio).
-3. Gönderim sunucu fonksiyonları + "Gönder" butonu.
+## Technical notes
+- All model calls, tools, secrets stay server-side (createServerFn / server routes).
+- Guardian is the mandatory gate: no action executes above its configured level
+  without human approval; L4 never auto-executes.

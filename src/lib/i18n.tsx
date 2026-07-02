@@ -547,6 +547,8 @@ const dict: Dict = {
   navWorkspace: { en: "Workspace", tr: "Çalışma alanı" },
   navPriority: { en: "Priority", tr: "Öncelik" },
   navTrust: { en: "Trust", tr: "Güven" },
+  navGuardian: { en: "Guardian", tr: "Muhafız" },
+  navPermissions: { en: "Permissions", tr: "İzinler" },
   navHelp: { en: "Help", tr: "Yardım" },
 
   // Product footer
