@@ -14,6 +14,117 @@ export type Database = {
   }
   public: {
     Tables: {
+      decisions: {
+        Row: {
+          action_payload: Json
+          alternatives: Json
+          approval_reason: string | null
+          approved_by: string | null
+          business_impact: string | null
+          category: Database["public"]["Enums"]["autonomy_category"]
+          confidence: number | null
+          created_at: string
+          do_nothing_outcome: string | null
+          evidence: Json
+          executed_at: string | null
+          expires_at: string | null
+          financial_impact: string | null
+          id: string
+          initiated_by: string | null
+          level: Database["public"]["Enums"]["autonomy_level"]
+          outcome: string | null
+          proposed_by: string
+          reasoning: string | null
+          recommendation: string
+          risk: Database["public"]["Enums"]["risk_level"]
+          status: Database["public"]["Enums"]["decision_status"]
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_payload?: Json
+          alternatives?: Json
+          approval_reason?: string | null
+          approved_by?: string | null
+          business_impact?: string | null
+          category: Database["public"]["Enums"]["autonomy_category"]
+          confidence?: number | null
+          created_at?: string
+          do_nothing_outcome?: string | null
+          evidence?: Json
+          executed_at?: string | null
+          expires_at?: string | null
+          financial_impact?: string | null
+          id?: string
+          initiated_by?: string | null
+          level: Database["public"]["Enums"]["autonomy_level"]
+          outcome?: string | null
+          proposed_by?: string
+          reasoning?: string | null
+          recommendation: string
+          risk?: Database["public"]["Enums"]["risk_level"]
+          status?: Database["public"]["Enums"]["decision_status"]
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_payload?: Json
+          alternatives?: Json
+          approval_reason?: string | null
+          approved_by?: string | null
+          business_impact?: string | null
+          category?: Database["public"]["Enums"]["autonomy_category"]
+          confidence?: number | null
+          created_at?: string
+          do_nothing_outcome?: string | null
+          evidence?: Json
+          executed_at?: string | null
+          expires_at?: string | null
+          financial_impact?: string | null
+          id?: string
+          initiated_by?: string | null
+          level?: Database["public"]["Enums"]["autonomy_level"]
+          outcome?: string | null
+          proposed_by?: string
+          reasoning?: string | null
+          recommendation?: string
+          risk?: Database["public"]["Enums"]["risk_level"]
+          status?: Database["public"]["Enums"]["decision_status"]
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      permission_settings: {
+        Row: {
+          category: Database["public"]["Enums"]["autonomy_category"]
+          created_at: string
+          id: string
+          level: Database["public"]["Enums"]["autonomy_level"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["autonomy_category"]
+          created_at?: string
+          id?: string
+          level?: Database["public"]["Enums"]["autonomy_level"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["autonomy_category"]
+          created_at?: string
+          id?: string
+          level?: Database["public"]["Enums"]["autonomy_level"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       waitlist_signups: {
         Row: {
           company: string | null
@@ -73,6 +184,29 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      autonomy_category:
+        | "marketing"
+        | "sales"
+        | "finance"
+        | "legal"
+        | "calendar"
+        | "email_followup"
+        | "pricing"
+        | "contracts"
+        | "data"
+      autonomy_level:
+        | "level1_autonomous"
+        | "level2_silent"
+        | "level3_approval"
+        | "level4_strategic"
+      decision_status:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "executed"
+        | "undone"
+        | "expired"
+      risk_level: "low" | "medium" | "high" | "critical"
       waitlist_lang: "en" | "tr"
       waitlist_onboarding_status:
         | "pending"
@@ -207,6 +341,32 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      autonomy_category: [
+        "marketing",
+        "sales",
+        "finance",
+        "legal",
+        "calendar",
+        "email_followup",
+        "pricing",
+        "contracts",
+        "data",
+      ],
+      autonomy_level: [
+        "level1_autonomous",
+        "level2_silent",
+        "level3_approval",
+        "level4_strategic",
+      ],
+      decision_status: [
+        "pending",
+        "approved",
+        "rejected",
+        "executed",
+        "undone",
+        "expired",
+      ],
+      risk_level: ["low", "medium", "high", "critical"],
       waitlist_lang: ["en", "tr"],
       waitlist_onboarding_status: [
         "pending",
