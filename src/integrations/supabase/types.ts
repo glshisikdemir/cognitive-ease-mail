@@ -14,6 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_runs: {
+        Row: {
+          agent: Database["public"]["Enums"]["task_agent"]
+          created_at: string
+          error: string | null
+          id: string
+          output: Json | null
+          status: string
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          agent: Database["public"]["Enums"]["task_agent"]
+          created_at?: string
+          error?: string | null
+          id?: string
+          output?: Json | null
+          status?: string
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          agent?: Database["public"]["Enums"]["task_agent"]
+          created_at?: string
+          error?: string | null
+          id?: string
+          output?: Json | null
+          status?: string
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_runs_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       decisions: {
         Row: {
           action_payload: Json
@@ -98,6 +139,42 @@ export type Database = {
         }
         Relationships: []
       }
+      objectives: {
+        Row: {
+          created_at: string
+          id: string
+          language: Database["public"]["Enums"]["objective_lang"]
+          source: Database["public"]["Enums"]["objective_source"]
+          status: Database["public"]["Enums"]["objective_status"]
+          summary: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          language?: Database["public"]["Enums"]["objective_lang"]
+          source?: Database["public"]["Enums"]["objective_source"]
+          status?: Database["public"]["Enums"]["objective_status"]
+          summary?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          language?: Database["public"]["Enums"]["objective_lang"]
+          source?: Database["public"]["Enums"]["objective_source"]
+          status?: Database["public"]["Enums"]["objective_status"]
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       permission_settings: {
         Row: {
           category: Database["public"]["Enums"]["autonomy_category"]
@@ -124,6 +201,78 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      tasks: {
+        Row: {
+          agent: Database["public"]["Enums"]["task_agent"]
+          created_at: string
+          decision_id: string | null
+          depends_on: Json
+          description: string | null
+          id: string
+          objective_id: string
+          order_index: number
+          payload: Json
+          requires_approval: boolean
+          result: Json | null
+          status: Database["public"]["Enums"]["task_status"]
+          title: string
+          type: Database["public"]["Enums"]["task_type"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          agent?: Database["public"]["Enums"]["task_agent"]
+          created_at?: string
+          decision_id?: string | null
+          depends_on?: Json
+          description?: string | null
+          id?: string
+          objective_id: string
+          order_index?: number
+          payload?: Json
+          requires_approval?: boolean
+          result?: Json | null
+          status?: Database["public"]["Enums"]["task_status"]
+          title: string
+          type?: Database["public"]["Enums"]["task_type"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          agent?: Database["public"]["Enums"]["task_agent"]
+          created_at?: string
+          decision_id?: string | null
+          depends_on?: Json
+          description?: string | null
+          id?: string
+          objective_id?: string
+          order_index?: number
+          payload?: Json
+          requires_approval?: boolean
+          result?: Json | null
+          status?: Database["public"]["Enums"]["task_status"]
+          title?: string
+          type?: Database["public"]["Enums"]["task_type"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_decision_id_fkey"
+            columns: ["decision_id"]
+            isOneToOne: false
+            referencedRelation: "decisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_objective_id_fkey"
+            columns: ["objective_id"]
+            isOneToOne: false
+            referencedRelation: "objectives"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       waitlist_signups: {
         Row: {
@@ -206,7 +355,46 @@ export type Database = {
         | "executed"
         | "undone"
         | "expired"
+      objective_lang: "en" | "tr"
+      objective_source: "voice" | "text"
+      objective_status:
+        | "planning"
+        | "active"
+        | "paused"
+        | "completed"
+        | "archived"
       risk_level: "low" | "medium" | "high" | "critical"
+      task_agent:
+        | "research"
+        | "sales"
+        | "email"
+        | "crm"
+        | "calendar"
+        | "analytics"
+        | "knowledge"
+        | "decision"
+        | "planner"
+      task_status:
+        | "pending"
+        | "ready"
+        | "running"
+        | "blocked"
+        | "awaiting_approval"
+        | "done"
+        | "failed"
+        | "skipped"
+      task_type:
+        | "research"
+        | "find"
+        | "enrich"
+        | "score"
+        | "segment"
+        | "message"
+        | "approve"
+        | "send"
+        | "track"
+        | "learn"
+        | "other"
       waitlist_lang: "en" | "tr"
       waitlist_onboarding_status:
         | "pending"
@@ -366,7 +554,50 @@ export const Constants = {
         "undone",
         "expired",
       ],
+      objective_lang: ["en", "tr"],
+      objective_source: ["voice", "text"],
+      objective_status: [
+        "planning",
+        "active",
+        "paused",
+        "completed",
+        "archived",
+      ],
       risk_level: ["low", "medium", "high", "critical"],
+      task_agent: [
+        "research",
+        "sales",
+        "email",
+        "crm",
+        "calendar",
+        "analytics",
+        "knowledge",
+        "decision",
+        "planner",
+      ],
+      task_status: [
+        "pending",
+        "ready",
+        "running",
+        "blocked",
+        "awaiting_approval",
+        "done",
+        "failed",
+        "skipped",
+      ],
+      task_type: [
+        "research",
+        "find",
+        "enrich",
+        "score",
+        "segment",
+        "message",
+        "approve",
+        "send",
+        "track",
+        "learn",
+        "other",
+      ],
       waitlist_lang: ["en", "tr"],
       waitlist_onboarding_status: [
         "pending",
