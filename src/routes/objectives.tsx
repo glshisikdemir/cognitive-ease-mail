@@ -103,7 +103,7 @@ function ObjectivesPage() {
   const t = (k: string) => translate(lang, k);
   const create = useServerFn(createObjective);
   const list = useServerFn(listObjectives);
-  const getОne = useServerFn(getObjective);
+  const getDetail = useServerFn(getObjective);
   const setTask = useServerFn(updateTaskStatus);
 
   const [objectives, setObjectives] = useState<ObjectiveRow[]>([]);
@@ -132,12 +132,12 @@ function ObjectivesPage() {
   const openObjective = useCallback(
     (id: string) => {
       setSelectedLoading(true);
-      getОne({ data: { id } })
+      getDetail({ data: { id } })
         .then(setSelected)
         .catch((e) => toast.error(e instanceof Error ? e.message : "Failed to load"))
         .finally(() => setSelectedLoading(false));
     },
-    [getОne],
+    [getDetail],
   );
 
   const handleCreate = async (source: "voice" | "text", value: string) => {
