@@ -17,6 +17,7 @@ import { Route as PriorityRouteImport } from './routes/priority'
 import { Route as PilotStatusRouteImport } from './routes/pilot-status'
 import { Route as PermissionsRouteImport } from './routes/permissions'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as ObjectivesRouteImport } from './routes/objectives'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GuardianRouteImport } from './routes/guardian'
 import { Route as CookiesRouteImport } from './routes/cookies'
@@ -67,6 +68,11 @@ const PermissionsRoute = PermissionsRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ObjectivesRoute = ObjectivesRouteImport.update({
+  id: '/objectives',
+  path: '/objectives',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/cookies': typeof CookiesRoute
   '/guardian': typeof GuardianRoute
   '/login': typeof LoginRoute
+  '/objectives': typeof ObjectivesRoute
   '/onboarding': typeof OnboardingRoute
   '/permissions': typeof PermissionsRoute
   '/pilot-status': typeof PilotStatusRoute
@@ -156,6 +163,7 @@ export interface FileRoutesByTo {
   '/cookies': typeof CookiesRoute
   '/guardian': typeof GuardianRoute
   '/login': typeof LoginRoute
+  '/objectives': typeof ObjectivesRoute
   '/onboarding': typeof OnboardingRoute
   '/permissions': typeof PermissionsRoute
   '/pilot-status': typeof PilotStatusRoute
@@ -178,6 +186,7 @@ export interface FileRoutesById {
   '/cookies': typeof CookiesRoute
   '/guardian': typeof GuardianRoute
   '/login': typeof LoginRoute
+  '/objectives': typeof ObjectivesRoute
   '/onboarding': typeof OnboardingRoute
   '/permissions': typeof PermissionsRoute
   '/pilot-status': typeof PilotStatusRoute
@@ -201,6 +210,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/guardian'
     | '/login'
+    | '/objectives'
     | '/onboarding'
     | '/permissions'
     | '/pilot-status'
@@ -222,6 +232,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/guardian'
     | '/login'
+    | '/objectives'
     | '/onboarding'
     | '/permissions'
     | '/pilot-status'
@@ -243,6 +254,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/guardian'
     | '/login'
+    | '/objectives'
     | '/onboarding'
     | '/permissions'
     | '/pilot-status'
@@ -265,6 +277,7 @@ export interface RootRouteChildren {
   CookiesRoute: typeof CookiesRoute
   GuardianRoute: typeof GuardianRoute
   LoginRoute: typeof LoginRoute
+  ObjectivesRoute: typeof ObjectivesRoute
   OnboardingRoute: typeof OnboardingRoute
   PermissionsRoute: typeof PermissionsRoute
   PilotStatusRoute: typeof PilotStatusRoute
@@ -333,6 +346,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/objectives': {
+      id: '/objectives'
+      path: '/objectives'
+      fullPath: '/objectives'
+      preLoaderRoute: typeof ObjectivesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -425,6 +445,7 @@ const rootRouteChildren: RootRouteChildren = {
   CookiesRoute: CookiesRoute,
   GuardianRoute: GuardianRoute,
   LoginRoute: LoginRoute,
+  ObjectivesRoute: ObjectivesRoute,
   OnboardingRoute: OnboardingRoute,
   PermissionsRoute: PermissionsRoute,
   PilotStatusRoute: PilotStatusRoute,
