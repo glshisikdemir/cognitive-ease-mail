@@ -26,7 +26,7 @@ import {
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { ProductFooter } from "@/components/ProductFooter";
-import { useLang } from "@/lib/i18n";
+import { useLang, t as translate } from "@/lib/i18n";
 import {
   createObjective,
   listObjectives,
@@ -99,7 +99,8 @@ const EXAMPLES_TR = [
 ];
 
 function ObjectivesPage() {
-  const { lang, t } = useLang();
+  const { lang } = useLang();
+  const t = (k: string) => translate(lang, k);
   const create = useServerFn(createObjective);
   const list = useServerFn(listObjectives);
   const getОne = useServerFn(getObjective);
