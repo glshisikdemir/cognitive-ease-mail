@@ -62,8 +62,9 @@ export function Header() {
       ? t(lang, "syncing")
       : t(lang, "offline");
 
-  const nav: { to: "/app" | "/priority" | "/briefing" | "/assistant" | "/guardian" | "/permissions" | "/channels" | "/trust"; key: string }[] = [
+  const nav: { to: "/app" | "/priority" | "/briefing" | "/assistant" | "/objectives" | "/guardian" | "/permissions" | "/channels" | "/trust"; key: string }[] = [
     { to: "/app", key: "navWorkspace" },
+    { to: "/objectives", key: "navObjectives" },
     { to: "/priority", key: "navPriority" },
     { to: "/briefing", key: "navBriefing" },
     { to: "/assistant", key: "navAssistant" },
