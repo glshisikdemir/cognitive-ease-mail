@@ -22,6 +22,7 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as ObjectivesRouteImport } from './routes/objectives'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GuardianRouteImport } from './routes/guardian'
+import { Route as DraftsRouteImport } from './routes/drafts'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ClientsRouteImport } from './routes/clients'
 import { Route as ChannelsRouteImport } from './routes/channels'
@@ -98,6 +99,11 @@ const GuardianRoute = GuardianRouteImport.update({
   path: '/guardian',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DraftsRoute = DraftsRouteImport.update({
+  id: '/drafts',
+  path: '/drafts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CookiesRoute = CookiesRouteImport.update({
   id: '/cookies',
   path: '/cookies',
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/channels': typeof ChannelsRoute
   '/clients': typeof ClientsRoute
   '/cookies': typeof CookiesRoute
+  '/drafts': typeof DraftsRoute
   '/guardian': typeof GuardianRoute
   '/login': typeof LoginRoute
   '/objectives': typeof ObjectivesRoute
@@ -183,6 +190,7 @@ export interface FileRoutesByTo {
   '/channels': typeof ChannelsRoute
   '/clients': typeof ClientsRoute
   '/cookies': typeof CookiesRoute
+  '/drafts': typeof DraftsRoute
   '/guardian': typeof GuardianRoute
   '/login': typeof LoginRoute
   '/objectives': typeof ObjectivesRoute
@@ -209,6 +217,7 @@ export interface FileRoutesById {
   '/channels': typeof ChannelsRoute
   '/clients': typeof ClientsRoute
   '/cookies': typeof CookiesRoute
+  '/drafts': typeof DraftsRoute
   '/guardian': typeof GuardianRoute
   '/login': typeof LoginRoute
   '/objectives': typeof ObjectivesRoute
@@ -236,6 +245,7 @@ export interface FileRouteTypes {
     | '/channels'
     | '/clients'
     | '/cookies'
+    | '/drafts'
     | '/guardian'
     | '/login'
     | '/objectives'
@@ -261,6 +271,7 @@ export interface FileRouteTypes {
     | '/channels'
     | '/clients'
     | '/cookies'
+    | '/drafts'
     | '/guardian'
     | '/login'
     | '/objectives'
@@ -286,6 +297,7 @@ export interface FileRouteTypes {
     | '/channels'
     | '/clients'
     | '/cookies'
+    | '/drafts'
     | '/guardian'
     | '/login'
     | '/objectives'
@@ -312,6 +324,7 @@ export interface RootRouteChildren {
   ChannelsRoute: typeof ChannelsRoute
   ClientsRoute: typeof ClientsRoute
   CookiesRoute: typeof CookiesRoute
+  DraftsRoute: typeof DraftsRoute
   GuardianRoute: typeof GuardianRoute
   LoginRoute: typeof LoginRoute
   ObjectivesRoute: typeof ObjectivesRoute
@@ -422,6 +435,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuardianRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/drafts': {
+      id: '/drafts'
+      path: '/drafts'
+      fullPath: '/drafts'
+      preLoaderRoute: typeof DraftsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cookies': {
       id: '/cookies'
       path: '/cookies'
@@ -504,6 +524,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChannelsRoute: ChannelsRoute,
   ClientsRoute: ClientsRoute,
   CookiesRoute: CookiesRoute,
+  DraftsRoute: DraftsRoute,
   GuardianRoute: GuardianRoute,
   LoginRoute: LoginRoute,
   ObjectivesRoute: ObjectivesRoute,
