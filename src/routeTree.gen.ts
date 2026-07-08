@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrustRouteImport } from './routes/trust'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SecurityRouteImport } from './routes/security'
 import { Route as RadarRouteImport } from './routes/radar'
 import { Route as PulseRouteImport } from './routes/pulse'
@@ -42,6 +43,11 @@ const TrustRoute = TrustRouteImport.update({
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SecurityRoute = SecurityRouteImport.update({
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/pulse': typeof PulseRoute
   '/radar': typeof RadarRoute
   '/security': typeof SecurityRoute
+  '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
   '/api/tts': typeof ApiTtsRoute
@@ -202,6 +209,7 @@ export interface FileRoutesByTo {
   '/pulse': typeof PulseRoute
   '/radar': typeof RadarRoute
   '/security': typeof SecurityRoute
+  '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
   '/api/tts': typeof ApiTtsRoute
@@ -229,6 +237,7 @@ export interface FileRoutesById {
   '/pulse': typeof PulseRoute
   '/radar': typeof RadarRoute
   '/security': typeof SecurityRoute
+  '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
   '/api/tts': typeof ApiTtsRoute
@@ -257,6 +266,7 @@ export interface FileRouteTypes {
     | '/pulse'
     | '/radar'
     | '/security'
+    | '/settings'
     | '/terms'
     | '/trust'
     | '/api/tts'
@@ -283,6 +293,7 @@ export interface FileRouteTypes {
     | '/pulse'
     | '/radar'
     | '/security'
+    | '/settings'
     | '/terms'
     | '/trust'
     | '/api/tts'
@@ -309,6 +320,7 @@ export interface FileRouteTypes {
     | '/pulse'
     | '/radar'
     | '/security'
+    | '/settings'
     | '/terms'
     | '/trust'
     | '/api/tts'
@@ -336,6 +348,7 @@ export interface RootRouteChildren {
   PulseRoute: typeof PulseRoute
   RadarRoute: typeof RadarRoute
   SecurityRoute: typeof SecurityRoute
+  SettingsRoute: typeof SettingsRoute
   TermsRoute: typeof TermsRoute
   TrustRoute: typeof TrustRoute
   ApiTtsRoute: typeof ApiTtsRoute
@@ -356,6 +369,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/security': {
@@ -536,6 +556,7 @@ const rootRouteChildren: RootRouteChildren = {
   PulseRoute: PulseRoute,
   RadarRoute: RadarRoute,
   SecurityRoute: SecurityRoute,
+  SettingsRoute: SettingsRoute,
   TermsRoute: TermsRoute,
   TrustRoute: TrustRoute,
   ApiTtsRoute: ApiTtsRoute,
