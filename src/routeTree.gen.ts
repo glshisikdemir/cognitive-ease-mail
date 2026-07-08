@@ -23,6 +23,7 @@ import { Route as ObjectivesRouteImport } from './routes/objectives'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GuardianRouteImport } from './routes/guardian'
 import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as ClientsRouteImport } from './routes/clients'
 import { Route as ChannelsRouteImport } from './routes/channels'
 import { Route as BriefingRouteImport } from './routes/briefing'
 import { Route as AssistantRouteImport } from './routes/assistant'
@@ -102,6 +103,11 @@ const CookiesRoute = CookiesRouteImport.update({
   path: '/cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClientsRoute = ClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChannelsRoute = ChannelsRouteImport.update({
   id: '/channels',
   path: '/channels',
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/assistant': typeof AssistantRoute
   '/briefing': typeof BriefingRoute
   '/channels': typeof ChannelsRoute
+  '/clients': typeof ClientsRoute
   '/cookies': typeof CookiesRoute
   '/guardian': typeof GuardianRoute
   '/login': typeof LoginRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByTo {
   '/assistant': typeof AssistantRoute
   '/briefing': typeof BriefingRoute
   '/channels': typeof ChannelsRoute
+  '/clients': typeof ClientsRoute
   '/cookies': typeof CookiesRoute
   '/guardian': typeof GuardianRoute
   '/login': typeof LoginRoute
@@ -199,6 +207,7 @@ export interface FileRoutesById {
   '/assistant': typeof AssistantRoute
   '/briefing': typeof BriefingRoute
   '/channels': typeof ChannelsRoute
+  '/clients': typeof ClientsRoute
   '/cookies': typeof CookiesRoute
   '/guardian': typeof GuardianRoute
   '/login': typeof LoginRoute
@@ -225,6 +234,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/briefing'
     | '/channels'
+    | '/clients'
     | '/cookies'
     | '/guardian'
     | '/login'
@@ -249,6 +259,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/briefing'
     | '/channels'
+    | '/clients'
     | '/cookies'
     | '/guardian'
     | '/login'
@@ -273,6 +284,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/briefing'
     | '/channels'
+    | '/clients'
     | '/cookies'
     | '/guardian'
     | '/login'
@@ -298,6 +310,7 @@ export interface RootRouteChildren {
   AssistantRoute: typeof AssistantRoute
   BriefingRoute: typeof BriefingRoute
   ChannelsRoute: typeof ChannelsRoute
+  ClientsRoute: typeof ClientsRoute
   CookiesRoute: typeof CookiesRoute
   GuardianRoute: typeof GuardianRoute
   LoginRoute: typeof LoginRoute
@@ -416,6 +429,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/clients': {
+      id: '/clients'
+      path: '/clients'
+      fullPath: '/clients'
+      preLoaderRoute: typeof ClientsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/channels': {
       id: '/channels'
       path: '/channels'
@@ -482,6 +502,7 @@ const rootRouteChildren: RootRouteChildren = {
   AssistantRoute: AssistantRoute,
   BriefingRoute: BriefingRoute,
   ChannelsRoute: ChannelsRoute,
+  ClientsRoute: ClientsRoute,
   CookiesRoute: CookiesRoute,
   GuardianRoute: GuardianRoute,
   LoginRoute: LoginRoute,
