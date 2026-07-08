@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrustRouteImport } from './routes/trust'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SecurityRouteImport } from './routes/security'
+import { Route as PulseRouteImport } from './routes/pulse'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PriorityRouteImport } from './routes/priority'
 import { Route as PilotStatusRouteImport } from './routes/pilot-status'
@@ -43,6 +44,11 @@ const TermsRoute = TermsRouteImport.update({
 const SecurityRoute = SecurityRouteImport.update({
   id: '/security',
   path: '/security',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PulseRoute = PulseRouteImport.update({
+  id: '/pulse',
+  path: '/pulse',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -147,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/pilot-status': typeof PilotStatusRoute
   '/priority': typeof PriorityRoute
   '/privacy': typeof PrivacyRoute
+  '/pulse': typeof PulseRoute
   '/security': typeof SecurityRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
@@ -169,6 +176,7 @@ export interface FileRoutesByTo {
   '/pilot-status': typeof PilotStatusRoute
   '/priority': typeof PriorityRoute
   '/privacy': typeof PrivacyRoute
+  '/pulse': typeof PulseRoute
   '/security': typeof SecurityRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
@@ -192,6 +200,7 @@ export interface FileRoutesById {
   '/pilot-status': typeof PilotStatusRoute
   '/priority': typeof PriorityRoute
   '/privacy': typeof PrivacyRoute
+  '/pulse': typeof PulseRoute
   '/security': typeof SecurityRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
@@ -216,6 +225,7 @@ export interface FileRouteTypes {
     | '/pilot-status'
     | '/priority'
     | '/privacy'
+    | '/pulse'
     | '/security'
     | '/terms'
     | '/trust'
@@ -238,6 +248,7 @@ export interface FileRouteTypes {
     | '/pilot-status'
     | '/priority'
     | '/privacy'
+    | '/pulse'
     | '/security'
     | '/terms'
     | '/trust'
@@ -260,6 +271,7 @@ export interface FileRouteTypes {
     | '/pilot-status'
     | '/priority'
     | '/privacy'
+    | '/pulse'
     | '/security'
     | '/terms'
     | '/trust'
@@ -283,6 +295,7 @@ export interface RootRouteChildren {
   PilotStatusRoute: typeof PilotStatusRoute
   PriorityRoute: typeof PriorityRoute
   PrivacyRoute: typeof PrivacyRoute
+  PulseRoute: typeof PulseRoute
   SecurityRoute: typeof SecurityRoute
   TermsRoute: typeof TermsRoute
   TrustRoute: typeof TrustRoute
@@ -311,6 +324,13 @@ declare module '@tanstack/react-router' {
       path: '/security'
       fullPath: '/security'
       preLoaderRoute: typeof SecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pulse': {
+      id: '/pulse'
+      path: '/pulse'
+      fullPath: '/pulse'
+      preLoaderRoute: typeof PulseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -451,6 +471,7 @@ const rootRouteChildren: RootRouteChildren = {
   PilotStatusRoute: PilotStatusRoute,
   PriorityRoute: PriorityRoute,
   PrivacyRoute: PrivacyRoute,
+  PulseRoute: PulseRoute,
   SecurityRoute: SecurityRoute,
   TermsRoute: TermsRoute,
   TrustRoute: TrustRoute,
