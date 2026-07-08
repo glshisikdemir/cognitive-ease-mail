@@ -48,7 +48,7 @@ function TrustPage() {
       <Header />
       <main className="mx-auto max-w-3xl px-6 py-12">
         <Link
-          to="/app"
+          to="/pulse"
           className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground"
         >
           <ArrowLeft className="h-3.5 w-3.5" />

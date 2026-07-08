@@ -4,907 +4,390 @@ import { useServerFn } from "@tanstack/react-start";
 import {
   ArrowRight,
   ShieldCheck,
-  Lock,
-  Hand,
   Plug,
-  Brain,
-  Eye,
-  Sparkles,
-  AlertTriangle,
-  Clock,
-  Inbox,
+  Users,
+  Activity,
+  Trash2,
   CheckCircle2,
-  CalendarDays,
   Mail,
-  UserRound,
 } from "lucide-react";
-import { useLang, type Lang } from "@/lib/i18n";
 import { submitWaitlist } from "@/lib/waitlist.functions";
-import { PilotNotice } from "@/components/PilotNotice";
+import { fmtMoney } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ISURA — Operational clarity for overloaded teams" },
+      { title: "ISURA — Which of your retainers is cooling right now?" },
       {
         name: "description",
         content:
-          "ISURA is an operational cognition platform. It analyzes communication, prioritizes operational attention, and reduces decision fatigue.",
+          "ISURA turns your agency's client email traffic into a per-client relationship graph: see which account is cooling, which revenue is at risk, and get replies drafted in your own voice.",
       },
-      { property: "og:title", content: "ISURA — Operational clarity for overloaded teams" },
+      { property: "og:title", content: "ISURA — Which of your retainers is cooling right now?" },
       {
         property: "og:description",
         content:
-          "An operational cognition layer that reduces communication overload and decision fatigue.",
+          "A relationship-intelligence layer above your Gmail inbox for retainer agencies.",
       },
     ],
   }),
   component: LandingPage,
 });
 
-/* ----------------------------- i18n (local) ----------------------------- */
-
-type Copy = Record<string, { en: string; tr: string }>;
-const L: Copy = {
-  navProblem: { en: "Problem", tr: "Sorun" },
-  navWhy: { en: "Why ISURA", tr: "Neden ISURA" },
-  navHow: { en: "How it works", tr: "Nasıl çalışır" },
-  navPreview: { en: "Preview", tr: "Önizleme" },
-  navTrust: { en: "Trust", tr: "Güven" },
-  navAccess: { en: "Request access", tr: "Erişim iste" },
-
-  heroEyebrow: { en: "Operational cognition platform", tr: "Operasyonel biliş platformu" },
-  heroTitle: {
-    en: "Operational clarity for overloaded teams.",
-    tr: "Aşırı yüklenmiş ekipler için operasyonel netlik.",
-  },
-  heroSub: {
-    en: "ISURA analyzes communication, prioritizes operational attention, and reduces decision fatigue — so people can focus on meaningful work.",
-    tr: "ISURA iletişimi analiz eder, operasyonel dikkati önceliklendirir ve karar yorgunluğunu azaltır — böylece insanlar anlamlı işe odaklanır.",
-  },
-  ctaPrimary: { en: "Request private access", tr: "Özel erişim iste" },
-  ctaSecondary: { en: "View product preview", tr: "Ürün önizlemesini gör" },
-  heroTrust: {
-    en: "ISURA never sends emails without approval.",
-    tr: "ISURA, onay olmadan asla e-posta göndermez.",
-  },
-
-  problemEyebrow: { en: "The problem", tr: "Sorun" },
-  problemTitle: {
-    en: "Modern work is dominated by communication overload.",
-    tr: "Modern iş, iletişim aşırı yüklemesinin egemenliği altında.",
-  },
-  problemSub: {
-    en: "Fragmented workflows and constant decisions silently consume the attention required for meaningful work.",
-    tr: "Parçalanmış iş akışları ve sürekli kararlar, anlamlı iş için gereken dikkati sessizce tüketir.",
-  },
-  p1t: { en: "Operational pressure", tr: "Operasyonel baskı" },
-  p1b: {
-    en: "Every message implies a consequence. The pressure to triage them never pauses.",
-    tr: "Her mesaj bir sonucu ima eder. Onları ayıklama baskısı asla durmaz.",
-  },
-  p2t: { en: "Inbox overload", tr: "Gelen kutusu aşırı yükü" },
-  p2b: {
-    en: "Hundreds of threads compete for attention. Most carry no real consequence.",
-    tr: "Yüzlerce konu dikkat için yarışır. Çoğunun gerçek bir sonucu yoktur.",
-  },
-  p3t: { en: "Mental fragmentation", tr: "Zihinsel parçalanma" },
-  p3b: {
-    en: "Switching between threads erodes the deep focus operational decisions require.",
-    tr: "Konular arası geçiş, operasyonel kararların gerektirdiği derin odağı aşındırır.",
-  },
-  p4t: { en: "Communication chaos", tr: "İletişim kaosu" },
-  p4b: {
-    en: "Risks, follow-ups, and waiting threads blur into one undifferentiated stream.",
-    tr: "Riskler, takipler ve bekleyen konular tek bir ayrımsız akışta bulanıklaşır.",
-  },
-
-  whyEyebrow: { en: "Why ISURA", tr: "Neden ISURA" },
-  whyTitle: {
-    en: "Not another inbox. Not another copilot.",
-    tr: "Başka bir gelen kutusu değil. Başka bir yardımcı pilot değil.",
-  },
-  whySub: {
-    en: "ISURA organizes operational cognition — the decisions, risks, and follow-ups beneath the messages — so attention lands where it matters.",
-    tr: "ISURA operasyonel bilişi — mesajların altındaki kararları, riskleri ve takipleri — düzenler; böylece dikkat doğru yere düşer.",
-  },
-  why1: { en: "Not another inbox.", tr: "Başka bir gelen kutusu değil." },
-  why1b: {
-    en: "ISURA does not replace your email client. It organizes the decisions inside it.",
-    tr: "ISURA e-posta istemcinizi değiştirmez. İçindeki kararları düzenler.",
-  },
-  why2: { en: "Not another AI copilot.", tr: "Başka bir AI yardımcı pilot değil." },
-  why2b: {
-    en: "You do not prompt ISURA. It quietly surfaces what carries operational consequence.",
-    tr: "ISURA'ya komut vermezsiniz. Operasyonel sonuç doğuranı sessizce öne çıkarır.",
-  },
-  why3: { en: "Not another automation tool.", tr: "Başka bir otomasyon aracı değil." },
-  why3b: {
-    en: "No rules. No workflows. ISURA reasons about each thread, then waits for your judgement.",
-    tr: "Kural yok. İş akışı yok. ISURA her konuyu değerlendirir, sonra sizin kararınızı bekler.",
-  },
-
-  howEyebrow: { en: "How it works", tr: "Nasıl çalışır" },
-  howTitle: { en: "From connection to clarity, in four steps.", tr: "Bağlantıdan netliğe, dört adımda." },
-  s1: { en: "Connect inbox securely", tr: "Gelen kutusunu güvenle bağlayın" },
-  s1b: {
-    en: "OAuth-only. Read-only mode available. Your credentials never reach us.",
-    tr: "Yalnızca OAuth. Salt okunur mod mevcut. Kimlik bilgileriniz bize ulaşmaz.",
-  },
-  s2: { en: "ISURA analyzes operational importance", tr: "ISURA operasyonel önemi analiz eder" },
-  s2b: {
-    en: "Every thread is read for consequence, urgency, and downstream impact.",
-    tr: "Her konu; sonuç, aciliyet ve sonraki etki için okunur.",
-  },
-  s3: { en: "Receive operational clarity", tr: "Operasyonel netliği alın" },
-  s3b: {
-    en: "A calm briefing of decisions, risks, follow-ups — and a suggested next action for each.",
-    tr: "Kararlar, riskler, takipler için sakin bir brifing — ve her biri için önerilen sonraki adım.",
-  },
-  s4: { en: "Stay fully in control", tr: "Tam kontrolde kalın" },
-  s4b: {
-    en: "Nothing is sent on your behalf. Approval is always required, always yours.",
-    tr: "Adınıza hiçbir şey gönderilmez. Onay daima gereklidir, daima sizindir.",
-  },
-
-  prevEyebrow: { en: "Product preview", tr: "Ürün önizlemesi" },
-  prevTitle: { en: "An operational layer, quietly applied.", tr: "Sessizce uygulanan operasyonel bir katman." },
-  prevBriefingTitle: { en: "Daily operational briefing", tr: "Günlük operasyonel brifing" },
-  prevBriefing1: { en: "2 urgent threads require decisions", tr: "2 acil konu kararınızı bekliyor" },
-  prevBriefing2: { en: "1 contract-related operational risk", tr: "1 sözleşme kaynaklı operasyonel risk" },
-  prevBriefing3: { en: "4 low-priority interruptions filtered", tr: "4 düşük öncelikli kesinti süzüldü" },
-  prevBriefing4: { en: "3 responses prepared, awaiting approval", tr: "3 yanıt hazırlandı, onayınızı bekliyor" },
-  prevReliefTitle: { en: "Cognitive relief today", tr: "Bugün bilişsel rahatlama" },
-  prevReliefMetric: { en: "Estimated focus time recovered", tr: "Tahmini odak süresi kazanımı" },
-  prevReliefValue: { en: "1.8h", tr: "1.8 sa" },
-  prevRiskTitle: { en: "Operational risk detected", tr: "Operasyonel risk tespit edildi" },
-  prevRiskBody: {
-    en: "Northwind contract renewal — counter-signature window closes today.",
-    tr: "Northwind sözleşme yenilemesi — karşı imza penceresi bugün kapanıyor.",
-  },
-  prevDecisionTitle: { en: "Decision simplified", tr: "Karar basitleştirildi" },
-  prevDecisionBody: {
-    en: "Sarah needs your countersignature on the renewed contract before 18:00.",
-    tr: "Sarah, yenilenen sözleşmeye karşı imzanızı 18:00'den önce bekliyor.",
-  },
-
-  trustEyebrow: { en: "Trust architecture", tr: "Güven mimarisi" },
-  trustTitle: { en: "Built so the most cautious operator can use it.", tr: "En temkinli kullanıcının bile kullanabileceği biçimde tasarlandı." },
-  t1: { en: "Approval-first architecture", tr: "Önce onay mimarisi" },
-  t1b: { en: "Nothing is sent without an explicit click from you.", tr: "Sizden açık bir tıklama olmadan hiçbir şey gönderilmez." },
-  t2: { en: "Read-only analysis mode", tr: "Salt okunur analiz modu" },
-  t2b: { en: "Run ISURA without ever granting send permissions.", tr: "Gönderme izni vermeden ISURA'yı çalıştırın." },
-  t3: { en: "Encryption in transit and at rest", tr: "İletim ve depolamada şifreleme" },
-  t3b: { en: "TLS 1.3 in transit. AES-256 at rest. Tokens isolated per workspace.", tr: "İletimde TLS 1.3. Beklemede AES-256. Token'lar çalışma alanı bazında izole." },
-  t4: { en: "Disconnect anytime", tr: "İstediğiniz zaman bağlantıyı kesin" },
-  t4b: { en: "Tokens revoked instantly. Stored data purged within 24 hours.", tr: "Token'lar anında iptal. Saklanan veriler 24 saat içinde silinir." },
-  t5: { en: "No training on private emails", tr: "Özel e-postalarla eğitim yapılmaz" },
-  t5b: { en: "Contractual zero-retention with every model provider.", tr: "Her model sağlayıcısıyla sözleşmesel sıfır-saklama." },
-  trustLink: { en: "Read the full trust architecture", tr: "Tam güven mimarisini okuyun" },
-
-  visionEyebrow: { en: "Founder vision", tr: "Kurucu vizyonu" },
-  visionTitle: {
-    en: "Operational complexity is the silent tax on modern work.",
-    tr: "Operasyonel karmaşıklık, modern işin sessiz vergisidir.",
-  },
-  visionBody: {
-    en: "We believe the next decade of software will not add more surfaces to manage. It will quietly remove them. ISURA is built so judgement remains human — and the cognitive overhead surrounding it does not.",
-    tr: "Yazılımın önümüzdeki on yılında yönetilecek yeni yüzeyler eklenmeyecek; mevcutlar sessizce kaldırılacak. ISURA, kararın insana ait kalması ve etrafındaki bilişsel yükün kalmaması için tasarlandı.",
-  },
-  visionSig: { en: "— The ISURA team", tr: "— ISURA ekibi" },
-
-  finalEyebrow: { en: "Private pilot", tr: "Özel pilot" },
-  finalTitle: {
-    en: "Your inbox should not control your brain.",
-    tr: "Gelen kutunuz beyninizi kontrol etmemeli.",
-  },
-  finalSub: {
-    en: "We are onboarding a small group of operators, founders, and teams. Joining is free during the pilot.",
-    tr: "Az sayıda operatör, kurucu ve ekibi karşılıyoruz. Pilot süresince katılım ücretsizdir.",
-  },
-  finalCta: { en: "Join private pilot", tr: "Özel pilota katıl" },
-  finalSubmitting: { en: "Securing your spot…", tr: "Yeriniz ayrılıyor…" },
-  fieldEmail: { en: "Work email", tr: "İş e-postası" },
-  fieldName: { en: "Name (optional)", tr: "İsim (opsiyonel)" },
-  fieldCompany: { en: "Company (optional)", tr: "Şirket (opsiyonel)" },
-  fieldRole: { en: "Role (optional)", tr: "Rol (opsiyonel)" },
-  finalPlaceholderEmail: { en: "you@work.com", tr: "siz@isiniz.com" },
-  finalPlaceholderName: { en: "Your name", tr: "Adınız" },
-  finalPlaceholderCompany: { en: "Company", tr: "Şirket" },
-  finalPlaceholderRole: { en: "e.g. COO, Head of Operations", tr: "örn. COO, Operasyon Müdürü" },
-  finalErrorInvalid: { en: "Please enter a valid work email.", tr: "Lütfen geçerli bir iş e-postası girin." },
-  finalErrorGeneric: { en: "Something went quiet on our side. Try again in a moment.", tr: "Tarafımızda bir şey sessizleşti. Birazdan tekrar deneyin." },
-
-  // Premium confirmation state
-  confirmEyebrow: { en: "You're on the list", tr: "Listedesiniz" },
-  confirmTitle: {
-    en: "You're on the list for ISURA private pilot access.",
-    tr: "ISURA özel pilot erişimi için listedesiniz.",
-  },
-  confirmAlready: {
-    en: "You're already on the list. We'll be in touch when a slot opens.",
-    tr: "Zaten listedesiniz. Kontenjan açılınca size ulaşacağız.",
-  },
-  confirmTimeline_h: { en: "Estimated onboarding", tr: "Tahmini başlangıç" },
-  confirmTimeline: { en: "2–4 weeks", tr: "2–4 hafta" },
-  confirmFounder_h: { en: "Founder-led onboarding", tr: "Kurucu eşliğinde başlangıç" },
-  confirmFounder: {
-    en: "When your slot opens, a founder personally walks you through setup.",
-    tr: "Sıranız geldiğinde bir kurucu kuruluma sizinle bizzat eşlik eder.",
-  },
-  confirmEmail_h: { en: "Confirmation sent", tr: "Onay gönderildi" },
-  confirmEmail: {
-    en: "Check your inbox for a calm welcome from ISURA.",
-    tr: "Gelen kutunuza ISURA'dan sakin bir karşılama bekleyin.",
-  },
-  confirmTrust1: { en: "ISURA never sends emails without your approval.", tr: "ISURA, onayınız olmadan asla e-posta göndermez." },
-  confirmTrust2: { en: "Read-only inbox analysis available.", tr: "Yalnızca okuma modu mevcuttur." },
-  confirmTrust3: { en: "Disconnect access anytime.", tr: "Erişimi istediğiniz an kesin." },
-  confirmTrust4: { en: "Your emails are never used to train AI models.", tr: "E-postalarınız hiçbir AI modelini eğitmek için kullanılmaz." },
-
-  footerCopy: { en: "© ISURA. Operational cognition, quietly applied.", tr: "© ISURA. Operasyonel biliş, sessizce uygulanır." },
-  footerAccess: { en: "Open workspace", tr: "Çalışma alanını aç" },
-  footerTrust: { en: "Trust & security", tr: "Güven ve güvenlik" },
-};
-const tr = (lang: Lang, k: keyof typeof L) => L[k][lang];
-
-/* ----------------------------- Page ----------------------------- */
-
 function LandingPage() {
-  const { lang } = useLang();
   return (
-    <div className="min-h-screen bg-background text-foreground antialiased">
-      <Nav lang={lang} />
-      <Hero lang={lang} />
-      <Problem lang={lang} />
-      <Why lang={lang} />
-      <How lang={lang} />
-      <Preview lang={lang} />
-      <Trust lang={lang} />
-      <Vision lang={lang} />
-      <FinalCTA lang={lang} />
-      <Footer lang={lang} />
+    <div className="min-h-screen bg-background text-foreground">
+      <SiteHeader />
+      <Hero />
+      <Problem />
+      <HowItWorks />
+      <Trust />
+      <Pricing />
+      <FinalCta />
+      <Footer />
     </div>
   );
 }
 
-/* ----------------------------- Nav ----------------------------- */
-
-function Nav({ lang }: { lang: Lang }) {
-  const { setLang } = useLang();
+function SiteHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-border/50 bg-background/75 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-6">
         <Link to="/" className="flex items-center gap-2.5">
           <span className="grid h-7 w-7 place-items-center rounded-md bg-foreground text-background">
-            <span className="font-display text-sm font-semibold leading-none">I</span>
+            <span className="font-display text-[13px] font-semibold leading-none">I</span>
           </span>
-          <span className="text-sm font-semibold tracking-tight">ISURA</span>
+          <span className="text-sm font-semibold tracking-[0.04em]">ISURA</span>
         </Link>
-
-        <nav className="hidden items-center gap-7 text-[13px] text-muted-foreground md:flex">
-          <a href="#problem" className="transition-colors hover:text-foreground">{tr(lang, "navProblem")}</a>
-          <a href="#why" className="transition-colors hover:text-foreground">{tr(lang, "navWhy")}</a>
-          <a href="#how" className="transition-colors hover:text-foreground">{tr(lang, "navHow")}</a>
-          <a href="#preview" className="transition-colors hover:text-foreground">{tr(lang, "navPreview")}</a>
-          <a href="#trust" className="transition-colors hover:text-foreground">{tr(lang, "navTrust")}</a>
-          <Link to="/assistant" className="transition-colors hover:text-foreground">{lang === "tr" ? "Sesli asistan" : "Voice assistant"}</Link>
+        <nav className="hidden items-center gap-6 text-[13px] text-muted-foreground md:flex">
+          <a href="#problem" className="hover:text-foreground">The problem</a>
+          <a href="#how" className="hover:text-foreground">How it works</a>
+          <a href="#trust" className="hover:text-foreground">Trust</a>
+          <a href="#pricing" className="hover:text-foreground">Pricing</a>
         </nav>
-
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-0.5 rounded-full border border-border/70 bg-surface p-0.5 text-[11px]">
-            <button
-              onClick={() => setLang("en")}
-              className={`rounded-full px-2 py-0.5 transition-colors ${lang === "en" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              EN
-            </button>
-            <button
-              onClick={() => setLang("tr")}
-              className={`rounded-full px-2 py-0.5 transition-colors ${lang === "tr" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              TR
-            </button>
-          </div>
-          <a
-            href="#access"
-            className="inline-flex items-center gap-1.5 rounded-md bg-foreground px-3 py-1.5 text-[12px] font-medium text-background transition hover:opacity-90"
-          >
-            {tr(lang, "navAccess")}
-            <ArrowRight className="h-3 w-3" />
-          </a>
-        </div>
+        <a
+          href="#access"
+          className="rounded-lg bg-primary px-3.5 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          Request pilot access
+        </a>
       </div>
     </header>
   );
 }
 
-/* ----------------------------- Hero ----------------------------- */
-
-function Hero({ lang }: { lang: Lang }) {
+function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-border/50">
-      {/* ambient gradient */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-[-30%] h-[70%] opacity-60"
-        style={{
-          background:
-            "radial-gradient(60% 50% at 50% 0%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 70%)",
-        }}
-      />
-      <div className="relative mx-auto max-w-4xl px-6 pb-24 pt-24 text-center sm:pt-32">
-        <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border/70 bg-surface px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-          {tr(lang, "heroEyebrow")}
+    <section className="mx-auto max-w-6xl px-6 pb-10 pt-16 sm:pt-24">
+      <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
+        <div>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-surface px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+            <span className="h-1.5 w-1.5 rounded-full bg-load-high-foreground" />
+            Relationship intelligence for retainer agencies
+          </span>
+          <h1 className="mt-5 font-display text-5xl leading-[1.05] text-foreground sm:text-6xl">
+            Which of your retainers is cooling right now?
+          </h1>
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            ISURA turns your agency's client email traffic into a per-client relationship graph:
+            see which account is cooling, which revenue is at risk, and get replies drafted in your
+            own voice.
+          </p>
+          <div className="mt-7">
+            <AccessForm compact />
+            <p className="mt-2 text-xs text-muted-foreground">
+              For founders & client-services leads of 5–50 person Gmail agencies.
+            </p>
+          </div>
         </div>
-        <h1 className="mt-7 font-display text-[44px] leading-[1.05] tracking-tight sm:text-6xl">
-          {tr(lang, "heroTitle")}
-        </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-relaxed text-muted-foreground sm:text-lg">
-          {tr(lang, "heroSub")}
+
+        <PulseMock />
+      </div>
+    </section>
+  );
+}
+
+/* Screenshot-style mockup of the Pulse surface */
+function PulseMock() {
+  const rows = [
+    { name: "Meridian Retail", val: "$14,000/mo", reason: "Revision unanswered 4 days · sentiment declining", h: 42, spark: [70, 64, 58, 55, 49, 45, 42] },
+    { name: "Bluestone Health", val: "$22,000/mo", reason: "Reply time doubled · 72h email unanswered", h: 51, spark: [78, 72, 68, 62, 58, 54, 51] },
+    { name: "Arcadia Travel", val: "$9,500/mo", reason: "14 days silence · reporting deck overdue", h: 57, spark: [72, 68, 66, 63, 61, 59, 57] },
+  ];
+  return (
+    <div className="rounded-2xl border border-border/70 bg-surface p-3 shadow-lg">
+      <div className="mb-3 flex items-center gap-1.5 px-1">
+        <span className="h-2.5 w-2.5 rounded-full bg-load-high/60" />
+        <span className="h-2.5 w-2.5 rounded-full bg-load-medium/60" />
+        <span className="h-2.5 w-2.5 rounded-full bg-load-low/60" />
+        <span className="ml-2 text-[11px] text-muted-foreground">ISURA · Pulse</span>
+      </div>
+      <div className="rounded-xl bg-background p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="font-display text-lg leading-tight text-foreground">
+              Good morning — 3 accounts need attention, 11 healthy.
+            </div>
+          </div>
+          <div className="shrink-0 rounded-lg bg-load-high px-3 py-1.5 text-load-high-foreground">
+            <div className="text-[9px] uppercase tracking-wide opacity-80">At risk</div>
+            <div className="text-sm font-semibold tabular-nums">{fmtMoney(45500)}</div>
+          </div>
+        </div>
+        <div className="mt-3 space-y-2">
+          {rows.map((r) => (
+            <div key={r.name} className="rounded-lg border border-border/60 bg-surface px-3 py-2.5">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm font-medium text-foreground">{r.name}</span>
+                <div className="flex items-center gap-2">
+                  <MiniSpark data={r.spark} />
+                  <span className="rounded-full bg-load-high px-2 py-0.5 text-[11px] font-medium tabular-nums text-load-high-foreground">
+                    {r.h}
+                  </span>
+                </div>
+              </div>
+              <div className="mt-1 text-[11px] text-muted-foreground">{r.reason}</div>
+              <div className="mt-2 flex gap-1.5">
+                <span className="rounded-md bg-primary px-2 py-0.5 text-[10px] font-medium text-primary-foreground">View draft</span>
+                <span className="rounded-md border border-border px-2 py-0.5 text-[10px] text-muted-foreground">Assign</span>
+                <span className="rounded-md border border-border px-2 py-0.5 text-[10px] text-muted-foreground">Snooze 3d</span>
+              </div>
+            </div>
+          ))}
+          <div className="rounded-lg border border-border/60 bg-surface-muted px-3 py-2 text-xs text-muted-foreground">
+            11 accounts healthy ✓
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MiniSpark({ data }: { data: number[] }) {
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = Math.max(1, max - min);
+  const pts = data
+    .map((v, i) => `${(i / (data.length - 1)) * 52},${20 - ((v - min) / range) * 16 - 2}`)
+    .join(" ");
+  return (
+    <svg width="52" height="20" viewBox="0 0 52 20" fill="none">
+      <polyline points={pts} stroke="var(--color-load-high-foreground)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function Problem() {
+  return (
+    <section id="problem" className="border-t border-border/60 bg-surface-muted/40">
+      <div className="mx-auto max-w-4xl px-6 py-20 text-center">
+        <h2 className="font-display text-4xl leading-tight text-foreground">
+          Client churn starts in email, not in a bad meeting.
+        </h2>
+        <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
+          By the time an account "suddenly" leaves, the signals were sitting in your inbox for
+          weeks — a revision left unanswered, replies getting slower, a promise that quietly slipped.
+          Your inbox shows you messages. It never shows you relationships.
         </p>
-        <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-10 grid gap-4 sm:grid-cols-3">
+          {[
+            { n: "4 days", t: "the average silence before a client feels ignored" },
+            { n: "2×", t: "slower client replies is the earliest cooling signal" },
+            { n: "1 miss", t: "an unkept commitment erodes trust faster than a bad result" },
+          ].map((x) => (
+            <div key={x.n} className="rounded-xl border border-border/60 bg-surface px-5 py-6 text-left">
+              <div className="font-display text-3xl text-foreground">{x.n}</div>
+              <p className="mt-2 text-sm text-muted-foreground">{x.t}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HowItWorks() {
+  const steps = [
+    {
+      icon: Plug,
+      title: "Connect Gmail",
+      body: "One secure OAuth connection to your Google Workspace. Your inbox stays exactly where it is.",
+    },
+    {
+      icon: Users,
+      title: "We map your clients",
+      body: "ISURA groups traffic by account, learns each client's tone, and builds a living relationship graph.",
+    },
+    {
+      icon: Activity,
+      title: "Daily Pulse + Radar + drafts in your voice",
+      body: "Every morning: who's cooling, what's at risk, and replies drafted in your voice — ready for one-tap approval.",
+    },
+  ];
+  return (
+    <section id="how" className="mx-auto max-w-6xl px-6 py-20">
+      <h2 className="text-center font-display text-4xl text-foreground">How it works</h2>
+      <p className="mx-auto mt-3 max-w-xl text-center text-sm text-muted-foreground">
+        An intelligence layer above your inbox — not another inbox to check.
+      </p>
+      <div className="mt-12 grid gap-5 md:grid-cols-3">
+        {steps.map((s, i) => (
+          <div key={s.title} className="rounded-2xl border border-border/70 bg-surface px-6 py-7">
+            <div className="flex items-center gap-3">
+              <span className="grid h-9 w-9 place-items-center rounded-lg bg-surface-muted text-foreground">
+                <s.icon className="h-4.5 w-4.5" />
+              </span>
+              <span className="font-display text-lg text-muted-foreground">0{i + 1}</span>
+            </div>
+            <h3 className="mt-4 font-display text-xl text-foreground">{s.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Trust() {
+  const items = [
+    { icon: ShieldCheck, t: "Approval-first", b: "Nothing is ever sent without your explicit tap. ISURA drafts; you decide." },
+    { icon: Trash2, t: "30-day body deletion", b: "Email bodies are automatically deleted after 30 days. We keep signals, not your mail." },
+    { icon: CheckCircle2, t: "Revoke anytime", b: "One button disconnects Gmail and deletes your data. No lock-in, no dark patterns." },
+  ];
+  return (
+    <section id="trust" className="border-y border-border/60 bg-surface-muted/40">
+      <div className="mx-auto max-w-6xl px-6 py-20">
+        <h2 className="text-center font-display text-4xl text-foreground">Built to be trusted</h2>
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
+          {items.map((x) => (
+            <div key={x.t} className="rounded-2xl border border-border/70 bg-surface px-6 py-7">
+              <x.icon className="h-5 w-5 text-foreground" />
+              <h3 className="mt-4 font-display text-xl text-foreground">{x.t}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{x.b}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Pricing() {
+  return (
+    <section id="pricing" className="mx-auto max-w-3xl px-6 py-20 text-center">
+      <h2 className="font-display text-4xl text-foreground">Pricing</h2>
+      <div className="mt-8 rounded-2xl border border-border/70 bg-surface px-8 py-10">
+        <div className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-surface-muted px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+          By invitation
+        </div>
+        <div className="mt-5 font-display text-5xl text-foreground">Pilot</div>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Currently invitation-only while we onboard a small set of agencies.
+        </p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">$79/seat</span> after the pilot.
+        </p>
+        <div className="mt-7">
           <a
             href="#access"
-            className="inline-flex items-center gap-1.5 rounded-md bg-foreground px-5 py-2.5 text-sm font-medium text-background transition hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            {tr(lang, "ctaPrimary")}
-            <ArrowRight className="h-3.5 w-3.5" />
+            Request pilot access
+            <ArrowRight className="h-4 w-4" />
           </a>
-          <a
-            href="#preview"
-            className="rounded-md border border-border bg-surface px-5 py-2.5 text-sm font-medium text-foreground transition hover:bg-surface-muted"
-          >
-            {tr(lang, "ctaSecondary")}
-          </a>
-          <Link
-            to="/assistant"
-            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-5 py-2.5 text-sm font-medium text-foreground transition hover:bg-surface-muted"
-          >
-            {lang === "tr" ? "Sesli asistanı dene" : "Try the voice assistant"}
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-        <p className="mt-6 inline-flex items-center gap-1.5 text-[12px] text-muted-foreground">
-          <ShieldCheck className="h-3 w-3" />
-          {tr(lang, "heroTrust")}
-        </p>
-      </div>
-    </section>
-  );
-}
-
-/* ----------------------------- Problem ----------------------------- */
-
-function Problem({ lang }: { lang: Lang }) {
-  const items = [
-    { t: "p1t", b: "p1b" },
-    { t: "p2t", b: "p2b" },
-    { t: "p3t", b: "p3b" },
-    { t: "p4t", b: "p4b" },
-  ] as const;
-  return (
-    <section id="problem" className="border-b border-border/50">
-      <div className="mx-auto max-w-5xl px-6 py-24 sm:py-28">
-        <div className="max-w-2xl">
-          <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-            {tr(lang, "problemEyebrow")}
-          </div>
-          <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight sm:text-4xl">
-            {tr(lang, "problemTitle")}
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
-            {tr(lang, "problemSub")}
-          </p>
-        </div>
-        <ul className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border/60 bg-border/40 sm:grid-cols-2">
-          {items.map((it) => (
-            <li key={it.t} className="bg-background p-7">
-              <div className="text-[12px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-                {tr(lang, it.t)}
-              </div>
-              <p className="mt-3 text-[15px] leading-relaxed text-foreground">{tr(lang, it.b)}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
-
-/* ----------------------------- Why ISURA ----------------------------- */
-
-function Why({ lang }: { lang: Lang }) {
-  const rows = [
-    { t: "why1", b: "why1b" },
-    { t: "why2", b: "why2b" },
-    { t: "why3", b: "why3b" },
-  ] as const;
-  return (
-    <section id="why" className="border-b border-border/50 bg-surface/40">
-      <div className="mx-auto max-w-5xl px-6 py-24 sm:py-28">
-        <div className="max-w-2xl">
-          <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-            {tr(lang, "whyEyebrow")}
-          </div>
-          <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight sm:text-4xl">
-            {tr(lang, "whyTitle")}
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
-            {tr(lang, "whySub")}
-          </p>
-        </div>
-        <div className="mt-12 grid gap-3 md:grid-cols-3">
-          {rows.map((r) => (
-            <div
-              key={r.t}
-              className="rounded-2xl border border-border/60 bg-background p-7"
-            >
-              <h3 className="font-display text-lg tracking-tight text-foreground">{tr(lang, r.t)}</h3>
-              <p className="mt-2 text-[14px] leading-relaxed text-muted-foreground">{tr(lang, r.b)}</p>
-            </div>
-          ))}
         </div>
       </div>
     </section>
   );
 }
 
-/* ----------------------------- How it works ----------------------------- */
-
-function How({ lang }: { lang: Lang }) {
-  const steps = [
-    { icon: Plug, t: "s1", b: "s1b" },
-    { icon: Brain, t: "s2", b: "s2b" },
-    { icon: Sparkles, t: "s3", b: "s3b" },
-    { icon: Hand, t: "s4", b: "s4b" },
-  ] as const;
+function FinalCta() {
   return (
-    <section id="how" className="border-b border-border/50">
-      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-28">
-        <div className="max-w-2xl">
-          <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-            {tr(lang, "howEyebrow")}
-          </div>
-          <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight sm:text-4xl">
-            {tr(lang, "howTitle")}
-          </h2>
-        </div>
-        <ol className="mt-12 grid gap-3 md:grid-cols-4">
-          {steps.map((s, i) => (
-            <li key={s.t} className="rounded-2xl border border-border/60 bg-surface p-6">
-              <div className="flex items-center justify-between">
-                <span className="font-display text-sm tabular-nums text-muted-foreground">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <s.icon className="h-4 w-4 text-muted-foreground" />
-              </div>
-              <h3 className="mt-6 font-display text-[15px] leading-snug text-foreground">
-                {tr(lang, s.t)}
-              </h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
-                {tr(lang, s.b)}
-              </p>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
-  );
-}
-
-/* ----------------------------- Preview ----------------------------- */
-
-function Preview({ lang }: { lang: Lang }) {
-  return (
-    <section id="preview" className="border-b border-border/50 bg-surface/30">
-      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-28">
-        <div className="max-w-2xl">
-          <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-            {tr(lang, "prevEyebrow")}
-          </div>
-          <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight sm:text-4xl">
-            {tr(lang, "prevTitle")}
-          </h2>
-        </div>
-
-        <div className="mt-12 grid gap-4 lg:grid-cols-12">
-          {/* Briefing card — wide */}
-          <div className="overflow-hidden rounded-2xl border border-border/60 bg-background shadow-sm lg:col-span-7">
-            <div className="flex items-center gap-2 border-b border-border/60 px-5 py-3">
-              <Inbox className="h-3.5 w-3.5 text-muted-foreground" />
-              <span className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-                {tr(lang, "prevBriefingTitle")}
-              </span>
-            </div>
-            <ul className="divide-y divide-border/60">
-              {[
-                { Icon: AlertTriangle, txt: tr(lang, "prevBriefing1") },
-                { Icon: ShieldCheck, txt: tr(lang, "prevBriefing2") },
-                { Icon: Eye, txt: tr(lang, "prevBriefing3") },
-                { Icon: Sparkles, txt: tr(lang, "prevBriefing4") },
-              ].map((row, i) => (
-                <li key={i} className="flex items-center gap-3 px-5 py-3.5">
-                  <span className="grid h-7 w-7 place-items-center rounded-full border border-border/70 bg-surface">
-                    <row.Icon className="h-3.5 w-3.5 text-foreground" />
-                  </span>
-                  <span className="text-[14px] text-foreground">{row.txt}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Relief metric */}
-          <div className="rounded-2xl border border-border/60 bg-background p-6 lg:col-span-5">
-            <div className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-              {tr(lang, "prevReliefTitle")}
-            </div>
-            <div className="mt-6 flex items-end gap-3">
-              <span className="font-display text-5xl leading-none tracking-tight text-foreground">
-                {tr(lang, "prevReliefValue")}
-              </span>
-              <span className="pb-1.5 text-[12px] text-muted-foreground">
-                {tr(lang, "prevReliefMetric")}
-              </span>
-            </div>
-            <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-surface-muted">
-              <div className="h-full w-[72%] rounded-full bg-foreground/80" />
-            </div>
-          </div>
-
-          {/* Risk card */}
-          <div className="rounded-2xl border border-border/60 bg-background p-6 lg:col-span-6">
-            <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-              <AlertTriangle className="h-3 w-3" />
-              {tr(lang, "prevRiskTitle")}
-            </div>
-            <p className="mt-3 text-[15px] leading-relaxed text-foreground">
-              {tr(lang, "prevRiskBody")}
-            </p>
-            <div className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-surface px-2.5 py-0.5 text-[11px] text-muted-foreground">
-              <Clock className="h-3 w-3" />
-              {lang === "en" ? "Closes today · 18:00" : "Bugün kapanır · 18:00"}
-            </div>
-          </div>
-
-          {/* Decision card */}
-          <div className="rounded-2xl border border-border/60 bg-background p-6 lg:col-span-6">
-            <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-              <Sparkles className="h-3 w-3" />
-              {tr(lang, "prevDecisionTitle")}
-            </div>
-            <p className="mt-3 text-[15px] leading-relaxed text-foreground">
-              {tr(lang, "prevDecisionBody")}
-            </p>
-            <div className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-surface px-2.5 py-0.5 text-[11px] text-muted-foreground">
-              <Hand className="h-3 w-3" />
-              {lang === "en" ? "Approval required" : "Onay gerekli"}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ----------------------------- Trust ----------------------------- */
-
-function Trust({ lang }: { lang: Lang }) {
-  const pillars = [
-    { Icon: Hand, t: "t1", b: "t1b" },
-    { Icon: Eye, t: "t2", b: "t2b" },
-    { Icon: Lock, t: "t3", b: "t3b" },
-    { Icon: Plug, t: "t4", b: "t4b" },
-    { Icon: ShieldCheck, t: "t5", b: "t5b" },
-  ] as const;
-  return (
-    <section id="trust" className="border-b border-border/50">
-      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-28">
-        <div className="max-w-2xl">
-          <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-            {tr(lang, "trustEyebrow")}
-          </div>
-          <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight sm:text-4xl">
-            {tr(lang, "trustTitle")}
-          </h2>
-        </div>
-        <ul className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {pillars.map((p) => (
-            <li
-              key={p.t}
-              className="rounded-2xl border border-border/60 bg-surface p-6"
-            >
-              <span className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-background">
-                <p.Icon className="h-4 w-4 text-foreground" />
-              </span>
-              <h3 className="mt-5 font-display text-[15px] tracking-tight text-foreground">
-                {tr(lang, p.t)}
-              </h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
-                {tr(lang, p.b)}
-              </p>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-8">
-          <Link
-            to="/trust"
-            className="inline-flex items-center gap-1.5 text-[13px] text-foreground underline-offset-4 hover:underline"
-          >
-            {tr(lang, "trustLink")}
-            <ArrowRight className="h-3 w-3" />
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ----------------------------- Vision ----------------------------- */
-
-function Vision({ lang }: { lang: Lang }) {
-  return (
-    <section className="border-b border-border/50 bg-surface/40">
-      <div className="mx-auto max-w-3xl px-6 py-24 sm:py-28">
-        <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-          {tr(lang, "visionEyebrow")}
-        </div>
-        <h2 className="mt-3 font-display text-3xl leading-snug tracking-tight sm:text-[34px]">
-          {tr(lang, "visionTitle")}
+    <section id="access" className="border-t border-border/60 bg-surface-muted/40">
+      <div className="mx-auto max-w-2xl px-6 py-20 text-center">
+        <h2 className="font-display text-4xl leading-tight text-foreground">
+          See which retainer is cooling — before it cancels.
         </h2>
-        <p className="mt-6 text-[16px] leading-relaxed text-muted-foreground">
-          {tr(lang, "visionBody")}
+        <p className="mt-3 text-sm text-muted-foreground">
+          Request pilot access and we'll be in touch.
         </p>
-        <p className="mt-8 text-[13px] tracking-wide text-muted-foreground">
-          {tr(lang, "visionSig")}
-        </p>
+        <div className="mx-auto mt-7 max-w-md">
+          <AccessForm />
+        </div>
       </div>
     </section>
   );
 }
 
-/* ----------------------------- Final CTA ----------------------------- */
-
-function FinalCTA({ lang }: { lang: Lang }) {
-  const submitFn = useServerFn(submitWaitlist);
+function AccessForm({ compact }: { compact?: boolean }) {
+  const submit = useServerFn(submitWaitlist);
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [company, setCompany] = useState("");
-  const [role, setRole] = useState("");
-  const [state, setState] = useState<
-    | { kind: "idle" }
-    | { kind: "submitting" }
-    | { kind: "done"; status: "created" | "already_signed_up" }
-    | { kind: "error"; message: string }
-  >({ kind: "idle" });
+  const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle");
 
-  const submit = async (e: React.FormEvent) => {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
-      setState({ kind: "error", message: tr(lang, "finalErrorInvalid") });
-      return;
-    }
-    setState({ kind: "submitting" });
+    if (!email.trim()) return;
+    setState("loading");
     try {
-      const res = await submitFn({
-        data: { email, name, company, role, language: lang, source: "landing" },
-      });
-      if (res.ok) {
-        setState({ kind: "done", status: res.status });
-      } else {
-        setState({
-          kind: "error",
-          message:
-            res.error === "invalid"
-              ? tr(lang, "finalErrorInvalid")
-              : tr(lang, "finalErrorGeneric"),
-        });
-      }
+      const res = await submit({ data: { email, language: "en", source: "landing" } });
+      setState(res.ok ? "done" : "error");
     } catch {
-      setState({ kind: "error", message: tr(lang, "finalErrorGeneric") });
+      setState("error");
     }
-  };
+  }
 
-  const isDone = state.kind === "done";
+  if (state === "done") {
+    return (
+      <div className="flex items-center gap-2 rounded-lg border border-load-low/60 bg-load-low px-4 py-3 text-sm text-load-low-foreground">
+        <CheckCircle2 className="h-4 w-4" />
+        You're on the list — we'll reach out about pilot access.
+      </div>
+    );
+  }
 
   return (
-    <section id="access" className="border-b border-border/50">
-      <div className="relative mx-auto max-w-4xl px-6 py-28">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-full opacity-60"
-          style={{
-            background:
-              "radial-gradient(50% 60% at 50% 50%, color-mix(in oklab, var(--primary) 10%, transparent), transparent 70%)",
-          }}
+    <form onSubmit={onSubmit} className={`flex flex-col gap-2 ${compact ? "sm:flex-row" : ""}`}>
+      <div className="relative flex-1">
+        <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@youragency.com"
+          className="w-full rounded-lg border border-border bg-surface py-2.5 pl-9 pr-3 text-sm text-foreground outline-none ring-primary/20 transition focus:border-border-strong focus:ring-2"
         />
-        <div className="relative">
-          {!isDone ? (
-            <div className="text-center">
-              <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                {tr(lang, "finalEyebrow")}
-              </div>
-              <h2 className="mt-3 font-display text-4xl leading-[1.05] tracking-tight sm:text-5xl">
-                {tr(lang, "finalTitle")}
-              </h2>
-              <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
-                {tr(lang, "finalSub")}
-              </p>
-
-              <form
-                onSubmit={submit}
-                className="mx-auto mt-10 grid w-full max-w-xl gap-2.5 text-left"
-              >
-                <input
-                  type="email"
-                  required
-                  autoComplete="email"
-                  maxLength={320}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={tr(lang, "finalPlaceholderEmail")}
-                  aria-label={tr(lang, "fieldEmail")}
-                  className="rounded-md border border-border bg-background px-4 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground/70 outline-none focus:border-foreground/40"
-                />
-                <div className="grid gap-2.5 sm:grid-cols-2">
-                  <input
-                    type="text"
-                    autoComplete="name"
-                    maxLength={120}
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder={tr(lang, "finalPlaceholderName")}
-                    aria-label={tr(lang, "fieldName")}
-                    className="rounded-md border border-border bg-background px-4 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground/70 outline-none focus:border-foreground/40"
-                  />
-                  <input
-                    type="text"
-                    autoComplete="organization"
-                    maxLength={160}
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                    placeholder={tr(lang, "finalPlaceholderCompany")}
-                    aria-label={tr(lang, "fieldCompany")}
-                    className="rounded-md border border-border bg-background px-4 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground/70 outline-none focus:border-foreground/40"
-                  />
-                </div>
-                <input
-                  type="text"
-                  autoComplete="organization-title"
-                  maxLength={120}
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  placeholder={tr(lang, "finalPlaceholderRole")}
-                  aria-label={tr(lang, "fieldRole")}
-                  className="rounded-md border border-border bg-background px-4 py-2.5 text-[14px] text-foreground placeholder:text-muted-foreground/70 outline-none focus:border-foreground/40"
-                />
-                <button
-                  type="submit"
-                  disabled={state.kind === "submitting"}
-                  className="mt-1 inline-flex items-center justify-center gap-1.5 rounded-md bg-foreground px-4 py-2.5 text-[13px] font-medium text-background transition hover:opacity-90 disabled:opacity-60"
-                >
-                  {state.kind === "submitting"
-                    ? tr(lang, "finalSubmitting")
-                    : tr(lang, "finalCta")}
-                  {state.kind !== "submitting" && <ArrowRight className="h-3.5 w-3.5" />}
-                </button>
-                {state.kind === "error" && (
-                  <p className="mt-1 text-center text-[12px] text-rose-600">
-                    {state.message}
-                  </p>
-                )}
-              </form>
-
-              <p className="mt-6 inline-flex items-center justify-center gap-1.5 text-[12px] text-muted-foreground">
-                <ShieldCheck className="h-3 w-3" />
-                {tr(lang, "heroTrust")}
-              </p>
-            </div>
-          ) : (
-            <div className="mx-auto max-w-2xl text-center">
-              <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border/70 bg-surface px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                {tr(lang, "confirmEyebrow")}
-              </div>
-              <h2 className="mt-6 font-display text-3xl leading-[1.1] tracking-tight sm:text-4xl">
-                {tr(lang, "confirmTitle")}
-              </h2>
-              {state.kind === "done" && state.status === "already_signed_up" && (
-                <p className="mt-4 text-[14px] text-muted-foreground">
-                  {tr(lang, "confirmAlready")}
-                </p>
-              )}
-
-              <div className="mx-auto mt-6 max-w-xl">
-                <PilotNotice variant="banner" />
-              </div>
-
-              <div className="mx-auto mt-10 grid max-w-xl gap-3 text-left sm:grid-cols-3">
-                {[
-                  { Icon: CalendarDays, h: "confirmTimeline_h", b: "confirmTimeline" },
-                  { Icon: UserRound, h: "confirmFounder_h", b: "confirmFounder" },
-                  { Icon: Mail, h: "confirmEmail_h", b: "confirmEmail" },
-                ].map(({ Icon, h, b }) => (
-                  <div
-                    key={h}
-                    className="rounded-2xl border border-border/60 bg-surface p-5"
-                  >
-                    <Icon className="h-4 w-4 text-foreground/70" />
-                    <div className="mt-3 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                      {tr(lang, h as keyof typeof L)}
-                    </div>
-                    <p className="mt-1 text-[13px] leading-relaxed text-foreground">
-                      {tr(lang, b as keyof typeof L)}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              <ul className="mx-auto mt-8 grid max-w-xl gap-2 text-left">
-                {[
-                  { Icon: Hand, k: "confirmTrust1" },
-                  { Icon: Eye, k: "confirmTrust2" },
-                  { Icon: Lock, k: "confirmTrust3" },
-                  { Icon: ShieldCheck, k: "confirmTrust4" },
-                ].map(({ Icon, k }) => (
-                  <li
-                    key={k}
-                    className="flex items-start gap-2.5 text-[13px] leading-relaxed text-muted-foreground"
-                  >
-                    <Icon className="mt-0.5 h-3.5 w-3.5 flex-none text-foreground/60" />
-                    <span>{tr(lang, k as keyof typeof L)}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
       </div>
-    </section>
+      <button
+        type="submit"
+        disabled={state === "loading"}
+        className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
+      >
+        {state === "loading" ? "Requesting…" : "Request pilot access"}
+      </button>
+      {state === "error" && (
+        <p className="text-xs text-load-high-foreground">Something went wrong — try again.</p>
+      )}
+    </form>
   );
 }
 
-/* ----------------------------- Footer ----------------------------- */
-
-function Footer({ lang }: { lang: Lang }) {
+function Footer() {
   return (
-    <footer className="border-t border-border/60 bg-surface/40">
-      <div className="mx-auto max-w-6xl px-6 py-10">
-        <div className="flex flex-col gap-4 text-[12px] text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>{tr(lang, "footerCopy")}</p>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            <Link to="/privacy" className="hover:text-foreground">
-              {lang === "tr" ? "Gizlilik" : "Privacy"}
-            </Link>
-            <Link to="/terms" className="hover:text-foreground">
-              {lang === "tr" ? "Şartlar" : "Terms"}
-            </Link>
-            <Link to="/cookies" className="hover:text-foreground">
-              {lang === "tr" ? "Çerezler" : "Cookies"}
-            </Link>
-            <Link to="/security" className="hover:text-foreground">
-              {lang === "tr" ? "Güvenlik" : "Security"}
-            </Link>
-            <Link to="/ai-transparency" className="hover:text-foreground">
-              {lang === "tr" ? "AI şeffaflığı" : "AI transparency"}
-            </Link>
-            <Link to="/pilot-status" className="hover:text-foreground">
-              {lang === "tr" ? "Pilot durumu" : "Pilot status"}
-            </Link>
-            <Link to="/trust" className="hover:text-foreground">
-              {tr(lang, "footerTrust")}
-            </Link>
-            <Link to="/app" className="hover:text-foreground">
-              {tr(lang, "footerAccess")}
-            </Link>
-          </div>
+    <footer className="border-t border-border/60">
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-10 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <span className="grid h-6 w-6 place-items-center rounded bg-foreground text-background">
+            <span className="font-display text-[11px] leading-none">I</span>
+          </span>
+          <span>ISURA · Relationship intelligence for agencies</span>
         </div>
-        <p className="mt-4 max-w-2xl text-[11px] leading-relaxed text-muted-foreground">
-          {lang === "tr"
-            ? "ISURA şu anda özel pilot sürecindedir. Özellikler ve sistem davranışları test sürecinde değişebilir."
-            : "ISURA is currently in private pilot. Features and system behavior may evolve during testing."}
-        </p>
+        <div className="flex flex-wrap gap-4">
+          <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
+          <Link to="/terms" className="hover:text-foreground">Terms</Link>
+          <Link to="/security" className="hover:text-foreground">Security</Link>
+          <Link to="/pulse" className="hover:text-foreground">Open app</Link>
+        </div>
       </div>
     </footer>
   );

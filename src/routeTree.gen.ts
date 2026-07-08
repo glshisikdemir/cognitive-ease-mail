@@ -11,23 +11,19 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrustRouteImport } from './routes/trust'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SecurityRouteImport } from './routes/security'
+import { Route as RadarRouteImport } from './routes/radar'
+import { Route as PulseRouteImport } from './routes/pulse'
 import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as PriorityRouteImport } from './routes/priority'
 import { Route as PilotStatusRouteImport } from './routes/pilot-status'
-import { Route as PermissionsRouteImport } from './routes/permissions'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as ObjectivesRouteImport } from './routes/objectives'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as GuardianRouteImport } from './routes/guardian'
+import { Route as DraftsRouteImport } from './routes/drafts'
 import { Route as CookiesRouteImport } from './routes/cookies'
-import { Route as ChannelsRouteImport } from './routes/channels'
-import { Route as BriefingRouteImport } from './routes/briefing'
-import { Route as AssistantRouteImport } from './routes/assistant'
-import { Route as AppRouteImport } from './routes/app'
+import { Route as ClientsRouteImport } from './routes/clients'
 import { Route as AiTransparencyRouteImport } from './routes/ai-transparency'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as EmailIdRouteImport } from './routes/email.$id'
 import { Route as ApiTtsRouteImport } from './routes/api/tts'
 
 const TrustRoute = TrustRouteImport.update({
@@ -40,9 +36,24 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SecurityRoute = SecurityRouteImport.update({
   id: '/security',
   path: '/security',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RadarRoute = RadarRouteImport.update({
+  id: '/radar',
+  path: '/radar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PulseRoute = PulseRouteImport.update({
+  id: '/pulse',
+  path: '/pulse',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -50,19 +61,9 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PriorityRoute = PriorityRouteImport.update({
-  id: '/priority',
-  path: '/priority',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PilotStatusRoute = PilotStatusRouteImport.update({
   id: '/pilot-status',
   path: '/pilot-status',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PermissionsRoute = PermissionsRouteImport.update({
-  id: '/permissions',
-  path: '/permissions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -70,19 +71,14 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ObjectivesRoute = ObjectivesRouteImport.update({
-  id: '/objectives',
-  path: '/objectives',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GuardianRoute = GuardianRouteImport.update({
-  id: '/guardian',
-  path: '/guardian',
+const DraftsRoute = DraftsRouteImport.update({
+  id: '/drafts',
+  path: '/drafts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CookiesRoute = CookiesRouteImport.update({
@@ -90,24 +86,9 @@ const CookiesRoute = CookiesRouteImport.update({
   path: '/cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ChannelsRoute = ChannelsRouteImport.update({
-  id: '/channels',
-  path: '/channels',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BriefingRoute = BriefingRouteImport.update({
-  id: '/briefing',
-  path: '/briefing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AssistantRoute = AssistantRouteImport.update({
-  id: '/assistant',
-  path: '/assistant',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AppRoute = AppRouteImport.update({
-  id: '/app',
-  path: '/app',
+const ClientsRoute = ClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AiTransparencyRoute = AiTransparencyRouteImport.update({
@@ -120,11 +101,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EmailIdRoute = EmailIdRouteImport.update({
-  id: '/email/$id',
-  path: '/email/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiTtsRoute = ApiTtsRouteImport.update({
   id: '/api/tts',
   path: '/api/tts',
@@ -134,160 +110,132 @@ const ApiTtsRoute = ApiTtsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ai-transparency': typeof AiTransparencyRoute
-  '/app': typeof AppRoute
-  '/assistant': typeof AssistantRoute
-  '/briefing': typeof BriefingRoute
-  '/channels': typeof ChannelsRoute
+  '/clients': typeof ClientsRoute
   '/cookies': typeof CookiesRoute
-  '/guardian': typeof GuardianRoute
+  '/drafts': typeof DraftsRoute
   '/login': typeof LoginRoute
-  '/objectives': typeof ObjectivesRoute
   '/onboarding': typeof OnboardingRoute
-  '/permissions': typeof PermissionsRoute
   '/pilot-status': typeof PilotStatusRoute
-  '/priority': typeof PriorityRoute
   '/privacy': typeof PrivacyRoute
+  '/pulse': typeof PulseRoute
+  '/radar': typeof RadarRoute
   '/security': typeof SecurityRoute
+  '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
   '/api/tts': typeof ApiTtsRoute
-  '/email/$id': typeof EmailIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-transparency': typeof AiTransparencyRoute
-  '/app': typeof AppRoute
-  '/assistant': typeof AssistantRoute
-  '/briefing': typeof BriefingRoute
-  '/channels': typeof ChannelsRoute
+  '/clients': typeof ClientsRoute
   '/cookies': typeof CookiesRoute
-  '/guardian': typeof GuardianRoute
+  '/drafts': typeof DraftsRoute
   '/login': typeof LoginRoute
-  '/objectives': typeof ObjectivesRoute
   '/onboarding': typeof OnboardingRoute
-  '/permissions': typeof PermissionsRoute
   '/pilot-status': typeof PilotStatusRoute
-  '/priority': typeof PriorityRoute
   '/privacy': typeof PrivacyRoute
+  '/pulse': typeof PulseRoute
+  '/radar': typeof RadarRoute
   '/security': typeof SecurityRoute
+  '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
   '/api/tts': typeof ApiTtsRoute
-  '/email/$id': typeof EmailIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/ai-transparency': typeof AiTransparencyRoute
-  '/app': typeof AppRoute
-  '/assistant': typeof AssistantRoute
-  '/briefing': typeof BriefingRoute
-  '/channels': typeof ChannelsRoute
+  '/clients': typeof ClientsRoute
   '/cookies': typeof CookiesRoute
-  '/guardian': typeof GuardianRoute
+  '/drafts': typeof DraftsRoute
   '/login': typeof LoginRoute
-  '/objectives': typeof ObjectivesRoute
   '/onboarding': typeof OnboardingRoute
-  '/permissions': typeof PermissionsRoute
   '/pilot-status': typeof PilotStatusRoute
-  '/priority': typeof PriorityRoute
   '/privacy': typeof PrivacyRoute
+  '/pulse': typeof PulseRoute
+  '/radar': typeof RadarRoute
   '/security': typeof SecurityRoute
+  '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
   '/trust': typeof TrustRoute
   '/api/tts': typeof ApiTtsRoute
-  '/email/$id': typeof EmailIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/ai-transparency'
-    | '/app'
-    | '/assistant'
-    | '/briefing'
-    | '/channels'
+    | '/clients'
     | '/cookies'
-    | '/guardian'
+    | '/drafts'
     | '/login'
-    | '/objectives'
     | '/onboarding'
-    | '/permissions'
     | '/pilot-status'
-    | '/priority'
     | '/privacy'
+    | '/pulse'
+    | '/radar'
     | '/security'
+    | '/settings'
     | '/terms'
     | '/trust'
     | '/api/tts'
-    | '/email/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/ai-transparency'
-    | '/app'
-    | '/assistant'
-    | '/briefing'
-    | '/channels'
+    | '/clients'
     | '/cookies'
-    | '/guardian'
+    | '/drafts'
     | '/login'
-    | '/objectives'
     | '/onboarding'
-    | '/permissions'
     | '/pilot-status'
-    | '/priority'
     | '/privacy'
+    | '/pulse'
+    | '/radar'
     | '/security'
+    | '/settings'
     | '/terms'
     | '/trust'
     | '/api/tts'
-    | '/email/$id'
   id:
     | '__root__'
     | '/'
     | '/ai-transparency'
-    | '/app'
-    | '/assistant'
-    | '/briefing'
-    | '/channels'
+    | '/clients'
     | '/cookies'
-    | '/guardian'
+    | '/drafts'
     | '/login'
-    | '/objectives'
     | '/onboarding'
-    | '/permissions'
     | '/pilot-status'
-    | '/priority'
     | '/privacy'
+    | '/pulse'
+    | '/radar'
     | '/security'
+    | '/settings'
     | '/terms'
     | '/trust'
     | '/api/tts'
-    | '/email/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AiTransparencyRoute: typeof AiTransparencyRoute
-  AppRoute: typeof AppRoute
-  AssistantRoute: typeof AssistantRoute
-  BriefingRoute: typeof BriefingRoute
-  ChannelsRoute: typeof ChannelsRoute
+  ClientsRoute: typeof ClientsRoute
   CookiesRoute: typeof CookiesRoute
-  GuardianRoute: typeof GuardianRoute
+  DraftsRoute: typeof DraftsRoute
   LoginRoute: typeof LoginRoute
-  ObjectivesRoute: typeof ObjectivesRoute
   OnboardingRoute: typeof OnboardingRoute
-  PermissionsRoute: typeof PermissionsRoute
   PilotStatusRoute: typeof PilotStatusRoute
-  PriorityRoute: typeof PriorityRoute
   PrivacyRoute: typeof PrivacyRoute
+  PulseRoute: typeof PulseRoute
+  RadarRoute: typeof RadarRoute
   SecurityRoute: typeof SecurityRoute
+  SettingsRoute: typeof SettingsRoute
   TermsRoute: typeof TermsRoute
   TrustRoute: typeof TrustRoute
   ApiTtsRoute: typeof ApiTtsRoute
-  EmailIdRoute: typeof EmailIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -306,11 +254,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/security': {
       id: '/security'
       path: '/security'
       fullPath: '/security'
       preLoaderRoute: typeof SecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/radar': {
+      id: '/radar'
+      path: '/radar'
+      fullPath: '/radar'
+      preLoaderRoute: typeof RadarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pulse': {
+      id: '/pulse'
+      path: '/pulse'
+      fullPath: '/pulse'
+      preLoaderRoute: typeof PulseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -320,25 +289,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/priority': {
-      id: '/priority'
-      path: '/priority'
-      fullPath: '/priority'
-      preLoaderRoute: typeof PriorityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/pilot-status': {
       id: '/pilot-status'
       path: '/pilot-status'
       fullPath: '/pilot-status'
       preLoaderRoute: typeof PilotStatusRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/permissions': {
-      id: '/permissions'
-      path: '/permissions'
-      fullPath: '/permissions'
-      preLoaderRoute: typeof PermissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -348,13 +303,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/objectives': {
-      id: '/objectives'
-      path: '/objectives'
-      fullPath: '/objectives'
-      preLoaderRoute: typeof ObjectivesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -362,11 +310,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/guardian': {
-      id: '/guardian'
-      path: '/guardian'
-      fullPath: '/guardian'
-      preLoaderRoute: typeof GuardianRouteImport
+    '/drafts': {
+      id: '/drafts'
+      path: '/drafts'
+      fullPath: '/drafts'
+      preLoaderRoute: typeof DraftsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cookies': {
@@ -376,32 +324,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/channels': {
-      id: '/channels'
-      path: '/channels'
-      fullPath: '/channels'
-      preLoaderRoute: typeof ChannelsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/briefing': {
-      id: '/briefing'
-      path: '/briefing'
-      fullPath: '/briefing'
-      preLoaderRoute: typeof BriefingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/assistant': {
-      id: '/assistant'
-      path: '/assistant'
-      fullPath: '/assistant'
-      preLoaderRoute: typeof AssistantRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/app': {
-      id: '/app'
-      path: '/app'
-      fullPath: '/app'
-      preLoaderRoute: typeof AppRouteImport
+    '/clients': {
+      id: '/clients'
+      path: '/clients'
+      fullPath: '/clients'
+      preLoaderRoute: typeof ClientsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ai-transparency': {
@@ -418,13 +345,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/email/$id': {
-      id: '/email/$id'
-      path: '/email/$id'
-      fullPath: '/email/$id'
-      preLoaderRoute: typeof EmailIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/tts': {
       id: '/api/tts'
       path: '/api/tts'
@@ -438,24 +358,20 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AiTransparencyRoute: AiTransparencyRoute,
-  AppRoute: AppRoute,
-  AssistantRoute: AssistantRoute,
-  BriefingRoute: BriefingRoute,
-  ChannelsRoute: ChannelsRoute,
+  ClientsRoute: ClientsRoute,
   CookiesRoute: CookiesRoute,
-  GuardianRoute: GuardianRoute,
+  DraftsRoute: DraftsRoute,
   LoginRoute: LoginRoute,
-  ObjectivesRoute: ObjectivesRoute,
   OnboardingRoute: OnboardingRoute,
-  PermissionsRoute: PermissionsRoute,
   PilotStatusRoute: PilotStatusRoute,
-  PriorityRoute: PriorityRoute,
   PrivacyRoute: PrivacyRoute,
+  PulseRoute: PulseRoute,
+  RadarRoute: RadarRoute,
   SecurityRoute: SecurityRoute,
+  SettingsRoute: SettingsRoute,
   TermsRoute: TermsRoute,
   TrustRoute: TrustRoute,
   ApiTtsRoute: ApiTtsRoute,
-  EmailIdRoute: EmailIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
