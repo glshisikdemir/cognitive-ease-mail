@@ -1,12 +1,181 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { toast } from "sonner";
+import { ShieldCheck } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 
 export const Route = createFileRoute("/settings")({
-  head: () => ({ meta: [{ title: "Settings — ISURA" }] }),
-  component: () => (
-    <AppShell>
-      <h1 className="font-display text-3xl text-foreground">Settings</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Coming in the next stage.</p>
-    </AppShell>
-  ),
+  head: () => ({
+    meta: [
+      { title: "Settings — ISURA" },
+      {
+        name: "description",
+        content: "Configure your morning briefing, attention thresholds and approval preferences.",
+      },
+    ],
+  }),
+  component: SettingsPage,
 });
+
+function Toggle({
+  label,
+  description,
+  checked,
+  onChange,
+}: {
+  label: string;
+  description: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4 py-3">
+      <div className="min-w-0">
+        <div className="text-sm font-medium text-foreground">{label}</div>
+        <div className="text-xs text-muted-foreground">{description}</div>
+      </div>
+      <button
+        role="switch"
+        aria-checked={checked}
+        onClick={() => onChange(!checked)}
+        className={`relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors ${
+          checked ? "bg-primary" : "bg-border-strong"
+        }`}
+      >
+        <span
+          className={`absolute top-0.5 h-5 w-5 rounded-full bg-background transition-transform ${
+            checked ? "translate-x-[22px]" : "translate-x-0.5"
+          }`}
+        />
+      </button>
+    </div>
+  );
+}
+
+function SettingsPage() {
+  const [briefing, setBriefing] = useState(true);
+  const [approvalFirst, setApprovalFirst] = useState(true);
+  const [weekendPause, setWeekendPause] = useState(false);
+  const [briefTime, setBriefTime] = useState("08:00");
+  const [attentionThreshold, setAttentionThreshold] = useState(60);
+  const [cooldownDays, setCooldownDays] = useState(7);
+
+  const save = () => toast.success("Settings saved");
+
+  return (
+    <AppShell>
+      <header>
+        <h1 className="font-display text-3xl leading-tight text-foreground sm:text-4xl">Settings</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Tune how ISURA watches your book and when it reaches you.
+        </p>
+      </header>
+
+      <div className="mt-6 max-w-2xl space-y-5">
+        {/* Morning briefing */}
+        <section className="rounded-2xl border border-border/70 bg-surface p-5">
+          <h2 className="font-display text-lg text-foreground">Morning briefing</h2>
+          <div className="mt-1 divide-y divide-border/50">
+            <Toggle
+              label="Daily briefing"
+              description="A 90-second summary of who needs attention, every morning."
+              checked={briefing}
+              onChange={setBriefing}
+            />
+            <div className="flex items-center justify-between gap-4 py-3">
+              <div>
+                <div className="text-sm font-medium text-foreground">Delivery time</div>
+                <div className="text-xs text-muted-foreground">When your briefing lands.</div>
+              </div>
+              <input
+                type="time"
+                value={briefTime}
+                onChange={(e) => setBriefTime(e.target.value)}
+                className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm text-foreground outline-none focus:border-border-strong"
+              />
+            </div>
+            <Toggle
+              label="Pause on weekends"
+              description="Skip Saturday and Sunday briefings."
+              checked={weekendPause}
+              onChange={setWeekendPause}
+            />
+          </div>
+        </section>
+
+        {/* Thresholds */}
+        <section className="rounded-2xl border border-border/70 bg-surface p-5">
+          <h2 className="font-display text-lg text-foreground">Attention thresholds</h2>
+          <div className="mt-3 space-y-5">
+            <div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-medium text-foreground">Attention band cutoff</span>
+                <span className="tabular-nums text-muted-foreground">below {attentionThreshold}</span>
+              </div>
+              <input
+                type="range"
+                min={40}
+                max={80}
+                value={attentionThreshold}
+                onChange={(e) => setAttentionThreshold(Number(e.target.value))}
+                className="mt-2 w-full accent-primary"
+              />
+              <p className="mt-1 text-xs text-muted-foreground">
+                Accounts scoring below this appear in your Pulse attention band.
+              </p>
+            </div>
+            <div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-medium text-foreground">Silence alert</span>
+                <span className="tabular-nums text-muted-foreground">{cooldownDays} days</span>
+              </div>
+              <input
+                type="range"
+                min={3}
+                max={21}
+                value={cooldownDays}
+                onChange={(e) => setCooldownDays(Number(e.target.value))}
+                className="mt-2 w-full accent-primary"
+              />
+              <p className="mt-1 text-xs text-muted-foreground">
+                Flag a client as cooling after this many days of silence.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Approval */}
+        <section className="rounded-2xl border border-border/70 bg-surface p-5">
+          <h2 className="font-display text-lg text-foreground">Approvals</h2>
+          <div className="mt-1 divide-y divide-border/50">
+            <Toggle
+              label="Approval-first sending"
+              description="Every reply waits for your explicit tap before it sends."
+              checked={approvalFirst}
+              onChange={(v) => {
+                if (!v) {
+                  toast("Approval-first is recommended and stays on.");
+                  return;
+                }
+                setApprovalFirst(v);
+              }}
+            />
+          </div>
+          <p className="mt-3 flex items-center gap-1.5 rounded-lg bg-surface-muted px-3 py-2 text-[11px] text-muted-foreground">
+            <ShieldCheck className="h-3.5 w-3.5" />
+            ISURA prepares drafts but never sends without your approval.
+          </p>
+        </section>
+
+        <div className="flex justify-end">
+          <button
+            onClick={save}
+            className="rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            Save changes
+          </button>
+        </div>
+      </div>
+    </AppShell>
+  );
+}
