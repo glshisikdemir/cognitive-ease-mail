@@ -21,9 +21,9 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DraftsRouteImport } from './routes/drafts'
 import { Route as CookiesRouteImport } from './routes/cookies'
-import { Route as ClientsRouteImport } from './routes/clients'
 import { Route as AiTransparencyRouteImport } from './routes/ai-transparency'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ClientsIndexRouteImport } from './routes/clients.index'
 import { Route as ClientsIdRouteImport } from './routes/clients.$id'
 import { Route as ApiTtsRouteImport } from './routes/api/tts'
 
@@ -87,11 +87,6 @@ const CookiesRoute = CookiesRouteImport.update({
   path: '/cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ClientsRoute = ClientsRouteImport.update({
-  id: '/clients',
-  path: '/clients',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AiTransparencyRoute = AiTransparencyRouteImport.update({
   id: '/ai-transparency',
   path: '/ai-transparency',
@@ -102,10 +97,15 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClientsIndexRoute = ClientsIndexRouteImport.update({
+  id: '/clients/',
+  path: '/clients/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ClientsIdRoute = ClientsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ClientsRoute,
+  id: '/clients/$id',
+  path: '/clients/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTtsRoute = ApiTtsRouteImport.update({
   id: '/api/tts',
@@ -116,7 +116,6 @@ const ApiTtsRoute = ApiTtsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ai-transparency': typeof AiTransparencyRoute
-  '/clients': typeof ClientsRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/drafts': typeof DraftsRoute
   '/login': typeof LoginRoute
@@ -131,11 +130,11 @@ export interface FileRoutesByFullPath {
   '/trust': typeof TrustRoute
   '/api/tts': typeof ApiTtsRoute
   '/clients/$id': typeof ClientsIdRoute
+  '/clients/': typeof ClientsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-transparency': typeof AiTransparencyRoute
-  '/clients': typeof ClientsRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/drafts': typeof DraftsRoute
   '/login': typeof LoginRoute
@@ -150,12 +149,12 @@ export interface FileRoutesByTo {
   '/trust': typeof TrustRoute
   '/api/tts': typeof ApiTtsRoute
   '/clients/$id': typeof ClientsIdRoute
+  '/clients': typeof ClientsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/ai-transparency': typeof AiTransparencyRoute
-  '/clients': typeof ClientsRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/drafts': typeof DraftsRoute
   '/login': typeof LoginRoute
@@ -170,13 +169,13 @@ export interface FileRoutesById {
   '/trust': typeof TrustRoute
   '/api/tts': typeof ApiTtsRoute
   '/clients/$id': typeof ClientsIdRoute
+  '/clients/': typeof ClientsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/ai-transparency'
-    | '/clients'
     | '/cookies'
     | '/drafts'
     | '/login'
@@ -191,11 +190,11 @@ export interface FileRouteTypes {
     | '/trust'
     | '/api/tts'
     | '/clients/$id'
+    | '/clients/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/ai-transparency'
-    | '/clients'
     | '/cookies'
     | '/drafts'
     | '/login'
@@ -210,11 +209,11 @@ export interface FileRouteTypes {
     | '/trust'
     | '/api/tts'
     | '/clients/$id'
+    | '/clients'
   id:
     | '__root__'
     | '/'
     | '/ai-transparency'
-    | '/clients'
     | '/cookies'
     | '/drafts'
     | '/login'
@@ -229,12 +228,12 @@ export interface FileRouteTypes {
     | '/trust'
     | '/api/tts'
     | '/clients/$id'
+    | '/clients/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AiTransparencyRoute: typeof AiTransparencyRoute
-  ClientsRoute: typeof ClientsRouteWithChildren
   CookiesRoute: typeof CookiesRoute
   DraftsRoute: typeof DraftsRoute
   LoginRoute: typeof LoginRoute
@@ -248,6 +247,8 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   TrustRoute: typeof TrustRoute
   ApiTtsRoute: typeof ApiTtsRoute
+  ClientsIdRoute: typeof ClientsIdRoute
+  ClientsIndexRoute: typeof ClientsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -336,13 +337,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/clients': {
-      id: '/clients'
-      path: '/clients'
-      fullPath: '/clients'
-      preLoaderRoute: typeof ClientsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/ai-transparency': {
       id: '/ai-transparency'
       path: '/ai-transparency'
@@ -357,12 +351,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/clients/': {
+      id: '/clients/'
+      path: '/clients'
+      fullPath: '/clients/'
+      preLoaderRoute: typeof ClientsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/clients/$id': {
       id: '/clients/$id'
-      path: '/$id'
+      path: '/clients/$id'
       fullPath: '/clients/$id'
       preLoaderRoute: typeof ClientsIdRouteImport
-      parentRoute: typeof ClientsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/api/tts': {
       id: '/api/tts'
@@ -374,21 +375,9 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface ClientsRouteChildren {
-  ClientsIdRoute: typeof ClientsIdRoute
-}
-
-const ClientsRouteChildren: ClientsRouteChildren = {
-  ClientsIdRoute: ClientsIdRoute,
-}
-
-const ClientsRouteWithChildren =
-  ClientsRoute._addFileChildren(ClientsRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AiTransparencyRoute: AiTransparencyRoute,
-  ClientsRoute: ClientsRouteWithChildren,
   CookiesRoute: CookiesRoute,
   DraftsRoute: DraftsRoute,
   LoginRoute: LoginRoute,
@@ -402,17 +391,9 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   TrustRoute: TrustRoute,
   ApiTtsRoute: ApiTtsRoute,
+  ClientsIdRoute: ClientsIdRoute,
+  ClientsIndexRoute: ClientsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

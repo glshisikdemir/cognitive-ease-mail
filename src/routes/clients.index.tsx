@@ -5,7 +5,7 @@ import { AppShell } from "@/components/app/AppShell";
 import { Sparkline, HealthBadge } from "@/components/app/Sparkline";
 import { CLIENTS, bandOf, bandLabel, fmtMoney, type Band } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/clients")({
+export const Route = createFileRoute("/clients/")({
   head: () => ({
     meta: [
       { title: "Clients — ISURA" },
