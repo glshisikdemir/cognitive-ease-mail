@@ -47,10 +47,16 @@ export function AppShell({ children }: { children: ReactNode }) {
                 >
                   <item.icon className="h-4 w-4" />
                   {item.label}
+                  {item.to === "/approvals" && approvals > 0 && (
+                    <span className="ml-auto rounded-full bg-load-medium px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-load-medium-foreground">
+                      {approvals}
+                    </span>
+                  )}
                 </Link>
               );
             })}
           </nav>
+
 
           <div className="mt-auto rounded-lg border border-border/60 bg-surface px-3 py-3 text-[11px] leading-relaxed text-muted-foreground">
             <span className="font-medium text-foreground">Approval-first.</span> Nothing is ever
