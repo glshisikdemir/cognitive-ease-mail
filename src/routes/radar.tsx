@@ -83,6 +83,7 @@ function RadarPage() {
         {alerts.map((a) => {
           const client = clientById(a.clientId);
           if (!client) return null;
+          const gate = gateForText(`${a.type} ${a.summary}`);
           return (
             <article
               key={a.id}
