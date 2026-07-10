@@ -85,6 +85,11 @@ function DraftsPage() {
                   )}
                 </div>
                 <div className="mt-0.5 truncate text-xs text-muted-foreground">{d.subject}</div>
+                {s === "pending" && (
+                  <div className="mt-1.5">
+                    <GuardianBadge gate={draftGate(d)} />
+                  </div>
+                )}
               </button>
             );
           })}
