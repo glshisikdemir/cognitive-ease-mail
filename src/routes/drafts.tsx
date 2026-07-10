@@ -4,7 +4,13 @@ import { toast } from "sonner";
 import { Check, Pencil, ShieldCheck, X } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 import { HealthBadge } from "@/components/app/Sparkline";
+import { GuardianBadge, guardianExplainer } from "@/components/app/GuardianBadge";
 import { DRAFTS, clientById, fmtMoney } from "@/lib/mock-data";
+import { gateForText } from "@/lib/guardian";
+
+function draftGate(d: { subject: string; originalEmail: string; draftBody: string }) {
+  return gateForText(`${d.subject} ${d.originalEmail} ${d.draftBody}`);
+}
 
 export const Route = createFileRoute("/drafts")({
   head: () => ({
@@ -33,6 +39,7 @@ function DraftsPage() {
   const activeDraft = DRAFTS.find((d) => d.id === active) ?? DRAFTS[0];
   const activeClient = activeDraft ? clientById(activeDraft.clientId) : undefined;
   const activeStatus = activeDraft ? status[activeDraft.id] ?? "pending" : "pending";
+  const activeGate = activeDraft ? draftGate(activeDraft) : undefined;
 
   return (
     <AppShell>
@@ -78,13 +85,18 @@ function DraftsPage() {
                   )}
                 </div>
                 <div className="mt-0.5 truncate text-xs text-muted-foreground">{d.subject}</div>
+                {s === "pending" && (
+                  <div className="mt-1.5">
+                    <GuardianBadge gate={draftGate(d)} />
+                  </div>
+                )}
               </button>
             );
           })}
         </div>
 
         {/* Detail */}
-        {activeDraft && activeClient && (
+        {activeDraft && activeClient && activeGate && (
           <div className="rounded-2xl border border-border/70 bg-surface p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <Link
@@ -97,6 +109,13 @@ function DraftsPage() {
               <span className="text-xs text-muted-foreground">
                 {activeDraft.person} · {fmtMoney(activeClient.retainer)}/mo
               </span>
+            </div>
+
+            <div className="mt-3 flex items-start gap-2 rounded-lg border border-border/60 bg-surface-muted px-4 py-3">
+              <GuardianBadge gate={activeGate} />
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                {guardianExplainer(activeGate)}
+              </p>
             </div>
 
             <div className="mt-4 rounded-lg border border-border/60 bg-surface-muted px-4 py-3">
@@ -123,14 +142,23 @@ function DraftsPage() {
             {activeStatus === "pending" ? (
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
+                  disabled={!activeGate.canExecute}
                   onClick={() => {
                     setStatus((s) => ({ ...s, [activeDraft.id]: "approved" }));
-                    toast.success(`Approved & sent to ${activeClient.name}`);
+                    toast.success(
+                      activeGate.requiresApproval
+                        ? `Approved & sent to ${activeClient.name}`
+                        : `Sent to ${activeClient.name} — logged in decision memory`,
+                    );
                   }}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <Check className="h-3.5 w-3.5" />
-                  Approve &amp; send
+                  {!activeGate.canExecute
+                    ? "You must send this"
+                    : activeGate.requiresApproval
+                      ? "Approve & send"
+                      : "Confirm & send"}
                 </button>
                 <button
                   onClick={() => toast.success("Draft opened for editing")}

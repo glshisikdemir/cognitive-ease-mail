@@ -167,3 +167,63 @@ export function requiresApproval(level: AutonomyLevel): boolean {
 export function canEverExecute(level: AutonomyLevel): boolean {
   return level !== "level4_strategic";
 }
+
+// ---- Draft & suggestion gating -------------------------------------------
+// Maps a piece of outbound work (an email draft or a suggested action) to an
+// autonomy category, then to the Guardian gate that governs whether ISURA may
+// act on its own or must pause for the human. This is the same trust layer the
+// rest of ISURA uses — Drafts and Radar route every decision through it.
+
+export type GuardianGate = {
+  category: AutonomyCategory;
+  level: AutonomyLevel;
+  requiresApproval: boolean;
+  canExecute: boolean;
+};
+
+// Lightweight, deterministic classifier over the text of a draft/suggestion.
+// Order matters: higher-impact categories are checked first.
+export function classifyText(text: string): AutonomyCategory {
+  const t = text.toLowerCase();
+  if (/(contract|renewal|renew|agreement|sign\b|signature)/.test(t)) return "contracts";
+  if (/(price|pricing|quote|discount|cpl|cost per|budget|invoice|\$|spend)/.test(t))
+    return "pricing";
+  if (/(silence|re-?engage|new lead|prospect|demo|win.?back|pitch)/.test(t)) return "sales";
+  if (/(campaign|outreach|newsletter|broadcast|blast)/.test(t)) return "marketing";
+  if (/(meeting|schedule|book a|calendar|invite|20 minutes)/.test(t)) return "calendar";
+  return "email_followup";
+}
+
+export function gateForCategory(category: AutonomyCategory): GuardianGate {
+  const level = CATEGORY_META[category].defaultLevel;
+  return {
+    category,
+    level,
+    requiresApproval: requiresApproval(level),
+    canExecute: canEverExecute(level),
+  };
+}
+
+export function gateForText(text: string): GuardianGate {
+  return gateForCategory(classifyText(text));
+}
+
+// Maps a Guardian level to the app's calm status tokens (no hardcoded colors).
+export const LEVEL_TOKEN: Record<AutonomyLevel, { chip: string; label: Bilingual }> = {
+  level1_autonomous: {
+    chip: "bg-load-low text-load-low-foreground",
+    label: { en: "Auto-send allowed", tr: "Otomatik gönderim serbest" },
+  },
+  level2_silent: {
+    chip: "bg-load-low text-load-low-foreground",
+    label: { en: "Silent confirmation", tr: "Sessiz onay" },
+  },
+  level3_approval: {
+    chip: "bg-load-medium text-load-medium-foreground",
+    label: { en: "Approval required", tr: "Onay gerekli" },
+  },
+  level4_strategic: {
+    chip: "bg-load-high text-load-high-foreground",
+    label: { en: "Human only", tr: "Yalnız insan" },
+  },
+};
