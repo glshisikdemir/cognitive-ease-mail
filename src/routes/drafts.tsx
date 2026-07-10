@@ -142,14 +142,23 @@ function DraftsPage() {
             {activeStatus === "pending" ? (
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
+                  disabled={!activeGate.canExecute}
                   onClick={() => {
                     setStatus((s) => ({ ...s, [activeDraft.id]: "approved" }));
-                    toast.success(`Approved & sent to ${activeClient.name}`);
+                    toast.success(
+                      activeGate.requiresApproval
+                        ? `Approved & sent to ${activeClient.name}`
+                        : `Sent to ${activeClient.name} — logged in decision memory`,
+                    );
                   }}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <Check className="h-3.5 w-3.5" />
-                  Approve &amp; send
+                  {!activeGate.canExecute
+                    ? "You must send this"
+                    : activeGate.requiresApproval
+                      ? "Approve & send"
+                      : "Confirm & send"}
                 </button>
                 <button
                   onClick={() => toast.success("Draft opened for editing")}
