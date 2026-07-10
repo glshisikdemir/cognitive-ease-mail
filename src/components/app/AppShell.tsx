@@ -1,10 +1,12 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Activity, Radar, Users, FileText, Settings as Cog } from "lucide-react";
+import { Activity, Radar, Users, FileText, Settings as Cog, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
+import { pendingApprovalCount } from "@/lib/approvals";
 
 const NAV = [
   { to: "/pulse", label: "Pulse", icon: Activity },
   { to: "/radar", label: "Radar", icon: Radar },
+  { to: "/approvals", label: "Approvals", icon: ShieldCheck },
   { to: "/clients", label: "Clients", icon: Users },
   { to: "/drafts", label: "Drafts", icon: FileText },
   { to: "/settings", label: "Settings", icon: Cog },
