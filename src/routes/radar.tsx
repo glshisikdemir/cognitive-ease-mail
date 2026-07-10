@@ -123,11 +123,17 @@ function RadarPage() {
               </div>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <button
-                  onClick={() => toast.success(`Draft opened for ${client.name}`)}
+                  onClick={() =>
+                    toast.success(
+                      gate.requiresApproval
+                        ? `Draft prepared for ${client.name} — awaiting your approval`
+                        : `Draft ready for ${client.name} — ISURA can send on approval`,
+                    )
+                  }
                   className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                 >
                   <FileText className="h-3.5 w-3.5" />
-                  View draft
+                  {gate.requiresApproval ? "Review & approve" : "View draft"}
                 </button>
                 <Link
                   to="/clients/$id"
