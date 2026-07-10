@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import { FileText, ExternalLink, Filter } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 import { HealthBadge } from "@/components/app/Sparkline";
+import { GuardianBadge } from "@/components/app/GuardianBadge";
+import { gateForText } from "@/lib/guardian";
 import {
   ALERTS,
   ALERT_LABELS,
