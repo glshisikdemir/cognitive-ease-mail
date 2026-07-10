@@ -39,6 +39,7 @@ function DraftsPage() {
   const activeDraft = DRAFTS.find((d) => d.id === active) ?? DRAFTS[0];
   const activeClient = activeDraft ? clientById(activeDraft.clientId) : undefined;
   const activeStatus = activeDraft ? status[activeDraft.id] ?? "pending" : "pending";
+  const activeGate = activeDraft ? draftGate(activeDraft) : undefined;
 
   return (
     <AppShell>
