@@ -96,7 +96,7 @@ function DraftsPage() {
         </div>
 
         {/* Detail */}
-        {activeDraft && activeClient && (
+        {activeDraft && activeClient && activeGate && (
           <div className="rounded-2xl border border-border/70 bg-surface p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <Link
@@ -109,6 +109,13 @@ function DraftsPage() {
               <span className="text-xs text-muted-foreground">
                 {activeDraft.person} · {fmtMoney(activeClient.retainer)}/mo
               </span>
+            </div>
+
+            <div className="mt-3 flex items-start gap-2 rounded-lg border border-border/60 bg-surface-muted px-4 py-3">
+              <GuardianBadge gate={activeGate} />
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                {guardianExplainer(activeGate)}
+              </p>
             </div>
 
             <div className="mt-4 rounded-lg border border-border/60 bg-surface-muted px-4 py-3">
