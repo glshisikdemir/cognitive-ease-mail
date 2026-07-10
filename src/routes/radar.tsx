@@ -105,6 +105,7 @@ function RadarPage() {
                       {client.name}
                     </Link>
                     <HealthBadge health={client.health} />
+                    <GuardianBadge gate={gate} />
                   </div>
                   <p className="mt-1.5 text-sm text-muted-foreground">{a.summary}</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
