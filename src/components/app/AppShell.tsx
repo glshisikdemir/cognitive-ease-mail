@@ -14,6 +14,8 @@ const NAV = [
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const approvals = pendingApprovalCount();
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
