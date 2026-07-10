@@ -4,7 +4,13 @@ import { toast } from "sonner";
 import { Check, Pencil, ShieldCheck, X } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 import { HealthBadge } from "@/components/app/Sparkline";
+import { GuardianBadge, guardianExplainer } from "@/components/app/GuardianBadge";
 import { DRAFTS, clientById, fmtMoney } from "@/lib/mock-data";
+import { gateForText } from "@/lib/guardian";
+
+function draftGate(d: { subject: string; originalEmail: string; draftBody: string }) {
+  return gateForText(`${d.subject} ${d.originalEmail} ${d.draftBody}`);
+}
 
 export const Route = createFileRoute("/drafts")({
   head: () => ({
