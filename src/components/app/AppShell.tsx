@@ -1,10 +1,12 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Activity, Radar, Users, FileText, Settings as Cog } from "lucide-react";
+import { Activity, Radar, Users, FileText, Settings as Cog, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
+import { pendingApprovalCount } from "@/lib/approvals";
 
 const NAV = [
   { to: "/pulse", label: "Pulse", icon: Activity },
   { to: "/radar", label: "Radar", icon: Radar },
+  { to: "/approvals", label: "Approvals", icon: ShieldCheck },
   { to: "/clients", label: "Clients", icon: Users },
   { to: "/drafts", label: "Drafts", icon: FileText },
   { to: "/settings", label: "Settings", icon: Cog },
@@ -12,6 +14,8 @@ const NAV = [
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const approvals = pendingApprovalCount();
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -43,10 +47,16 @@ export function AppShell({ children }: { children: ReactNode }) {
                 >
                   <item.icon className="h-4 w-4" />
                   {item.label}
+                  {item.to === "/approvals" && approvals > 0 && (
+                    <span className="ml-auto rounded-full bg-load-medium px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-load-medium-foreground">
+                      {approvals}
+                    </span>
+                  )}
                 </Link>
               );
             })}
           </nav>
+
 
           <div className="mt-auto rounded-lg border border-border/60 bg-surface px-3 py-3 text-[11px] leading-relaxed text-muted-foreground">
             <span className="font-medium text-foreground">Approval-first.</span> Nothing is ever

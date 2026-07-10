@@ -22,6 +22,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as DraftsRouteImport } from './routes/drafts'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ClientsRouteImport } from './routes/clients'
+import { Route as ApprovalsRouteImport } from './routes/approvals'
 import { Route as AiTransparencyRouteImport } from './routes/ai-transparency'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ClientsIndexRouteImport } from './routes/clients.index'
@@ -93,6 +94,11 @@ const ClientsRoute = ClientsRouteImport.update({
   path: '/clients',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApprovalsRoute = ApprovalsRouteImport.update({
+  id: '/approvals',
+  path: '/approvals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AiTransparencyRoute = AiTransparencyRouteImport.update({
   id: '/ai-transparency',
   path: '/ai-transparency',
@@ -122,6 +128,7 @@ const ApiTtsRoute = ApiTtsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ai-transparency': typeof AiTransparencyRoute
+  '/approvals': typeof ApprovalsRoute
   '/clients': typeof ClientsRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/drafts': typeof DraftsRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-transparency': typeof AiTransparencyRoute
+  '/approvals': typeof ApprovalsRoute
   '/cookies': typeof CookiesRoute
   '/drafts': typeof DraftsRoute
   '/login': typeof LoginRoute
@@ -162,6 +170,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/ai-transparency': typeof AiTransparencyRoute
+  '/approvals': typeof ApprovalsRoute
   '/clients': typeof ClientsRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/drafts': typeof DraftsRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/ai-transparency'
+    | '/approvals'
     | '/clients'
     | '/cookies'
     | '/drafts'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/ai-transparency'
+    | '/approvals'
     | '/cookies'
     | '/drafts'
     | '/login'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/ai-transparency'
+    | '/approvals'
     | '/clients'
     | '/cookies'
     | '/drafts'
@@ -244,6 +256,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AiTransparencyRoute: typeof AiTransparencyRoute
+  ApprovalsRoute: typeof ApprovalsRoute
   ClientsRoute: typeof ClientsRouteWithChildren
   CookiesRoute: typeof CookiesRoute
   DraftsRoute: typeof DraftsRoute
@@ -353,6 +366,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/approvals': {
+      id: '/approvals'
+      path: '/approvals'
+      fullPath: '/approvals'
+      preLoaderRoute: typeof ApprovalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ai-transparency': {
       id: '/ai-transparency'
       path: '/ai-transparency'
@@ -407,6 +427,7 @@ const ClientsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AiTransparencyRoute: AiTransparencyRoute,
+  ApprovalsRoute: ApprovalsRoute,
   ClientsRoute: ClientsRouteWithChildren,
   CookiesRoute: CookiesRoute,
   DraftsRoute: DraftsRoute,
