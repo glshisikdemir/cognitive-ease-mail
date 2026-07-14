@@ -9,8 +9,8 @@ export function ProductFooter() {
     {
       heading: t(lang, "footerProduct"),
       links: [
-        { to: "/app" as const, label: t(lang, "footerLinkWorkspace") },
-        { to: "/priority" as const, label: t(lang, "footerLinkPriority") },
+        { to: "/pulse" as const, label: t(lang, "footerLinkWorkspace") },
+        { to: "/radar" as const, label: t(lang, "footerLinkPriority") },
         { to: "/" as const, label: t(lang, "footerLinkLanding") },
       ],
     },
