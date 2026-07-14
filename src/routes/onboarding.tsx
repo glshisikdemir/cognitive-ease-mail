@@ -143,7 +143,7 @@ function OnboardingPage() {
 
   const next = () => setStep((s) => Math.min(STEPS, s + 1));
   const back = () => setStep((s) => Math.max(1, s - 1));
-  const finish = () => navigate({ to: "/app" });
+  const finish = () => navigate({ to: "/pulse" });
 
   return (
     <div className="surface-veil min-h-screen">
