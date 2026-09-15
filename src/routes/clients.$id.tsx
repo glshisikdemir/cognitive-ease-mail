@@ -53,6 +53,7 @@ function ClientDetail() {
 
   const draft = DRAFTS.find((d) => d.clientId === client.id);
   const band = bandOf(client.health);
+  const signals = signalsForClient(client.id);
 
   return (
     <AppShell>
