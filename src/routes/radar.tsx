@@ -6,6 +6,8 @@ import { AppShell } from "@/components/app/AppShell";
 import { HealthBadge } from "@/components/app/Sparkline";
 import { GuardianBadge } from "@/components/app/GuardianBadge";
 import { gateForText } from "@/lib/guardian";
+import { GuardChip } from "@/components/app/GuardPanel";
+import { signalsForClient } from "@/lib/intelligence-data";
 import {
   ALERTS,
   ALERT_LABELS,
@@ -106,6 +108,7 @@ function RadarPage() {
                     </Link>
                     <HealthBadge health={client.health} />
                     <GuardianBadge gate={gate} />
+                    <GuardChip signals={signalsForClient(client.id)} />
                   </div>
                   <p className="mt-1.5 text-sm text-muted-foreground">{a.summary}</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
