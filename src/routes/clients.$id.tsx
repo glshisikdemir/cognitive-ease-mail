@@ -92,6 +92,10 @@ function ClientDetail() {
       <div className="mt-8 grid gap-5 lg:grid-cols-[1.4fr_1fr]">
         {/* Left column */}
         <div className="space-y-5">
+          {/* Intelligence Guard — evidence behind every conclusion */}
+          <GuardPanel signals={signals} />
+
+
           {/* Health factors */}
           <section className="rounded-2xl border border-border/70 bg-surface p-5">
             <h2 className="font-display text-lg text-foreground">What's moving health</h2>
