@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 import { Sparkline, HealthBadge } from "@/components/app/Sparkline";
+import { GuardPanel, GuardChip } from "@/components/app/GuardPanel";
+import { signalsForClient } from "@/lib/intelligence-data";
 import { clientById, bandLabel, bandOf, fmtMoney, DRAFTS } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/clients/$id")({
