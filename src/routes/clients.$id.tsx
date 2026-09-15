@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 import { Sparkline, HealthBadge } from "@/components/app/Sparkline";
+import { GuardPanel, GuardChip } from "@/components/app/GuardPanel";
+import { signalsForClient } from "@/lib/intelligence-data";
 import { clientById, bandLabel, bandOf, fmtMoney, DRAFTS } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/clients/$id")({
@@ -51,6 +53,7 @@ function ClientDetail() {
 
   const draft = DRAFTS.find((d) => d.clientId === client.id);
   const band = bandOf(client.health);
+  const signals = signalsForClient(client.id);
 
   return (
     <AppShell>
@@ -68,6 +71,8 @@ function ClientDetail() {
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="font-display text-3xl text-foreground sm:text-4xl">{client.name}</h1>
             <HealthBadge health={client.health} />
+            <GuardChip signals={signals} />
+
           </div>
           <p className="mt-1.5 text-sm text-muted-foreground">
             {client.owner} · {fmtMoney(client.retainer)}/mo · {bandLabel(band)}
@@ -87,6 +92,10 @@ function ClientDetail() {
       <div className="mt-8 grid gap-5 lg:grid-cols-[1.4fr_1fr]">
         {/* Left column */}
         <div className="space-y-5">
+          {/* Intelligence Guard — evidence behind every conclusion */}
+          <GuardPanel signals={signals} />
+
+
           {/* Health factors */}
           <section className="rounded-2xl border border-border/70 bg-surface p-5">
             <h2 className="font-display text-lg text-foreground">What's moving health</h2>
