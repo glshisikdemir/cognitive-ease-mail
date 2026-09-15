@@ -71,6 +71,8 @@ function ClientDetail() {
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="font-display text-3xl text-foreground sm:text-4xl">{client.name}</h1>
             <HealthBadge health={client.health} />
+            <GuardChip signals={signals} />
+
           </div>
           <p className="mt-1.5 text-sm text-muted-foreground">
             {client.owner} · {fmtMoney(client.retainer)}/mo · {bandLabel(band)}
