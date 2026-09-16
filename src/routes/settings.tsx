@@ -10,7 +10,7 @@ export const Route = createFileRoute("/settings")({
       { title: "Settings — ISURA" },
       {
         name: "description",
-        content: "Configure your morning briefing, attention thresholds and approval preferences.",
+        content: "Choose when ISURA briefs you and keep control of every outgoing reply.",
       },
     ],
   }),
@@ -57,8 +57,6 @@ function SettingsPage() {
   const [approvalFirst, setApprovalFirst] = useState(true);
   const [weekendPause, setWeekendPause] = useState(false);
   const [briefTime, setBriefTime] = useState("08:00");
-  const [attentionThreshold, setAttentionThreshold] = useState(60);
-  const [cooldownDays, setCooldownDays] = useState(7);
 
   const save = () => toast.success("Settings saved");
 
@@ -67,7 +65,7 @@ function SettingsPage() {
       <header>
         <h1 className="font-display text-3xl leading-tight text-foreground sm:text-4xl">Settings</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Tune how ISURA watches your book and when it reaches you.
+          Choose when ISURA reaches you. Everything else works out of the box.
         </p>
       </header>
 
@@ -103,58 +101,17 @@ function SettingsPage() {
           </div>
         </section>
 
-        {/* Thresholds */}
-        <section className="rounded-2xl border border-border/70 bg-surface p-5">
-          <h2 className="font-display text-lg text-foreground">Attention thresholds</h2>
-          <div className="mt-3 space-y-5">
-            <div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-medium text-foreground">Attention band cutoff</span>
-                <span className="tabular-nums text-muted-foreground">below {attentionThreshold}</span>
-              </div>
-              <input
-                type="range"
-                min={40}
-                max={80}
-                value={attentionThreshold}
-                onChange={(e) => setAttentionThreshold(Number(e.target.value))}
-                className="mt-2 w-full accent-primary"
-              />
-              <p className="mt-1 text-xs text-muted-foreground">
-                Accounts scoring below this appear in your Pulse attention band.
-              </p>
-            </div>
-            <div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-medium text-foreground">Silence alert</span>
-                <span className="tabular-nums text-muted-foreground">{cooldownDays} days</span>
-              </div>
-              <input
-                type="range"
-                min={3}
-                max={21}
-                value={cooldownDays}
-                onChange={(e) => setCooldownDays(Number(e.target.value))}
-                className="mt-2 w-full accent-primary"
-              />
-              <p className="mt-1 text-xs text-muted-foreground">
-                Flag a client as cooling after this many days of silence.
-              </p>
-            </div>
-          </div>
-        </section>
-
         {/* Approval */}
         <section className="rounded-2xl border border-border/70 bg-surface p-5">
           <h2 className="font-display text-lg text-foreground">Approvals</h2>
           <div className="mt-1 divide-y divide-border/50">
             <Toggle
-              label="Approval-first sending"
-              description="Every reply waits for your explicit tap before it sends."
+               label="Always review before sending"
+               description="Every reply waits for you before it leaves ISURA."
               checked={approvalFirst}
               onChange={(v) => {
                 if (!v) {
-                  toast("Approval-first is recommended and stays on.");
+                   toast("Review before sending stays on to keep you in control.");
                   return;
                 }
                 setApprovalFirst(v);

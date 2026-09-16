@@ -4,10 +4,7 @@ import { toast } from "sonner";
 import { FileText, ExternalLink, Filter } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 import { HealthBadge } from "@/components/app/Sparkline";
-import { GuardianBadge } from "@/components/app/GuardianBadge";
 import { gateForText } from "@/lib/guardian";
-import { GuardChip } from "@/components/app/GuardPanel";
-import { signalsForClient } from "@/lib/intelligence-data";
 import {
   ALERTS,
   ALERT_LABELS,
@@ -59,7 +56,7 @@ function RadarPage() {
         <div>
           <h1 className="font-display text-3xl leading-tight text-foreground sm:text-4xl">Radar</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Every open loop across your book, oldest first. {ALERTS.length} signals right now.
+             {ALERTS.length} client conversations may need your attention, oldest first.
           </p>
         </div>
       </header>
@@ -107,8 +104,6 @@ function RadarPage() {
                       {client.name}
                     </Link>
                     <HealthBadge health={client.health} />
-                    <GuardianBadge gate={gate} />
-                    <GuardChip signals={signalsForClient(client.id)} />
                   </div>
                   <p className="mt-1.5 text-sm text-muted-foreground">{a.summary}</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
@@ -136,7 +131,7 @@ function RadarPage() {
                   className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                 >
                   <FileText className="h-3.5 w-3.5" />
-                  {gate.requiresApproval ? "Review & approve" : "View draft"}
+                   {gate.requiresApproval ? "Review reply" : "View reply"}
                 </button>
                 <Link
                   to="/clients/$id"
@@ -144,7 +139,7 @@ function RadarPage() {
                   className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground transition-colors hover:bg-surface-muted"
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
-                  Open account
+                   Review account
                 </Link>
               </div>
             </article>
