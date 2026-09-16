@@ -15,7 +15,7 @@ export const Route = createFileRoute("/approvals")({
       {
         name: "description",
         content:
-          "Every decision the Decision Guardian paused for you — drafts and radar actions awaiting approval, oldest first.",
+          "Replies and client actions waiting for your review, oldest first.",
       },
     ],
   }),
@@ -50,8 +50,7 @@ function ApprovalsPage() {
           <ShieldCheck className="h-8 w-8 text-muted-foreground" />
           <p className="mt-3 text-sm font-medium text-foreground">You're all caught up.</p>
           <p className="mt-1 max-w-sm text-xs text-muted-foreground">
-            Low-risk actions run autonomously. Only high-impact decisions land here for your
-            approval.
+            ISURA only pauses items that genuinely need your judgement.
           </p>
         </div>
       ) : (
@@ -84,7 +83,7 @@ function ApprovalsPage() {
                         {item.clientName}
                       </Link>
                       {client && <HealthBadge health={client.health} />}
-                      <GuardianBadge gate={item.gate} />
+                       <GuardianBadge gate={item.gate} />
                     </div>
                     <p className="mt-1.5 text-sm font-medium text-foreground">{item.title}</p>
                     <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">
@@ -106,7 +105,7 @@ function ApprovalsPage() {
 
                 {res ? (
                   <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
-                    {res === "approved" ? "Approved — logged in decision memory." : "Declined."}{" "}
+                     {res === "approved" ? "Approved and sent." : "Declined."}{" "}
                     <button
                       onClick={() =>
                         setResolved((r) => {
@@ -160,7 +159,7 @@ function ApprovalsPage() {
 
       <p className="mt-6 flex items-center gap-1.5 text-[11px] text-muted-foreground">
         <ShieldCheck className="h-3.5 w-3.5" />
-        Guardian routes low-risk work autonomously and pauses high-impact decisions here.
+         Routine work stays quiet. Only meaningful decisions appear here.
       </p>
     </AppShell>
   );

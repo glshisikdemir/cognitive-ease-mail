@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 import { Sparkline, HealthBadge } from "@/components/app/Sparkline";
-import { GuardPanel, GuardChip } from "@/components/app/GuardPanel";
+import { GuardPanel } from "@/components/app/GuardPanel";
 import { signalsForClient } from "@/lib/intelligence-data";
 import { clientById, bandLabel, bandOf, fmtMoney, DRAFTS } from "@/lib/mock-data";
 
@@ -71,8 +71,6 @@ function ClientDetail() {
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="font-display text-3xl text-foreground sm:text-4xl">{client.name}</h1>
             <HealthBadge health={client.health} />
-            <GuardChip signals={signals} />
-
           </div>
           <p className="mt-1.5 text-sm text-muted-foreground">
             {client.owner} · {fmtMoney(client.retainer)}/mo · {bandLabel(band)}

@@ -216,12 +216,8 @@ function DraftsWorkspace() {
                   )}
                 </div>
                 <div className="mt-0.5 truncate text-xs text-muted-foreground">{d.subject}</div>
-                {s === "pending" && (
-                  <div className="mt-1.5">
-                    <GuardianBadge
-                      gate={gateForText(`${d.subject} ${d.originalEmail} ${body}`)}
-                    />
-                  </div>
+                {s === "pending" && gateForText(`${d.subject} ${d.originalEmail} ${body}`).requiresApproval && (
+                  <p className="mt-1.5 text-[11px] text-load-medium-foreground">Take a quick look</p>
                 )}
               </button>
             );
@@ -309,9 +305,9 @@ function DraftsWorkspace() {
                   onClick={() => {
                     setStatus(activeDraft.id, "approved", activeState?.editedBody ?? null);
                     toast.success(
-                      activeGate.requiresApproval
-                        ? `Approved & sent to ${activeClient.name}`
-                        : `Sent to ${activeClient.name} — logged in decision memory`,
+                       activeGate.requiresApproval
+                         ? `Approved & sent to ${activeClient.name}`
+                         : `Sent to ${activeClient.name}`,
                     );
                   }}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
