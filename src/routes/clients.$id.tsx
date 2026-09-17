@@ -26,6 +26,18 @@ export const Route = createFileRoute("/clients/$id")({
             ? `Relationship health, open loops and timeline for ${client.name}.`
             : "Client account.",
         },
+        {
+          property: "og:title",
+          content: client ? `${client.name} — ISURA` : "Client — ISURA",
+        },
+        {
+          property: "og:description",
+          content: client
+            ? `Relationship health, open loops and timeline for ${client.name}.`
+            : "Client account.",
+        },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary" },
       ],
     };
   },
