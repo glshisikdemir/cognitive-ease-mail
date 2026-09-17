@@ -29,6 +29,13 @@ export const Route = createFileRoute("/drafts")({
         name: "description",
         content: "Reply drafts prepared in each client's voice. Nothing sends without your approval.",
       },
+      { property: "og:title", content: "Drafts — ISURA" },
+      {
+        property: "og:description",
+        content: "Review client-ready replies before anything is sent.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: DraftsPage,

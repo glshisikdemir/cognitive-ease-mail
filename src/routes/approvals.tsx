@@ -17,6 +17,13 @@ export const Route = createFileRoute("/approvals")({
         content:
           "Replies and client actions waiting for your review, oldest first.",
       },
+      { property: "og:title", content: "Approval Queue — ISURA" },
+      {
+        property: "og:description",
+        content: "Review replies and client actions that need your judgement.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: ApprovalsPage,

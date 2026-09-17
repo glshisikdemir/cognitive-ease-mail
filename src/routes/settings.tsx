@@ -12,6 +12,13 @@ export const Route = createFileRoute("/settings")({
         name: "description",
         content: "Choose when ISURA briefs you and keep control of every outgoing reply.",
       },
+      { property: "og:title", content: "Settings — ISURA" },
+      {
+        property: "og:description",
+        content: "Choose when ISURA briefs you and keep control of every outgoing reply.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: SettingsPage,

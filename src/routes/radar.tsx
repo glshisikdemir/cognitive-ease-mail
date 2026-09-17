@@ -22,6 +22,13 @@ export const Route = createFileRoute("/radar")({
         name: "description",
         content: "Every open loop across your clients: unanswered emails, cooling accounts, unkept commitments.",
       },
+      { property: "og:title", content: "Radar — ISURA" },
+      {
+        property: "og:description",
+        content: "See which client conversations need attention, oldest first.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: RadarPage,
